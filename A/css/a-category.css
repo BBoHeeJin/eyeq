@@ -1,0 +1,132 @@
+/* =========================================================
+   EYEQ A안 — CATEGORY SELECT (PC 169:1564 BASIC · 169:1565 PRO / Mobile 207:1835 · 207:1901)
+   PC: 캔버스 1920×964 — 본문 x 80 · y 167 − 116 = 51 · 카드 336×662 간격 20
+   모드: html.a-mode-pro → 배경 color/pro-page, 아이콘 박스 surface, 버튼 검정
+   ========================================================= */
+.a-mode-pro, .a-mode-pro body { background: var(--color-pro-page); }
+
+.a-cat__pc { position: absolute; inset: 0; --e1: calc(var(--ex) * 0.3); --e2: calc(var(--ex) * 0.4); --eh: calc(var(--ex) * 0.2); }
+.a-cat__row {
+  position: absolute;
+  left: calc(80 * var(--k));
+  top: calc(51 * var(--k) + var(--e1));
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: calc(1760 * var(--k));
+}
+.a-cat__mode { display: flex; flex-direction: column; align-items: flex-end; gap: calc(12 * var(--k)); }
+.a-cat__modedesc { font-family: var(--font-kr); font-size: calc(14 * var(--k)); line-height: calc(20 * var(--k)); color: var(--color-text-sub); white-space: nowrap; text-align: right; }
+
+.a-cat__cards {
+  position: absolute;
+  left: calc(80 * var(--k));
+  top: calc(211 * var(--k) + var(--e2));
+  display: flex;
+  gap: calc(20 * var(--k));
+}
+.a-catc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(336 * var(--k));
+  height: calc(662 * var(--k) + var(--eh));
+  padding: calc(32 * var(--k)) calc(28 * var(--k));
+  border: 1px solid var(--color-border);
+  border-radius: calc(22 * var(--k));
+  background: var(--color-white);
+  filter: drop-shadow(0 calc(12 * var(--k)) calc(16 * var(--k)) rgba(10, 26, 64, 0.06));
+  text-align: center;
+  transition: transform 250ms ease-out, border-color 250ms ease-out;
+}
+@media (hover: hover) {   /* Figma 미정의 — 메인 카테고리 카드 Hover와 같은 방식 (구현 제안) */
+  .a-catc:hover { transform: translateY(calc(-8 * var(--k))); border-color: var(--color-primary); }
+}
+.a-catc__body { display: flex; flex: 1 1 0; flex-direction: column; align-items: center; justify-content: center; gap: calc(41 * var(--k)); width: 100%; }
+.a-catc__iconbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(200 * var(--k));
+  height: calc(200 * var(--k));
+  border-radius: calc(40 * var(--k));
+  background: var(--color-pro-bg);
+}
+.a-mode-pro .a-catc__iconbox { background: var(--color-surface); }
+.a-catc .a-ico { --iw: 144; --ih: 100; }
+.a-catc__name { font-family: var(--font-en); font-weight: 700; font-size: calc(28 * var(--k)); line-height: calc(34 * var(--k)); letter-spacing: -0.01em; white-space: nowrap; color: var(--color-text); }
+.a-catc__desc { margin-top: calc(-20 * var(--k)); font-family: var(--font-kr); font-size: calc(16 * var(--k)); line-height: calc(24 * var(--k)); white-space: nowrap; color: var(--color-text-sub); }
+.a-catc__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--k));
+  width: 100%;
+  height: calc(52 * var(--k));
+  border-radius: 999px;
+  background: var(--color-primary-tint);
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(16 * var(--k));
+  line-height: calc(22 * var(--k));
+  color: var(--color-primary);
+}
+.a-mode-pro .a-catc__btn { background: var(--color-text); color: var(--color-white); }
+
+/* 카드 아이콘 (Card Icons 78:122 — 144×100) — a-main.css의 비율 좌표를 그대로 사용 */
+.a-ico { position: relative; display: block; width: calc(var(--iw) * var(--k)); height: calc(var(--ih) * var(--k)); }
+.a-ico > *, .a-ico__g > * { position: absolute; }
+.a-ico__glyph { inset: 0 9.26% -8% 9.26%; width: 81.48%; height: 108%; }
+.a-ico--spacing .a-ico__g     { inset: 0 0.46% 4% 0.46%; }
+.a-ico--alignment .a-ico__g   { inset: 0 3.7% 4% 3.7%; }
+.a-ico--hierarchy .a-ico__g   { inset: 0 6.02% 4% 6.02%; }
+.a-ico--composition .a-ico__g { inset: 0 3.7%; }
+.a-ico__bar { background: var(--gradient-icon-bar); border-radius: calc(5 * var(--k)); }
+.a-ico__bar--l { inset: 0 73.83% 0 0; }
+.a-ico__bar--r { inset: 0 0 0 73.83%; }
+.a-ico__strong { inset: 27.78% 37.38%; width: 25.24%; height: 44.44%; }
+.a-ico--alignment .a-ico__s { background: #dfe4f0; border-radius: calc(10 * var(--k)); }
+.a-ico--alignment .a-ico__s--1 { inset: 9.72% 1% 76.39% 17%; }
+.a-ico--alignment .a-ico__s--2 { inset: 33.33% 17% 52.78% 17%; }
+.a-ico--alignment .a-ico__s--3 { inset: 56.94% 8% 29.17% 17%; }
+.a-ico--alignment .a-ico__s--4 { inset: 80.56% 35% 5.56% 17%; }
+.a-ico--alignment .a-ico__s--5 { inset: 3.47% 91% -0.69% 5%; background: var(--color-primary); border-radius: calc(4 * var(--k)); }
+.a-ico--hierarchy .a-ico__s { border-radius: calc(5 * var(--k)); }
+.a-ico--hierarchy .a-ico__s--1 { inset: 3.47% 0 72.92% 0; background: var(--color-primary); }
+.a-ico--hierarchy .a-ico__s--2 { inset: 38.19% 14.74%; background: #e6eaf2; }
+.a-ico--hierarchy .a-ico__s--3 { inset: 72.92% 27.89% 3.47% 27.89%; background: #e6eaf2; }
+.a-ico--composition .a-ico__s--1 { inset: 4% 33% 13.33% 5%; background: #dbe5ff; border-radius: calc(8 * var(--k)); }
+.a-ico--composition .a-ico__s--2 { inset: 20% 5% 0 35%; background: rgba(9, 83, 234, 0.25); border-radius: calc(30 * var(--k)); }
+
+/* =========================================================
+   Mobile (207:1835 / 207:1901) — 좌표 = Figma y − 107 (상태바·헤더 제외)
+   ========================================================= */
+@media (max-width: 1023px) {
+  /* 모바일: 위에서 아래로 흐르는 배치 · 공통 여백(위 16 · 좌우 20 · 아래 24) · 카드 5개가 남은 높이를 똑같이 나눔 */
+  .a-cat__mo { position: absolute !important; inset: 0; display: flex !important; flex-direction: column; padding: var(--mp-t) var(--mp-x) var(--mp-b); }
+  .a-cat__mo .a-toggle { align-self: flex-start; }
+  .a-catm__title { margin: calc(19 * var(--k)) 0 0; font-family: var(--font-kr); font-weight: 700; font-size: calc(21 * var(--k)); line-height: calc(30 * var(--k)); white-space: nowrap; color: var(--color-text); }
+  .a-catm__sub { margin-top: calc(6 * var(--k)); font-family: var(--font-kr); font-size: max(12px, calc(14 * var(--k))); line-height: calc(20 * var(--k)); color: #666666; }
+  .a-catm__list { flex: 1 1 auto; display: flex; flex-direction: column; gap: calc(10 * var(--k)); min-height: 0; margin-top: calc(16 * var(--k)); }
+  .a-catm {
+    position: relative;
+    display: grid;
+    flex: 1 1 0;
+    grid-template-columns: calc(8 * var(--k)) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: center;
+    column-gap: calc(10 * var(--k));
+    row-gap: calc(8 * var(--k));
+    min-height: 0;
+    padding: 0 calc(52 * var(--k)) 0 calc(17 * var(--k));
+    border: 1px solid #e2e7f0;
+    border-radius: calc(16 * var(--k));
+    background: var(--color-white);
+    text-align: left;
+  }
+  .a-catm:active { border-color: var(--color-primary); }      /* 누름 표시 — 구현 제안 */
+  .a-catm__dot { grid-column: 1; grid-row: 1; align-self: center; width: calc(8 * var(--k)); height: calc(8 * var(--k)); }
+  .a-catm__name { grid-column: 2; grid-row: 1; font-family: var(--font-en); font-weight: 700; font-size: calc(19 * var(--k)); line-height: calc(24 * var(--k)); color: var(--color-text); }
+  .a-catm__desc { grid-column: 1 / -1; grid-row: 2; font-family: var(--font-kr); font-size: max(12px, calc(14 * var(--k))); line-height: calc(20 * var(--k)); color: #666666; white-space: nowrap; }
+  .a-catm__arrow { position: absolute; right: calc(20 * var(--k)); top: 50%; transform: translateY(-50%); font-family: var(--font-en); font-weight: 700; font-size: calc(23 * var(--k)); line-height: 1; color: var(--color-primary); }
+}

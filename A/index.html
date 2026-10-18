@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko" class="a-page-main">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EYEQ — 좋은 디자인은, 보는 눈에서 시작됩니다</title>
+  <meta name="description" content="직접 보고, 움직이고, 맞춰보세요. 작은 차이가, 더 좋은 디자인을 만듭니다." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 화면 상태를 정한 뒤 첫 화면을 그림 (깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#a-ready" blocking="render" />
+  <link rel="stylesheet" href="css/a-tokens.css" />
+  <link rel="stylesheet" href="css/a-common.css" />
+  <link rel="stylesheet" href="css/a-ui.css" />
+  <link rel="stylesheet" href="css/a-main.css" />
+</head>
+<body class="a-page">
+
+  <!-- ===== Header (PC 71:67 / Mobile 79:139) ===== -->
+  <header class="a-header">
+    <a class="a-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="a-pc" src="assets/a/logo-eyeq.svg" alt="EYEQ" />
+      <img class="a-mo" src="assets/a/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="a-nav" aria-label="주요 메뉴">
+      <a class="a-nav__item is-active" aria-current="page" href="index.html">Home</a>
+      <a class="a-nav__item" href="level.html">Level Select</a>
+      <a class="a-nav__item" href="category.html">Test</a>
+      <a class="a-nav__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+    </nav>
+    <div class="a-header__actions">
+      <button class="a-icon-btn a-icon-btn--bell" type="button" aria-label="알림" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-bell.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-bell-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--profile" type="button" aria-label="마이 프로필" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-profile.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-profile-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--menu" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="a-menu" data-menu-toggle>
+        <img src="assets/a/icon-menu.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Mobile Menu (134:1373) ===== -->
+  <div class="a-menu" id="a-menu" data-menu aria-hidden="true">
+    <button class="a-menu__dim" type="button" aria-label="메뉴 닫기" data-menu-close tabindex="-1"></button>
+    <div class="a-menu__drawer" role="dialog" aria-modal="true" aria-label="메뉴">
+      <div class="a-menu__top">
+        <div class="a-menu__bar">
+          <button class="a-close" type="button" aria-label="메뉴 닫기" data-menu-close><img src="assets/a/icon-close-mobile.svg" alt="" /></button>
+        </div>
+        <nav class="a-menu__nav" aria-label="모바일 메뉴">
+          <a class="a-menu__item is-active" aria-current="page" href="index.html">Home</a>
+          <a class="a-menu__item" href="level.html">Level Select</a>
+          <a class="a-menu__item" href="category.html">Test</a>
+          <a class="a-menu__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+        </nav>
+      </div>
+      <button class="a-menu__profile" type="button" data-soon aria-haspopup="dialog">
+        <span class="a-menu__profile-icon"><img src="assets/a/icon-profile-menu.svg" alt="" /></span>마이 프로필
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== 메인 화면 (PC 71:280 / Mobile 134:1255) ===== -->
+  <main class="a-view">
+    <div class="a-canvas a-home">
+
+      <!-- ---------- PC ---------- -->
+      <div class="a-home__pc a-pc">
+        <!-- Hero / Visual (71:282) -->
+        <div class="a-visual" aria-hidden="true">
+          <span class="a-visual__glow"></span>
+          <span class="a-slash a-visual__slash"><span class="a-slash__mark"><span class="a-slash__s1"></span><span class="a-slash__s2"></span></span></span>
+          <span class="a-bubble a-bubble--sense">어떤 감각을<br />키워볼까요?</span>
+          <span class="a-bubble a-bubble--eye">보는 눈을<br />테스트해볼까요?</span>
+          <img class="a-visual__char" src="assets/a/character.png" alt="" />
+          <span class="a-sphere a-visual__sphere-s"></span>
+          <span class="a-visual__ring-wrap"><span class="a-visual__ring"></span></span>
+          <span class="a-sphere a-visual__sphere-l"></span>
+        </div>
+
+        <!-- Hero / Copy (71:301) -->
+        <h1 class="a-copy__brand"><img src="assets/a/logo-eyeq-hero.svg" alt="EYEQ" /></h1>
+        <p class="a-copy__headline">좋은 디자인은, 보는 눈에서 시작됩니다.</p>
+        <p class="a-copy__eyebrow">MEASURE YOUR DESIGN SENSE</p>
+        <span class="a-divider a-copy__divider" aria-hidden="true"></span>
+        <p class="a-copy__desc">직접 보고, 움직이고, 맞춰보세요.<br />작은 차이가, 더 좋은 디자인을 만듭니다.</p>
+
+        <!-- Hero / Actions (71:312) -->
+        <div class="a-actions">
+          <a class="a-alltest" href="level.html">
+            <span class="a-alltest__icon"><img class="a-alltest__icon-def" src="assets/a/btn-icon-circle.svg" alt="" /><img class="a-alltest__icon-hov" src="assets/a/btn-icon-circle-hover.svg" alt="" /></span>
+            <span class="a-alltest__label">ALL TEST 시작하기</span>
+          </a>
+          <button class="a-preview" type="button" data-soon aria-haspopup="dialog">
+            <span class="a-preview__icon" aria-hidden="true"><span class="a-preview__tri"></span></span>
+            <span class="a-preview__label">테스트 미리보기</span>
+          </button>
+        </div>
+
+        <!-- Category Cards (71:323) -->
+        <div class="a-cards">
+        <button class="a-card" type="button" data-cat="typography" data-popup-open="typography" aria-haspopup="dialog">
+          <span class="a-card__box">
+            <span class="a-card__icon"><span class="a-ico a-ico--typography" aria-hidden="true"><img class="a-ico__glyph" src="assets/a/card-glyph-typography.svg" alt="" /></span></span>
+            <span class="a-card__name">Typography</span>
+            <span class="a-card__desc">글자를 다루는 감각</span>
+            <span class="a-card__arrow"><img class="a-card__arrow-def" src="assets/a/card-arrow.svg" alt="" /><img class="a-card__arrow-hov" src="assets/a/card-arrow-hover.svg" alt="" /></span>
+          </span>
+        </button>
+        <button class="a-card" type="button" data-cat="spacing" data-soon aria-haspopup="dialog">
+          <span class="a-card__box">
+            <span class="a-card__icon"><span class="a-ico a-ico--spacing" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__bar a-ico__bar--l"></span><img class="a-ico__strong" src="assets/a/card-strong-spacing.svg" alt="" /><span class="a-ico__bar a-ico__bar--r"></span></span></span></span>
+            <span class="a-card__name">Spacing</span>
+            <span class="a-card__desc">여백을 보는 감각</span>
+            <span class="a-card__arrow"><img class="a-card__arrow-def" src="assets/a/card-arrow.svg" alt="" /><img class="a-card__arrow-hov" src="assets/a/card-arrow-hover.svg" alt="" /></span>
+          </span>
+        </button>
+        <button class="a-card" type="button" data-cat="alignment" data-soon aria-haspopup="dialog">
+          <span class="a-card__box">
+            <span class="a-card__icon"><span class="a-ico a-ico--alignment" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span><span class="a-ico__s a-ico__s--3"></span><span class="a-ico__s a-ico__s--4"></span><span class="a-ico__s a-ico__s--5"></span></span></span></span>
+            <span class="a-card__name">Alignment</span>
+            <span class="a-card__desc">정렬을 보는 감각</span>
+            <span class="a-card__arrow"><img class="a-card__arrow-def" src="assets/a/card-arrow.svg" alt="" /><img class="a-card__arrow-hov" src="assets/a/card-arrow-hover.svg" alt="" /></span>
+          </span>
+        </button>
+        <button class="a-card" type="button" data-cat="hierarchy" data-soon aria-haspopup="dialog">
+          <span class="a-card__box">
+            <span class="a-card__icon"><span class="a-ico a-ico--hierarchy" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span><span class="a-ico__s a-ico__s--3"></span></span></span></span>
+            <span class="a-card__name">Hierarchy</span>
+            <span class="a-card__desc">정보의 위계를 만드는 감각</span>
+            <span class="a-card__arrow"><img class="a-card__arrow-def" src="assets/a/card-arrow.svg" alt="" /><img class="a-card__arrow-hov" src="assets/a/card-arrow-hover.svg" alt="" /></span>
+          </span>
+        </button>
+        <button class="a-card" type="button" data-cat="composition" data-soon aria-haspopup="dialog">
+          <span class="a-card__box">
+            <span class="a-card__icon"><span class="a-ico a-ico--composition" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span></span></span></span>
+            <span class="a-card__name">Composition</span>
+            <span class="a-card__desc">전체적인 균형을 보는 감각</span>
+            <span class="a-card__arrow"><img class="a-card__arrow-def" src="assets/a/card-arrow.svg" alt="" /><img class="a-card__arrow-hov" src="assets/a/card-arrow-hover.svg" alt="" /></span>
+          </span>
+        </button>
+        </div>
+      </div>
+
+      <!-- ---------- Mobile ---------- -->
+      <div class="a-home__mo a-mo">
+        <h1 class="a-mtitle">좋은 디자인은,<br /><em>보는 눈</em>에서 시작됩니다.</h1>
+        <div class="a-mvisual" aria-hidden="true">
+          <span class="a-sphere a-mvisual__sphere-s"></span>
+          <span class="a-sphere a-mvisual__sphere-l"></span>
+          <span class="a-mvisual__glow"></span>
+          <span class="a-mvisual__char"><img src="assets/a/character-mobile.png" alt="" /></span>
+          <span class="a-slash a-mvisual__slash"><span class="a-slash__mark"><span class="a-slash__s1"></span><span class="a-slash__s2"></span></span></span>
+        </div>
+        <a class="a-malltest" href="level.html">
+          <span class="a-malltest__icon"><img src="assets/a/icon-arrow-mobile.svg" alt="" /></span>
+          <span class="a-malltest__label">ALL TEST 시작하기</span>
+        </a>
+        <section class="a-mcats" aria-label="5가지 디자인 감각">
+          <div class="a-mcats__head">
+            <h2 class="a-mcats__title">5가지 디자인 감각</h2>
+            <a class="a-mcats__all" href="category.html">전체 보기<img src="assets/a/icon-chevron-right.svg" alt="" /></a>
+          </div>
+          <div class="a-carousel" data-carousel>
+            <div class="a-carousel__viewport">
+              <div class="a-carousel__track" data-track>
+            <button class="a-ccard" type="button" data-cat="hierarchy" aria-hidden="true" tabindex="-1" data-clone>
+              <span class="a-ico a-ico--hierarchy" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span><span class="a-ico__s a-ico__s--3"></span></span></span>
+              <span class="a-ccard__name">Hierarchy</span>
+              <span class="a-ccard__desc">정보의 위계를 만드는 감각</span>
+            </button>
+            <button class="a-ccard" type="button" data-cat="composition" aria-hidden="true" tabindex="-1" data-clone>
+              <span class="a-ico a-ico--composition" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span></span></span>
+              <span class="a-ccard__name">Composition</span>
+              <span class="a-ccard__desc">전체적인 균형을 보는 감각</span>
+            </button>
+            <button class="a-ccard" type="button" data-cat="typography">
+              <span class="a-ico a-ico--typography" aria-hidden="true"><img class="a-ico__glyph" src="assets/a/card-glyph-typography-mobile.svg" alt="" /></span>
+              <span class="a-ccard__name">Typography</span>
+              <span class="a-ccard__desc">글자를 다루는 감각</span>
+            </button>
+            <button class="a-ccard" type="button" data-cat="spacing">
+              <span class="a-ico a-ico--spacing" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__bar a-ico__bar--l"></span><img class="a-ico__strong" src="assets/a/card-strong-spacing-mobile.svg" alt="" /><span class="a-ico__bar a-ico__bar--r"></span></span></span>
+              <span class="a-ccard__name">Spacing</span>
+              <span class="a-ccard__desc">여백을 보는 감각</span>
+            </button>
+            <button class="a-ccard" type="button" data-cat="alignment">
+              <span class="a-ico a-ico--alignment" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span><span class="a-ico__s a-ico__s--3"></span><span class="a-ico__s a-ico__s--4"></span><span class="a-ico__s a-ico__s--5"></span></span></span>
+              <span class="a-ccard__name">Alignment</span>
+              <span class="a-ccard__desc">정렬을 보는 감각</span>
+            </button>
+            <button class="a-ccard" type="button" data-cat="hierarchy">
+              <span class="a-ico a-ico--hierarchy" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span><span class="a-ico__s a-ico__s--3"></span></span></span>
+              <span class="a-ccard__name">Hierarchy</span>
+              <span class="a-ccard__desc">정보의 위계를 만드는 감각</span>
+            </button>
+            <button class="a-ccard" type="button" data-cat="composition">
+              <span class="a-ico a-ico--composition" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span></span></span>
+              <span class="a-ccard__name">Composition</span>
+              <span class="a-ccard__desc">전체적인 균형을 보는 감각</span>
+            </button>
+            <button class="a-ccard" type="button" data-cat="typography" aria-hidden="true" tabindex="-1" data-clone>
+              <span class="a-ico a-ico--typography" aria-hidden="true"><img class="a-ico__glyph" src="assets/a/card-glyph-typography-mobile.svg" alt="" /></span>
+              <span class="a-ccard__name">Typography</span>
+              <span class="a-ccard__desc">글자를 다루는 감각</span>
+            </button>
+            <button class="a-ccard" type="button" data-cat="spacing" aria-hidden="true" tabindex="-1" data-clone>
+              <span class="a-ico a-ico--spacing" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__bar a-ico__bar--l"></span><img class="a-ico__strong" src="assets/a/card-strong-spacing-mobile.svg" alt="" /><span class="a-ico__bar a-ico__bar--r"></span></span></span>
+              <span class="a-ccard__name">Spacing</span>
+              <span class="a-ccard__desc">여백을 보는 감각</span>
+            </button>
+              </div>
+            </div>
+            <div class="a-carousel__dots" role="group" aria-label="카테고리 위치">
+            <button class="a-dot" type="button" data-dot="0" aria-label="Typography"><img class="a-dot__on" src="assets/a/dot-active.svg" alt="" /><img class="a-dot__off" src="assets/a/dot.svg" alt="" /></button>
+            <button class="a-dot" type="button" data-dot="1" aria-label="Spacing"><img class="a-dot__on" src="assets/a/dot-active.svg" alt="" /><img class="a-dot__off" src="assets/a/dot.svg" alt="" /></button>
+            <button class="a-dot" type="button" data-dot="2" aria-label="Alignment"><img class="a-dot__on" src="assets/a/dot-active.svg" alt="" /><img class="a-dot__off" src="assets/a/dot.svg" alt="" /></button>
+            <button class="a-dot" type="button" data-dot="3" aria-label="Hierarchy"><img class="a-dot__on" src="assets/a/dot-active.svg" alt="" /><img class="a-dot__off" src="assets/a/dot.svg" alt="" /></button>
+            <button class="a-dot" type="button" data-dot="4" aria-label="Composition"><img class="a-dot__on" src="assets/a/dot-active.svg" alt="" /><img class="a-dot__off" src="assets/a/dot.svg" alt="" /></button>
+            </div>
+            <p class="a-sr-only" aria-live="polite" data-carousel-status></p>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===== Popup / Typography (PC 111:412 · Mobile 134:487) ===== -->
+  <div class="a-modal" data-modal="typography" aria-hidden="true">
+    <button class="a-modal__dim" type="button" aria-label="닫기" data-modal-close tabindex="-1"></button>
+    <div class="a-modal__dialog a-pop" role="dialog" aria-modal="true" aria-labelledby="a-pop-title">
+      <div class="a-pop__content">
+        <div class="a-pop__head">
+          <p class="a-pop__title" id="a-pop-title">Typography</p>
+          <p class="a-pop__sub">글자를 다루는 감각</p>
+        </div>
+        <span class="a-divider" aria-hidden="true"></span>
+        <p class="a-pop__desc">같은 문장도 서체와 크기, 자간에 따라<br />전혀 다르게 읽힙니다. 읽기 쉬운 글자와<br />정돈된 텍스트의 리듬을 알아보는 감각이에요.</p>
+      </div>
+      <div class="a-pop__visual">
+        <div class="a-pc">
+          <div class="a-pg" aria-hidden="true">
+            <span class="a-pg__spec-wrap"><span class="a-pg__spec"><span class="a-pg__aa">Aa</span><span class="a-pg__line a-pg__line--1"></span><span class="a-pg__line a-pg__line--2"></span><span class="a-pg__line a-pg__line--3"></span></span></span>
+            <span class="a-pg__sel-wrap"><span class="a-pg__sel"><span class="a-pg__t">T</span><span class="a-pg__box"></span><span class="a-pg__h a-pg__h--1"></span><span class="a-pg__h a-pg__h--2"></span><span class="a-pg__h a-pg__h--3"></span><span class="a-pg__h a-pg__h--4"></span><img class="a-pg__cursor" src="assets/a/popup-cursor.svg" alt="" /></span></span>
+            <span class="a-pg__baseline"></span>
+            <span class="a-pg__A">A</span>
+            <span class="a-pg__a">a</span>
+            <img class="a-pg__cap" src="assets/a/popup-cap-height.svg" alt="" />
+            <img class="a-pg__x" src="assets/a/popup-x-height.svg" alt="" />
+          </div>
+        </div>
+        <div class="a-mo">
+          <div class="a-pg" aria-hidden="true">
+            <span class="a-pg__spec-wrap"><span class="a-pg__spec"><span class="a-pg__aa">Aa</span><span class="a-pg__line a-pg__line--1"></span><span class="a-pg__line a-pg__line--2"></span><span class="a-pg__line a-pg__line--3"></span></span></span>
+            <span class="a-pg__sel-wrap"><span class="a-pg__sel"><span class="a-pg__t">T</span><span class="a-pg__box"></span><span class="a-pg__h a-pg__h--1"></span><span class="a-pg__h a-pg__h--2"></span><span class="a-pg__h a-pg__h--3"></span><span class="a-pg__h a-pg__h--4"></span><img class="a-pg__cursor" src="assets/a/popup-cursor-mobile.svg" alt="" /></span></span>
+            <span class="a-pg__baseline"></span>
+            <span class="a-pg__A">A</span>
+            <span class="a-pg__a">a</span>
+            <img class="a-pg__cap" src="assets/a/popup-cap-height-mobile.svg" alt="" />
+            <img class="a-pg__x" src="assets/a/popup-x-height-mobile.svg" alt="" />
+          </div>
+        </div>
+      </div>
+      <button class="a-close a-pop__close" type="button" aria-label="닫기" data-modal-close>
+        <img class="a-pc" src="assets/a/icon-close.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-close-popup-mobile.svg" alt="" />
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Coming Soon (A안 Dialog / Confirm 161:1164 스타일 · 구현 제안) ===== -->
+  <div class="a-modal a-modal--dialog" data-modal="soon" aria-hidden="true">
+    <button class="a-modal__dim" type="button" aria-label="닫기" data-modal-close tabindex="-1"></button>
+    <div class="a-modal__dialog a-dialog" role="dialog" aria-modal="true" aria-labelledby="a-soon-title" aria-describedby="a-soon-body">
+      <div class="a-dialog__text">
+        <h2 class="a-dialog__title" id="a-soon-title">아직 준비 중이에요!</h2>
+        <p class="a-dialog__body" id="a-soon-body" data-soon-body>곧 만나볼 수 있도록 준비하고 있어요.</p>
+      </div>
+      <div class="a-dialog__actions">
+        <button class="a-dialog__btn a-dialog__btn--confirm" type="button" data-modal-close>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/a-common.js"></script>
+  <script src="js/a-main.js"></script>
+  <span id="a-ready" hidden></span>
+</body>
+</html>

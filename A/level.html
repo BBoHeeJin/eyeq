@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko" class="a-page-level">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EYEQ — Level Select</title>
+  <meta name="description" content="좋은 디자인은, 보는 눈에서 시작됩니다." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 화면 상태를 정한 뒤 첫 화면을 그림 (깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#a-ready" blocking="render" />
+  <link rel="stylesheet" href="css/a-tokens.css" />
+  <link rel="stylesheet" href="css/a-common.css" />
+  <link rel="stylesheet" href="css/a-ui.css" />
+  <link rel="stylesheet" href="css/a-level.css" />
+</head>
+<body class="a-page">
+
+  <!-- ===== Header (PC 71:67 / Mobile 79:139) ===== -->
+  <header class="a-header">
+    <a class="a-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="a-pc" src="assets/a/logo-eyeq.svg" alt="EYEQ" />
+      <img class="a-mo" src="assets/a/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="a-nav" aria-label="주요 메뉴">
+      <a class="a-nav__item" href="index.html">Home</a>
+      <a class="a-nav__item is-active" aria-current="page" href="level.html">Level Select</a>
+      <a class="a-nav__item" href="category.html">Test</a>
+      <a class="a-nav__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+    </nav>
+    <div class="a-header__actions">
+      <button class="a-icon-btn a-icon-btn--bell" type="button" aria-label="알림" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-bell.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-bell-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--profile" type="button" aria-label="마이 프로필" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-profile.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-profile-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--menu" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="a-menu" data-menu-toggle>
+        <img src="assets/a/icon-menu.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Mobile Menu (134:1373) ===== -->
+  <div class="a-menu" id="a-menu" data-menu aria-hidden="true">
+    <button class="a-menu__dim" type="button" aria-label="메뉴 닫기" data-menu-close tabindex="-1"></button>
+    <div class="a-menu__drawer" role="dialog" aria-modal="true" aria-label="메뉴">
+      <div class="a-menu__top">
+        <div class="a-menu__bar">
+          <button class="a-close" type="button" aria-label="메뉴 닫기" data-menu-close><img src="assets/a/icon-close-mobile.svg" alt="" /></button>
+        </div>
+        <nav class="a-menu__nav" aria-label="모바일 메뉴">
+          <a class="a-menu__item" href="index.html">Home</a>
+          <a class="a-menu__item is-active" aria-current="page" href="level.html">Level Select</a>
+          <a class="a-menu__item" href="category.html">Test</a>
+          <a class="a-menu__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+        </nav>
+      </div>
+      <button class="a-menu__profile" type="button" data-soon aria-haspopup="dialog">
+        <span class="a-menu__profile-icon"><img src="assets/a/icon-profile-menu.svg" alt="" /></span>마이 프로필
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== LEVEL SELECT (PC 84:228 / Mobile 204:1852) ===== -->
+  <main class="a-view">
+    <div class="a-canvas a-lv">
+      <!-- ---------- PC ---------- -->
+      <div class="a-lv__pc a-pc">
+        <div class="a-lv__row">
+          <div class="a-ptitle">
+            <p class="a-ptitle__eyebrow">CHOOSE YOUR LEVEL</p>
+            <h1 class="a-ptitle__h">어떤 방식으로 디자인 감각을 테스트할까요?</h1>
+            <p class="a-ptitle__sub">나에게 맞는 테스트를 선택하고, 디자인을 보는 눈을 확인해보세요.</p>
+          </div>
+          <div class="a-lv__chars" aria-hidden="true">
+            <span class="a-lv__bubble">처음이라면 <em>BASIC</em>부터<br />시작해보세요.</span>
+            <img src="assets/a/char-basic.png" alt="" />
+            <img src="assets/a/char-pro.png" alt="" />
+          </div>
+        </div>
+        <div class="a-lv__cards">
+          <!-- Card / BASIC (83:243 → Hover 83:308) -->
+          <article class="a-lvc" aria-labelledby="a-lv-basic">
+            <div class="a-lvc__box">
+              <div class="a-lvc__head">
+                <h2 class="a-lvc__title" id="a-lv-basic">BASIC</h2>
+                <p class="a-lvc__d1">내 감각은 몇 점일까?</p>
+                <p class="a-lvc__d2">가볍게 즐기는 디자인 감각 테스트</p>
+              </div>
+              <div class="a-lvc__preview a-lvc__preview--basic" aria-hidden="true">
+                <p class="a-lvc__q">Q. 더 잘 정렬된 디자인을 골라주세요</p>
+                <div class="a-lvc__opts">
+                  <div class="a-lvc__opt"><span class="a-lvc__chip">A</span>
+                    <span class="a-lvc__mini"><i class="a-l1"></i><i class="a-l2" style="margin-left:calc(18 * var(--k))"></i><i class="a-l3" style="margin-left:calc(6 * var(--k))"></i><i class="a-l4" style="margin-left:calc(26 * var(--k))"></i></span></div>
+                  <div class="a-lvc__opt is-on"><span class="a-lvc__chip">B</span>
+                    <span class="a-lvc__mini"><i class="a-l1"></i><i class="a-l2"></i><i class="a-l3"></i><i class="a-l4"></i></span>
+                    <span class="a-lvc__badge"><img src="assets/a/icon-check-badge.svg" alt="" /></span></div>
+                </div>
+              </div>
+              <ul class="a-lvc__features">
+                <li class="a-lvc__feature"><img src="assets/a/icon-check-feature.svg" alt="" />터치와 선택 중심의 직관적인 문제</li>
+                <li class="a-lvc__feature"><img src="assets/a/icon-check-feature.svg" alt="" />5가지 디자인 감각을 빠르게 측정</li>
+                <li class="a-lvc__feature"><img src="assets/a/icon-check-feature.svg" alt="" />부담 없이 즐기는 미니게임 형식</li>
+              </ul>
+              <div class="a-lvc__bottom">
+                <p class="a-lvc__time"><img src="assets/a/icon-clock.svg" alt="" /><span>예상 소요 시간</span><strong>약 2~3분</strong></p>
+                <a class="a-btn a-btn--tint" href="category.html?mode=basic" data-start-mode="basic">BASIC 시작하기<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></a>
+              </div>
+            </div>
+          </article>
+          <!-- Card / PRO (83:373 → Hover 83:428) -->
+          <article class="a-lvc a-lvc--pro" aria-labelledby="a-lv-pro">
+            <div class="a-lvc__box">
+              <div class="a-lvc__head">
+                <h2 class="a-lvc__title" id="a-lv-pro">PRO</h2>
+                <p class="a-lvc__d1">왜 틀렸고, 어떻게 좋아질까?</p>
+                <p class="a-lvc__d2">실제 UI를 분석하고 개선하는 심화 테스트</p>
+              </div>
+              <div class="a-lvc__preview a-lvc__preview--pro" aria-hidden="true">
+                <span class="a-lvp__img"></span>
+                <span class="a-lvp__text"><i class="a-p1"></i><i class="a-p2"></i><i class="a-p3"></i><i class="a-p4"></i></span>
+                <img class="a-lvp__guide" src="assets/a/guide-dashed.svg" alt="" />
+                <span class="a-lvp__sel"></span>
+                <span class="a-lvp__h a-lvp__h--1"></span><span class="a-lvp__h a-lvp__h--2"></span><span class="a-lvp__h a-lvp__h--3"></span><span class="a-lvp__h a-lvp__h--4"></span><span class="a-lvp__h a-lvp__h--5"></span>
+                <img class="a-lvp__ind" src="assets/a/spacing-indicator.svg" alt="" />
+                <span class="a-lvp__val">44</span>
+              </div>
+              <ul class="a-lvc__features">
+                <li class="a-lvc__feature"><img src="assets/a/icon-check-feature.svg" alt="" />실제 디자인 화면을 활용한 문제</li>
+                <li class="a-lvc__feature"><img src="assets/a/icon-check-feature.svg" alt="" />드래그와 조절을 통한 직접적인 수정</li>
+                <li class="a-lvc__feature"><img src="assets/a/icon-check-feature.svg" alt="" />여러 디자인 요소를 종합적으로 판단</li>
+              </ul>
+              <div class="a-lvc__bottom">
+                <p class="a-lvc__time"><img src="assets/a/icon-clock.svg" alt="" /><span>예상 소요 시간</span><strong>약 5~7분</strong></p>
+                <a class="a-btn a-btn--dark" href="category.html?mode=pro" data-start-mode="pro">PRO 시작하기<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ---------- Mobile ---------- -->
+      <div class="a-lv__mo a-mo">
+        <p class="a-lvm__eyebrow">CHOOSE YOUR LEVEL</p>
+        <h1 class="a-lvm__title">어떤 방식으로 디자인<br />감각을 테스트할까요?</h1>
+        <p class="a-lvm__sub">나에게 맞는 테스트를 선택해보세요.</p>
+        <article class="a-lvm">
+          <p class="a-lvm__label">BASIC · 입문</p>
+          <h2 class="a-lvm__h">둘 중 더 좋은 디자인은?</h2>
+          <p class="a-lvm__desc">A/B 중 하나를 선택하며<br />디자인을 보는 눈을 확인해요.</p>
+          <p class="a-lvm__feat">✓&nbsp;&nbsp;직관적인 선택형 문제</p>
+          <a class="a-btn a-btn--tint a-lvm__btn" href="category.html?mode=basic" data-start-mode="basic">BASIC 시작하기<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></a>
+        </article>
+        <article class="a-lvm a-lvm--pro">
+          <p class="a-lvm__label">PRO · 심화</p>
+          <h2 class="a-lvm__h">직접 디자인을 고쳐볼까요?</h2>
+          <p class="a-lvm__desc">간격과 정렬을 직접 조정하며<br />디자인 감각을 훈련해요.</p>
+          <p class="a-lvm__feat">✓&nbsp;&nbsp;직접 조작하는 실전형 문제</p>
+          <a class="a-btn a-btn--dark a-lvm__btn" href="category.html?mode=pro" data-start-mode="pro">PRO 시작하기<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></a>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Coming Soon (A안 Dialog / Confirm 161:1164 스타일 · 구현 제안) ===== -->
+  <div class="a-modal a-modal--dialog" data-modal="soon" aria-hidden="true">
+    <button class="a-modal__dim" type="button" aria-label="닫기" data-modal-close tabindex="-1"></button>
+    <div class="a-modal__dialog a-dialog" role="dialog" aria-modal="true" aria-labelledby="a-soon-title" aria-describedby="a-soon-body">
+      <div class="a-dialog__text">
+        <h2 class="a-dialog__title" id="a-soon-title">아직 준비 중이에요!</h2>
+        <p class="a-dialog__body" id="a-soon-body" data-soon-body>곧 만나볼 수 있도록 준비하고 있어요.</p>
+      </div>
+      <div class="a-dialog__actions">
+        <button class="a-dialog__btn a-dialog__btn--confirm" type="button" data-modal-close>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/a-common.js"></script>
+  <span id="a-ready" hidden></span>
+</body>
+</html>

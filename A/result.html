@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko" class="a-page-result">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EYEQ — Typography BASIC 결과</title>
+  <meta name="description" content="좋은 디자인은, 보는 눈에서 시작됩니다." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 화면 상태를 정한 뒤 첫 화면을 그림 (깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#a-ready" blocking="render" />
+  <link rel="stylesheet" href="css/a-tokens.css" />
+  <link rel="stylesheet" href="css/a-common.css" />
+  <link rel="stylesheet" href="css/a-ui.css" />
+  <link rel="stylesheet" href="css/a-result.css" />
+</head>
+<body class="a-page">
+
+  <!-- ===== Header (PC 71:67 / Mobile 79:139) ===== -->
+  <header class="a-header">
+    <a class="a-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="a-pc" src="assets/a/logo-eyeq.svg" alt="EYEQ" />
+      <img class="a-mo" src="assets/a/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="a-nav" aria-label="주요 메뉴">
+      <a class="a-nav__item" href="index.html">Home</a>
+      <a class="a-nav__item" href="level.html">Level Select</a>
+      <a class="a-nav__item is-active" aria-current="page" href="category.html">Test</a>
+      <a class="a-nav__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+    </nav>
+    <div class="a-header__actions">
+      <button class="a-icon-btn a-icon-btn--bell" type="button" aria-label="알림" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-bell.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-bell-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--profile" type="button" aria-label="마이 프로필" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-profile.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-profile-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--menu" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="a-menu" data-menu-toggle>
+        <img src="assets/a/icon-menu.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Mobile Menu (134:1373) ===== -->
+  <div class="a-menu" id="a-menu" data-menu aria-hidden="true">
+    <button class="a-menu__dim" type="button" aria-label="메뉴 닫기" data-menu-close tabindex="-1"></button>
+    <div class="a-menu__drawer" role="dialog" aria-modal="true" aria-label="메뉴">
+      <div class="a-menu__top">
+        <div class="a-menu__bar">
+          <button class="a-close" type="button" aria-label="메뉴 닫기" data-menu-close><img src="assets/a/icon-close-mobile.svg" alt="" /></button>
+        </div>
+        <nav class="a-menu__nav" aria-label="모바일 메뉴">
+          <a class="a-menu__item" href="index.html">Home</a>
+          <a class="a-menu__item" href="level.html">Level Select</a>
+          <a class="a-menu__item is-active" aria-current="page" href="category.html">Test</a>
+          <a class="a-menu__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+        </nav>
+      </div>
+      <button class="a-menu__profile" type="button" data-soon aria-haspopup="dialog">
+        <span class="a-menu__profile-icon"><img src="assets/a/icon-profile-menu.svg" alt="" /></span>마이 프로필
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== TYPOGRAPHY BASIC — RESULT (시안 PC 189:1653 / Mobile 213:2035 · 다른 페이지 제목·글자 크기에 맞춰 조정) ===== -->
+  <main class="a-view">
+    <div class="a-canvas a-res" data-result>
+      <div class="a-res__row">
+        <div class="a-ptitle">
+          <p class="a-ptitle__eyebrow">TYPOGRAPHY · BASIC RESULT</p>
+          <h1 class="a-ptitle__h">나의 <em>타이포그래피</em> 감각은?</h1>
+          <p class="a-ptitle__sub">3개의 문제를 통해 확인한 디자인 감각 결과예요.</p>
+        </div>
+      </div>
+      <div class="a-res__body">
+        <!-- Result / Score Summary (191:1703 · 213:2022) -->
+        <section class="a-score" aria-labelledby="a-score-h">
+          <div class="a-score__text">
+            <p class="a-score__eyebrow">YOUR RESULT</p>
+            <h2 class="a-score__h" id="a-score-h" data-score-h></h2>
+            <p class="a-score__fb" data-score-fb></p>
+            <p class="a-score__count" data-score-count></p>
+          </div>
+          <div class="a-score__ring">
+            <svg viewBox="0 0 220 220" aria-hidden="true"><circle class="a-ring__track" cx="110" cy="110" r="101.75" /><circle class="a-ring__val" cx="110" cy="110" r="101.75" data-ring /></svg>
+            <p class="a-score__num"><b data-score-num></b><span>/ 100</span></p>
+          </div>
+        </section>
+        <section class="a-res__qs" aria-labelledby="a-res-qs">
+          <div class="a-res__qhead">
+            <h2 class="a-res__h2" id="a-res-qs">문제별 결과</h2>
+            <p class="a-res__h2sub">내가 고른 답과 정답을 비교해보세요.</p>
+          </div>
+          <div class="a-res__cards">
+          <article class="a-rq" data-rq="1">
+            <div class="a-rq__row">
+              <h3 class="a-rq__title"><span class="a-rq__no">Q1</span>서체 선택</h3>
+              <span class="a-rq__badge" data-rq-badge></span>
+            </div>
+            <div class="a-rq__row">
+              <p class="a-rq__ans"><span>선택 <b data-rq-pick></b></span><i aria-hidden="true"></i><span>정답 <b data-rq-answer></b></span></p>
+              <button class="a-rq__more" type="button" data-soon aria-haspopup="dialog" data-soon-msg="문제별 해설을 준비하고 있어요.">해설 보기<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M2.99999 9.00027H14.25M9.74999 4.12527L14.625 9.00027L9.74999 13.8753" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></button>
+            </div>
+          </article>
+          <article class="a-rq" data-rq="2">
+            <div class="a-rq__row">
+              <h3 class="a-rq__title"><span class="a-rq__no">Q2</span>글자 크기</h3>
+              <span class="a-rq__badge" data-rq-badge></span>
+            </div>
+            <div class="a-rq__row">
+              <p class="a-rq__ans"><span>선택 <b data-rq-pick></b></span><i aria-hidden="true"></i><span>정답 <b data-rq-answer></b></span></p>
+              <button class="a-rq__more" type="button" data-soon aria-haspopup="dialog" data-soon-msg="문제별 해설을 준비하고 있어요.">해설 보기<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M2.99999 9.00027H14.25M9.74999 4.12527L14.625 9.00027L9.74999 13.8753" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></button>
+            </div>
+          </article>
+          <article class="a-rq" data-rq="3">
+            <div class="a-rq__row">
+              <h3 class="a-rq__title"><span class="a-rq__no">Q3</span>자간 비교</h3>
+              <span class="a-rq__badge" data-rq-badge></span>
+            </div>
+            <div class="a-rq__row">
+              <p class="a-rq__ans"><span>선택 <b data-rq-pick></b></span><i aria-hidden="true"></i><span>정답 <b data-rq-answer></b></span></p>
+              <button class="a-rq__more" type="button" data-soon aria-haspopup="dialog" data-soon-msg="문제별 해설을 준비하고 있어요.">해설 보기<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M2.99999 9.00027H14.25M9.74999 4.12527L14.625 9.00027L9.74999 13.8753" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></button>
+            </div>
+          </article>
+          </div>
+        </section>
+        <div class="a-res__btns">
+          <a class="a-btn a-btn--tint" href="test-basic.html" data-retry>다시 테스트하기<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></a>
+          <a class="a-btn a-btn--primary" href="category.html">다른 감각 테스트<svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M2.99999 9.00027H14.25M9.74999 4.12527L14.625 9.00027L9.74999 13.8753" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Coming Soon (A안 Dialog / Confirm 161:1164 스타일 · 구현 제안) ===== -->
+  <div class="a-modal a-modal--dialog" data-modal="soon" aria-hidden="true">
+    <button class="a-modal__dim" type="button" aria-label="닫기" data-modal-close tabindex="-1"></button>
+    <div class="a-modal__dialog a-dialog" role="dialog" aria-modal="true" aria-labelledby="a-soon-title" aria-describedby="a-soon-body">
+      <div class="a-dialog__text">
+        <h2 class="a-dialog__title" id="a-soon-title">아직 준비 중이에요!</h2>
+        <p class="a-dialog__body" id="a-soon-body" data-soon-body>곧 만나볼 수 있도록 준비하고 있어요.</p>
+      </div>
+      <div class="a-dialog__actions">
+        <button class="a-dialog__btn a-dialog__btn--confirm" type="button" data-modal-close>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/a-common.js"></script>
+  <script src="js/a-result.js"></script>
+  <span id="a-ready" hidden></span>
+</body>
+</html>

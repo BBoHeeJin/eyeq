@@ -1,0 +1,82 @@
+/* =========================================================
+   EYEQ A안 — Tokens
+   기준 시안: Figma '메인 화면'(71:280, 1920×1080) · 'Main / Menu – Mobile'(134:1255, 390×844)
+   색상 = Figma 변수(color/*) 및 레이어 값 그대로. B안 값은 사용하지 않음.
+   ========================================================= */
+:root {
+  /* ---------- Color (Figma color/*) ---------- */
+  --color-primary: #0953ea;          /* color/primary */
+  --color-text: #111111;             /* color/text */
+  --color-text-sub: #8e919b;         /* color/text-sub */
+  --color-border: #e8eaf0;           /* color/border */
+  --color-white: #ffffff;            /* color/white */
+  --color-page: #fdfdfd;             /* 메인 화면 배경 */
+  --color-black-btn: #0c0c0c;        /* Button / ALL TEST */
+  --color-nav-active: #0a0a0a;       /* Nav Item Active */
+  --color-nav-default: #999ea8;      /* Nav Item Default */
+  --color-card-border: #edf0f5;      /* Card / Category PC */
+  --color-card-desc: #333333;
+  --color-headline: #111111;
+  --color-eyebrow: #969ba8;
+  --color-desc: #777d88;
+  --color-divider: #e1e3e8;
+  --color-preview-border: #e2e4e8;
+  --color-dim-popup: rgba(11, 12, 16, 0.55);   /* Overlay / Typography Dim */
+  --color-dim-menu: rgba(11, 12, 16, 0.45);    /* Overlay / Menu Dim */
+  --color-surface: #f5f6f8;          /* color/surface */
+  --color-line: #dddee1;             /* color/line */
+  --color-primary-tint: #ebf1fd;     /* color/primary-tint */
+  --color-primary-hover: #0740ba;    /* color/primary-hover */
+  --color-pro-bg: #f5f7ff;           /* color/pro-bg */
+  --color-pro-border: #dde4ff;       /* color/pro-border */
+  --color-pro-page: #f3f5ff;         /* color/pro-page */
+  --color-pro-card-border: #e0e5ff;  /* color/pro-card-border */
+  --color-placeholder: #eff0f5;      /* color/placeholder */
+  --color-dim-dialog: rgba(11, 12, 16, 0.55);  /* Overlay / Switch to PRO·BASIC Dim */
+
+  /* ---------- Gradient ---------- */
+  /* Sphere (Deco) — 시안 radialGradient 스톱 그대로 */
+  --sphere-stops: #d9e5ff 0%, #b2ccff 15%, #8bb2ff 30%, #6b9afa 47.5%, #4a83f5 65%, #2a6bef 82.5%, #195fed 91.25%, #0953ea 100%;
+  --glow-stops: rgba(9, 83, 234, 0.35) 0%, rgba(9, 83, 234, 0.12) 45%, rgba(9, 83, 234, 0) 72%;
+  --gradient-icon-bar: linear-gradient(180deg, #d7e1ff 0%, #eff3ff 100%);
+  --gradient-popup-visual: linear-gradient(180deg, #ffffff 0%, #f0f4ff 100%);
+
+  /* ---------- Font ---------- */
+  --font-en: "Inter", "Noto Sans KR", sans-serif;
+  --font-kr: "Noto Sans KR", sans-serif;
+  --font-arial: Arial, "Noto Sans KR", sans-serif;   /* 시안 Hero 카피 = Arial (한글은 Noto Sans KR) */
+  --font-plex: "IBM Plex Sans KR", "Noto Sans KR", sans-serif;   /* PRO 포스터 · BASIC Q2 */
+  --font-caslon: "Libre Caslon Text", Georgia, serif;           /* BASIC Q3 로고 */
+
+  /* =========================================================
+     반응형 단위 (B안과 같은 방식 — 구현 제안)
+     PC ≥1024: 헤더 --uh(가로 기준), 콘텐츠 --u(가로·세로 중 빡빡한 쪽)
+     태블릿 768–1023 / 모바일 320–767: 모바일 시안 구조, --c
+     ========================================================= */
+  --uh: clamp(0.75px, calc(100vw / 1920), 1.2px);
+  --header-h: calc(116 * var(--uh));          /* 시안 헤더 28 + 60 + 28 */
+  --u: clamp(0.533px, min(calc(100vw / 1920), calc((100vh - var(--header-h)) / 964)), 1.2px);
+  --m-header-h: 60px;                          /* Header / Mobile 79:139 */
+  --ph: 700;                                   /* 모바일 본문 기준 높이 — 모든 페이지 같은 값 (페이지 이동 시 크기·여백 고정) */
+  --ph-t: 700;
+}
+@supports (height: 100svh) {
+  :root { --u: clamp(0.533px, min(calc(100vw / 1920), calc((100svh - var(--header-h)) / 964)), 1.2px); }
+}
+@media (max-width: 1023px) {
+  :root {
+    --header-h: var(--m-header-h);
+    --c: clamp(1px, min(calc(100vw / 700), calc((100vh - var(--m-header-h)) / var(--ph-t))), 1.3px);
+  }
+  @supports (height: 100svh) {
+    :root { --c: clamp(1px, min(calc(100vw / 700), calc((100svh - var(--m-header-h)) / var(--ph-t))), 1.3px); }
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --c: clamp(0.6px, min(calc(100vw / 390), calc((100vh - var(--m-header-h)) / var(--ph))), 1.1px);
+  }
+  @supports (height: 100svh) {
+    :root { --c: clamp(0.6px, min(calc(100vw / 390), calc((100svh - var(--m-header-h)) / var(--ph))), 1.1px); }
+  }
+}

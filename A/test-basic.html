@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko" class="a-page-test">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EYEQ — Typography BASIC</title>
+  <meta name="description" content="좋은 디자인은, 보는 눈에서 시작됩니다." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Libre+Caslon+Text&display=swap" />
+  <!-- 스크립트가 화면 상태를 정한 뒤 첫 화면을 그림 (깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#a-ready" blocking="render" />
+  <link rel="stylesheet" href="css/a-tokens.css" />
+  <link rel="stylesheet" href="css/a-common.css" />
+  <link rel="stylesheet" href="css/a-ui.css" />
+  <link rel="stylesheet" href="css/a-test.css" />
+</head>
+<body class="a-page">
+
+  <!-- ===== Header (PC 71:67 / Mobile 79:139) ===== -->
+  <header class="a-header">
+    <a class="a-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="a-pc" src="assets/a/logo-eyeq.svg" alt="EYEQ" />
+      <img class="a-mo" src="assets/a/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="a-nav" aria-label="주요 메뉴">
+      <a class="a-nav__item" href="index.html">Home</a>
+      <a class="a-nav__item" href="level.html">Level Select</a>
+      <a class="a-nav__item is-active" aria-current="page" href="category.html">Test</a>
+      <a class="a-nav__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+    </nav>
+    <div class="a-header__actions">
+      <button class="a-icon-btn a-icon-btn--bell" type="button" aria-label="알림" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-bell.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-bell-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--profile" type="button" aria-label="마이 프로필" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-profile.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-profile-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--menu" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="a-menu" data-menu-toggle>
+        <img src="assets/a/icon-menu.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Mobile Menu (134:1373) ===== -->
+  <div class="a-menu" id="a-menu" data-menu aria-hidden="true">
+    <button class="a-menu__dim" type="button" aria-label="메뉴 닫기" data-menu-close tabindex="-1"></button>
+    <div class="a-menu__drawer" role="dialog" aria-modal="true" aria-label="메뉴">
+      <div class="a-menu__top">
+        <div class="a-menu__bar">
+          <button class="a-close" type="button" aria-label="메뉴 닫기" data-menu-close><img src="assets/a/icon-close-mobile.svg" alt="" /></button>
+        </div>
+        <nav class="a-menu__nav" aria-label="모바일 메뉴">
+          <a class="a-menu__item" href="index.html">Home</a>
+          <a class="a-menu__item" href="level.html">Level Select</a>
+          <a class="a-menu__item is-active" aria-current="page" href="category.html">Test</a>
+          <a class="a-menu__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+        </nav>
+      </div>
+      <button class="a-menu__profile" type="button" data-soon aria-haspopup="dialog">
+        <span class="a-menu__profile-icon"><img src="assets/a/icon-profile-menu.svg" alt="" /></span>마이 프로필
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== TYPOGRAPHY BASIC (PC 142:1166 / Mobile 194:1835) ===== -->
+  <main class="a-view">
+    <div class="a-canvas a-test" data-basic>
+      <div class="a-test__row">
+        <div class="a-ptitle">
+          <p class="a-ptitle__eyebrow">TYPOGRAPHY</p>
+          <h1 class="a-ptitle__h" data-q-title></h1>
+          <p class="a-ptitle__sub" data-q-sub></p>
+        </div>
+        <div class="a-test__right">
+          <div class="a-qprog" aria-label="진행" data-progress>
+            <div class="a-qprog__count"><span class="a-qprog__q" data-q-num>Q1</span><span class="a-qprog__t">/ 3</span></div>
+            <div class="a-qprog__bar"><span></span><span></span><span></span></div>
+          </div>
+          <div class="a-toggle" role="group" aria-label="테스트 모드" data-toggle data-test-toggle>
+            <button class="a-toggle__item is-active" aria-pressed="true" type="button" data-mode-btn="basic">BASIC</button>
+            <button class="a-toggle__item" aria-pressed="false" type="button" data-mode-btn="pro">PRO</button>
+          </div>
+        </div>
+      </div>
+      <div class="a-test__answer">
+        <div class="a-opts-box">
+            <div class="a-opts" role="radiogroup" aria-label="Q1 보기" data-q="1">
+              <button class="a-opt" type="button" role="radio" aria-checked="false" data-option="A" aria-label="보기 A">
+                <span class="a-opt__art" aria-hidden="true"><img class="a-opt__logo" src="assets/a/logo-mellow-rounded.svg" alt="" /></span>
+                <span class="a-opt__letter" aria-hidden="true">A</span>
+                <span class="a-opt__check" aria-hidden="true"><img class="a-pc" src="assets/a/option-check.svg" alt="" /><img class="a-mo" src="assets/a/option-check-mobile.svg" alt="" /></span>
+              </button>
+              <button class="a-opt" type="button" role="radio" aria-checked="false" data-option="B" aria-label="보기 B">
+                <span class="a-opt__art" aria-hidden="true"><img class="a-opt__logo" src="assets/a/logo-mellow-serif.svg" alt="" /></span>
+                <span class="a-opt__letter" aria-hidden="true">B</span>
+                <span class="a-opt__check" aria-hidden="true"><img class="a-pc" src="assets/a/option-check.svg" alt="" /><img class="a-mo" src="assets/a/option-check-mobile.svg" alt="" /></span>
+              </button>
+            </div>
+            <div class="a-opts" role="radiogroup" aria-label="Q2 보기" data-q="2" hidden>
+              <button class="a-opt" type="button" role="radio" aria-checked="false" data-option="A" aria-label="보기 A">
+                <span class="a-opt__art" aria-hidden="true"><span class="a-q2p a-q2p--flat"><span class="a-q2p__l a-q2p__l--1">CAFE MELLOW</span><span class="a-q2p__l a-q2p__l--2">WEEKEND EVENT</span><span class="a-q2p__l a-q2p__l--3">모든 음료 30% 할인</span><span class="a-q2p__l a-q2p__l--4">10.17 - 10.19</span><span class="a-q2p__l a-q2p__l--5">오전 10시 - 오후 8시</span></span></span>
+                <span class="a-opt__letter" aria-hidden="true">A</span>
+                <span class="a-opt__check" aria-hidden="true"><img class="a-pc" src="assets/a/option-check.svg" alt="" /><img class="a-mo" src="assets/a/option-check-mobile.svg" alt="" /></span>
+              </button>
+              <button class="a-opt" type="button" role="radio" aria-checked="false" data-option="B" aria-label="보기 B">
+                <span class="a-opt__art" aria-hidden="true"><span class="a-q2p a-q2p--hier"><span class="a-q2p__l a-q2p__l--1">CAFE MELLOW</span><span class="a-q2p__l a-q2p__l--2">WEEKEND EVENT</span><span class="a-q2p__l a-q2p__l--3">모든 음료 30% 할인</span><span class="a-q2p__l a-q2p__l--4">10.17 - 10.19</span><span class="a-q2p__l a-q2p__l--5">오전 10시 - 오후 8시</span></span></span>
+                <span class="a-opt__letter" aria-hidden="true">B</span>
+                <span class="a-opt__check" aria-hidden="true"><img class="a-pc" src="assets/a/option-check.svg" alt="" /><img class="a-mo" src="assets/a/option-check-mobile.svg" alt="" /></span>
+              </button>
+            </div>
+            <div class="a-opts" role="radiogroup" aria-label="Q3 보기" data-q="3" hidden>
+              <button class="a-opt" type="button" role="radio" aria-checked="false" data-option="A" aria-label="보기 A">
+                <span class="a-opt__art" aria-hidden="true"><span class="a-q3l a-q3l--tight"><span class="a-q3l__cafe">CAFE</span><span class="a-q3l__word">mellow</span><img class="a-q3l__leaf" src="assets/a/leaf.svg" alt="" /></span></span>
+                <span class="a-opt__letter" aria-hidden="true">A</span>
+                <span class="a-opt__check" aria-hidden="true"><img class="a-pc" src="assets/a/option-check.svg" alt="" /><img class="a-mo" src="assets/a/option-check-mobile.svg" alt="" /></span>
+              </button>
+              <button class="a-opt" type="button" role="radio" aria-checked="false" data-option="B" aria-label="보기 B">
+                <span class="a-opt__art" aria-hidden="true"><span class="a-q3l a-q3l--wide"><span class="a-q3l__cafe">CAFE</span><span class="a-q3l__word">mellow</span><img class="a-q3l__leaf" src="assets/a/leaf.svg" alt="" /></span></span>
+                <span class="a-opt__letter" aria-hidden="true">B</span>
+                <span class="a-opt__check" aria-hidden="true"><img class="a-pc" src="assets/a/option-check.svg" alt="" /><img class="a-mo" src="assets/a/option-check-mobile.svg" alt="" /></span>
+              </button>
+            </div>
+        </div>
+        <div class="a-test__bottom">
+          <p class="a-hint"><span class="a-hint__icon"><img src="assets/a/icon-bulb.svg" alt="" /></span><span class="a-hint__label">힌트</span><span class="a-hint__bar" aria-hidden="true"></span><span class="a-hint__text" data-q-hint></span></p>
+          <div class="a-test__btns">
+            <button class="a-btn a-btn--prev" type="button" data-prev hidden><svg class="a-mi" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><g> <path d="M15 10H5M9.5 14.5L5 10L9.5 5.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg>이전 문제</button>
+            <button class="a-btn a-btn--primary" type="button" data-next disabled><span data-next-label>다음 문제</span><svg class="a-mi" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M2.99999 9.00027H14.25M9.74999 4.12527L14.625 9.00027L9.74999 13.8753" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></button>
+          </div>
+        </div>
+      </div>
+      <p class="a-sr-only" aria-live="polite" data-live></p>
+    </div>
+  </main>
+
+  <!-- ===== Overlay / Switch to PRO · BASIC (161:1161 · 188:1717 · 194:1919) ===== -->
+  <div class="a-modal a-modal--dialog" data-modal="switch" aria-hidden="true">
+    <button class="a-modal__dim" type="button" aria-label="닫기" data-modal-close tabindex="-1"></button>
+    <div class="a-modal__dialog a-dialog" role="dialog" aria-modal="true" aria-labelledby="a-switch-title">
+      <div class="a-dialog__text">
+        <h2 class="a-dialog__title" id="a-switch-title" data-switch-title>PRO 모드로 전환할까요?</h2>
+        <p class="a-dialog__body" data-switch-body>지금까지 진행한 BASIC 테스트 기록은 초기화돼요.</p>
+      </div>
+      <div class="a-dialog__actions">
+        <button class="a-dialog__btn" type="button" data-modal-close>취소</button>
+        <button class="a-dialog__btn a-dialog__btn--confirm" type="button" data-switch-confirm>PRO로 전환</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Coming Soon (A안 Dialog / Confirm 161:1164 스타일 · 구현 제안) ===== -->
+  <div class="a-modal a-modal--dialog" data-modal="soon" aria-hidden="true">
+    <button class="a-modal__dim" type="button" aria-label="닫기" data-modal-close tabindex="-1"></button>
+    <div class="a-modal__dialog a-dialog" role="dialog" aria-modal="true" aria-labelledby="a-soon-title" aria-describedby="a-soon-body">
+      <div class="a-dialog__text">
+        <h2 class="a-dialog__title" id="a-soon-title">아직 준비 중이에요!</h2>
+        <p class="a-dialog__body" id="a-soon-body" data-soon-body>곧 만나볼 수 있도록 준비하고 있어요.</p>
+      </div>
+      <div class="a-dialog__actions">
+        <button class="a-dialog__btn a-dialog__btn--confirm" type="button" data-modal-close>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/a-common.js"></script>
+  <script src="js/a-switch.js"></script>
+  <script src="js/a-basic.js"></script>
+  <span id="a-ready" hidden></span>
+</body>
+</html>

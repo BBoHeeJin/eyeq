@@ -1,0 +1,202 @@
+/* =========================================================
+   EYEQ A안 — TYPOGRAPHY BASIC RESULT (시안 PC 189:1653 / Mobile 213:2035)
+   다른 페이지와 같은 제목 줄(.a-ptitle)·글자 크기·여백으로 조정 (사용자 요청 · 시안과 약간 다름)
+   PC: 제목 y 51 · 본문 y 212 (테스트 화면과 같은 위치) / Mobile: 위에서 아래로 흐르는 배치
+   점수·정답은 실제 테스트 기록으로 채움
+   ========================================================= */
+.a-res { --e1: calc(var(--ex) * 0.3); --e2: calc(var(--ex) * 0.4); }
+
+.a-res__row { position: absolute; left: calc(80 * var(--k)); top: calc(51 * var(--k) + var(--e1)); width: calc(1760 * var(--k)); }
+.a-res__body {
+  position: absolute;
+  left: calc(80 * var(--k));
+  top: calc(212 * var(--k) + var(--e2));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;           /* 버튼 아래 끝 = 테스트 화면 '다음 문제' 아래 끝 (y 873) */
+  width: calc(1760 * var(--k));
+  height: calc(661 * var(--k) + var(--ex) * 0.2);
+}
+
+/* ---------- 점수 요약 (Result / Score Summary 191:1703) ---------- */
+.a-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(272 * var(--k));
+  padding: 0 calc(96 * var(--k)) 0 calc(56 * var(--k));
+  border-radius: calc(28 * var(--k));
+  background: var(--color-surface);
+}
+.a-score__text { display: flex; flex-direction: column; white-space: nowrap; }
+.a-score__eyebrow {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(13 * var(--k));
+  line-height: calc(18 * var(--k));
+  letter-spacing: 0.2em;
+  color: var(--color-primary);
+}
+.a-score__h {
+  margin: calc(12 * var(--k)) 0 0;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(28 * var(--k));
+  line-height: calc(38 * var(--k));
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+.a-score__fb span { display: block; }
+.a-score__fb {
+  margin-top: calc(10 * var(--k));
+  font-family: var(--font-kr);
+  font-size: calc(16 * var(--k));
+  line-height: calc(26 * var(--k));
+  color: var(--color-text-sub);
+}
+.a-score__count {
+  margin-top: calc(24 * var(--k));
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(16 * var(--k));
+  line-height: calc(24 * var(--k));
+  color: var(--color-primary);
+}
+/* 점수 링 (score-ring-track / score-ring-67 원본: 지름 220 · 두께 16.5) — 숫자는 링 가운데 */
+.a-score__ring { position: relative; flex: none; width: calc(200 * var(--k)); height: calc(200 * var(--k)); }
+.a-score__ring svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+.a-ring__track, .a-ring__val { fill: none; stroke-width: 16.5; }
+.a-ring__track { stroke: #dee6f2; }
+.a-ring__val { stroke: var(--color-primary); stroke-linecap: butt; stroke-dasharray: 639.31; stroke-dashoffset: calc(639.31 * (1 - var(--score, 0))); transition: stroke-dashoffset 700ms ease-out; }
+.a-score__num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(2 * var(--k));
+  margin: 0;
+  font-family: var(--font-en);
+}
+.a-score__num b { font-weight: 700; font-size: calc(56 * var(--k)); line-height: calc(60 * var(--k)); color: var(--color-text); }
+.a-score__num span { font-weight: 500; font-size: calc(16 * var(--k)); line-height: calc(22 * var(--k)); color: var(--color-text-sub); }
+
+/* ---------- 문제별 결과 ---------- */
+.a-res__qs { display: flex; flex-direction: column; gap: calc(20 * var(--k)); }
+.a-res__qhead { display: flex; flex-direction: column; gap: calc(6 * var(--k)); white-space: nowrap; }
+.a-res__h2 { margin: 0; font-family: var(--font-kr); font-weight: 700; font-size: calc(22 * var(--k)); line-height: calc(32 * var(--k)); color: var(--color-text); }
+.a-res__h2sub { font-family: var(--font-kr); font-size: calc(16 * var(--k)); line-height: calc(24 * var(--k)); color: var(--color-text-sub); }
+
+/* Result / Question Card — 두 줄 정렬: [번호·제목 | 배지] / [선택·정답 | 해설 보기] */
+.a-res__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(24 * var(--k)); }
+.a-rq {
+  display: flex;
+  flex-direction: column;
+  gap: calc(18 * var(--k));
+  padding: calc(28 * var(--k)) calc(32 * var(--k));
+  border: 1.5px solid var(--color-border);
+  border-radius: calc(20 * var(--k));
+  background: var(--color-white);
+}
+.a-rq__row { display: flex; align-items: center; justify-content: space-between; gap: calc(12 * var(--k)); min-height: calc(32 * var(--k)); white-space: nowrap; }
+.a-rq__title {
+  display: flex;
+  align-items: baseline;
+  gap: calc(10 * var(--k));
+  margin: 0;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(20 * var(--k));
+  line-height: calc(28 * var(--k));
+  color: var(--color-text);
+}
+.a-rq__no { font-family: var(--font-en); color: var(--color-primary); }
+.a-rq__badge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(64 * var(--k));
+  height: calc(32 * var(--k));
+  padding: 0 calc(14 * var(--k));
+  border-radius: 999px;
+  background: #fdeeee;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(14 * var(--k));
+  line-height: calc(20 * var(--k));
+  color: #d45151;
+}
+.a-rq.is-correct .a-rq__badge { background: var(--color-primary-tint); color: var(--color-primary); }
+.a-rq__ans {
+  display: flex;
+  align-items: center;
+  gap: calc(12 * var(--k));
+  margin: 0;
+  font-family: var(--font-kr);
+  font-size: calc(16 * var(--k));
+  line-height: calc(24 * var(--k));
+  color: var(--color-text-sub);
+}
+.a-rq__ans b { margin-left: calc(4 * var(--k)); font-family: var(--font-en); font-weight: 700; color: var(--color-text); }
+.a-rq__ans i { width: 1.5px; height: calc(14 * var(--k)); background: var(--color-line); }
+.a-rq__more {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: calc(6 * var(--k));
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(15 * var(--k));
+  line-height: calc(22 * var(--k));
+  color: var(--color-primary);
+}
+.a-rq__more .a-mi { width: calc(16 * var(--k)); height: calc(16 * var(--k)); transition: transform 200ms ease-out; }
+@media (hover: hover) { .a-rq__more:hover .a-mi { transform: translateX(3px); } }   /* 구현 제안 */
+
+.a-res__btns { display: flex; justify-content: flex-end; gap: calc(12 * var(--k)); }
+
+/* =========================================================
+   Compact (<1024) — 위에서 아래로 흐르는 배치
+   ========================================================= */
+@media (max-width: 1023px) {
+  .a-res { display: flex; flex-direction: column; gap: calc(16 * var(--k)); padding: var(--mp-t) var(--mp-x) var(--mp-b); }
+  .a-res__row, .a-res__body { position: static; width: auto; height: auto; }
+  .a-res__body { flex: 1 1 auto; justify-content: flex-start; gap: calc(16 * var(--k)); }
+  .a-res__btns { margin-top: auto; }      /* 버튼 위치 = 테스트 화면 '다음 문제' 위치 */
+  .a-res .a-ptitle { gap: calc(6 * var(--k)); white-space: normal; }
+  .a-res .a-ptitle__eyebrow { font-size: max(11px, calc(12 * var(--k))); line-height: calc(16 * var(--k)); letter-spacing: 0.12em; }
+  .a-res .a-ptitle__h { font-size: calc(21 * var(--k)); line-height: calc(30 * var(--k)); }
+  .a-res .a-ptitle__sub { display: none; }        /* 테스트 화면 모바일처럼 설명 줄 생략 */
+
+  .a-score { height: auto; padding: calc(16 * var(--k)) calc(16 * var(--k)) calc(16 * var(--k)) calc(18 * var(--k)); border-radius: calc(20 * var(--k)); }
+  .a-score__text { white-space: normal; min-width: 0; }
+  .a-score__eyebrow { font-size: max(11px, calc(12 * var(--k))); line-height: calc(16 * var(--k)); letter-spacing: 0.12em; }
+  .a-score__h { margin-top: calc(8 * var(--k)); font-size: calc(17 * var(--k)); line-height: calc(24 * var(--k)); }
+  .a-score__fb { margin-top: calc(6 * var(--k)); font-size: max(11px, calc(12 * var(--k))); line-height: calc(18 * var(--k)); word-break: keep-all; }
+  .a-score__fb span { display: inline; }
+  .a-score__count { margin-top: calc(10 * var(--k)); font-size: max(12px, calc(14 * var(--k))); line-height: calc(20 * var(--k)); }
+  .a-score__ring { width: calc(96 * var(--k)); height: calc(96 * var(--k)); margin-left: calc(12 * var(--k)); }
+  .a-score__num { gap: 0; }
+  .a-score__num b { font-size: calc(26 * var(--k)); line-height: calc(30 * var(--k)); }
+  .a-score__num span { font-size: max(10px, calc(11 * var(--k))); line-height: calc(14 * var(--k)); }
+
+  .a-res__qs { gap: calc(10 * var(--k)); }
+  .a-res__qhead { gap: calc(4 * var(--k)); }
+  .a-res__h2 { font-size: calc(18 * var(--k)); line-height: calc(26 * var(--k)); }
+  .a-res__h2sub { font-size: max(12px, calc(13 * var(--k))); line-height: calc(20 * var(--k)); }
+  .a-res__cards { grid-template-columns: minmax(0, 1fr); gap: calc(8 * var(--k)); }
+  .a-rq { gap: calc(6 * var(--k)); padding: calc(12 * var(--k)) calc(16 * var(--k)); border-width: 1px; border-radius: calc(16 * var(--k)); }
+  .a-rq__row { min-height: calc(24 * var(--k)); }
+  .a-rq__title { gap: calc(8 * var(--k)); font-size: calc(16 * var(--k)); line-height: calc(22 * var(--k)); }
+  .a-rq__badge { min-width: calc(48 * var(--k)); height: calc(24 * var(--k)); padding: 0 calc(10 * var(--k)); font-size: max(11px, calc(12 * var(--k))); line-height: calc(16 * var(--k)); }
+  .a-rq__ans { gap: calc(10 * var(--k)); font-size: max(12px, calc(13 * var(--k))); line-height: calc(20 * var(--k)); }
+  .a-rq__ans i { height: calc(11 * var(--k)); }
+  .a-rq__more { gap: calc(4 * var(--k)); font-size: max(11px, calc(12 * var(--k))); line-height: calc(18 * var(--k)); }
+  .a-rq__more .a-mi { width: calc(13 * var(--k)); height: calc(13 * var(--k)); }
+
+  .a-res__btns { gap: calc(10 * var(--k)); }
+  .a-res__btns .a-btn { flex: 1 1 0; width: auto; height: calc(56 * var(--k)); gap: calc(6 * var(--k)); font-size: max(13px, calc(15 * var(--k))); }
+  .a-res__btns .a-btn .a-mi { width: calc(15 * var(--k)); height: calc(15 * var(--k)); }
+}

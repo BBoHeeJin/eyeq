@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko" class="a-page-cat">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EYEQ — 카테고리 선택</title>
+  <meta name="description" content="좋은 디자인은, 보는 눈에서 시작됩니다." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 화면 상태를 정한 뒤 첫 화면을 그림 (깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#a-ready" blocking="render" />
+  <link rel="stylesheet" href="css/a-tokens.css" />
+  <link rel="stylesheet" href="css/a-common.css" />
+  <link rel="stylesheet" href="css/a-ui.css" />
+  <link rel="stylesheet" href="css/a-category.css" />
+</head>
+<body class="a-page">
+
+  <!-- ===== Header (PC 71:67 / Mobile 79:139) ===== -->
+  <header class="a-header">
+    <a class="a-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="a-pc" src="assets/a/logo-eyeq.svg" alt="EYEQ" />
+      <img class="a-mo" src="assets/a/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="a-nav" aria-label="주요 메뉴">
+      <a class="a-nav__item" href="index.html">Home</a>
+      <a class="a-nav__item" href="level.html">Level Select</a>
+      <a class="a-nav__item is-active" aria-current="page" href="category.html">Test</a>
+      <a class="a-nav__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+    </nav>
+    <div class="a-header__actions">
+      <button class="a-icon-btn a-icon-btn--bell" type="button" aria-label="알림" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-bell.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-bell-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--profile" type="button" aria-label="마이 프로필" data-soon aria-haspopup="dialog">
+        <img class="a-pc" src="assets/a/icon-profile.svg" alt="" />
+        <img class="a-mo" src="assets/a/icon-profile-mobile.svg" alt="" />
+      </button>
+      <button class="a-icon-btn a-icon-btn--menu" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="a-menu" data-menu-toggle>
+        <img src="assets/a/icon-menu.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Mobile Menu (134:1373) ===== -->
+  <div class="a-menu" id="a-menu" data-menu aria-hidden="true">
+    <button class="a-menu__dim" type="button" aria-label="메뉴 닫기" data-menu-close tabindex="-1"></button>
+    <div class="a-menu__drawer" role="dialog" aria-modal="true" aria-label="메뉴">
+      <div class="a-menu__top">
+        <div class="a-menu__bar">
+          <button class="a-close" type="button" aria-label="메뉴 닫기" data-menu-close><img src="assets/a/icon-close-mobile.svg" alt="" /></button>
+        </div>
+        <nav class="a-menu__nav" aria-label="모바일 메뉴">
+          <a class="a-menu__item" href="index.html">Home</a>
+          <a class="a-menu__item" href="level.html">Level Select</a>
+          <a class="a-menu__item is-active" aria-current="page" href="category.html">Test</a>
+          <a class="a-menu__item" href="#" data-my-result aria-haspopup="dialog">My Result</a>
+        </nav>
+      </div>
+      <button class="a-menu__profile" type="button" data-soon aria-haspopup="dialog">
+        <span class="a-menu__profile-icon"><img src="assets/a/icon-profile-menu.svg" alt="" /></span>마이 프로필
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== CATEGORY SELECT (PC 169:1564 BASIC · 169:1565 PRO / Mobile 207:1835 · 207:1901) ===== -->
+  <main class="a-view">
+    <div class="a-canvas a-cat">
+      <div class="a-cat__pc a-pc">
+        <div class="a-cat__row">
+          <div class="a-ptitle">
+            <p class="a-ptitle__eyebrow">TEST · CHOOSE YOUR SENSE</p>
+            <h1 class="a-ptitle__h">어떤 디자인 감각을 테스트할까요?</h1>
+            <p class="a-ptitle__sub">원하는 카테고리를 선택해보세요.</p>
+          </div>
+          <div class="a-cat__mode">
+          <div class="a-toggle" role="group" aria-label="테스트 모드" data-toggle>
+            <button class="a-toggle__item is-active" aria-pressed="true" type="button" data-mode-btn="basic">BASIC</button>
+            <button class="a-toggle__item" aria-pressed="false" type="button" data-mode-btn="pro">PRO</button>
+          </div>
+            <p class="a-cat__modedesc" data-mode-desc>디자인을 보고 선택하는 가벼운 테스트</p>
+          </div>
+        </div>
+        <div class="a-cat__cards">
+          <a class="a-catc" data-cat="typography" href="test-basic.html" data-cat-start>
+            <span class="a-catc__body">
+              <span class="a-catc__iconbox"><span class="a-ico a-ico--typography" aria-hidden="true"><img class="a-ico__glyph" src="assets/a/cat-glyph-typography.svg" alt="" /></span></span>
+              <span class="a-catc__name">Typography</span>
+              <span class="a-catc__desc">글자를 다루는 감각</span>
+            </span>
+            <span class="a-catc__btn">시작하기<svg class="a-mi a-catc__arrow" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></span>
+          </a>
+          <button class="a-catc" data-cat="spacing" type="button" data-soon aria-haspopup="dialog">
+            <span class="a-catc__body">
+              <span class="a-catc__iconbox"><span class="a-ico a-ico--spacing" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__bar a-ico__bar--l"></span><img class="a-ico__strong" src="assets/a/cat-strong-spacing.svg" alt="" /><span class="a-ico__bar a-ico__bar--r"></span></span></span></span>
+              <span class="a-catc__name">Spacing</span>
+              <span class="a-catc__desc">여백을 다루는 감각</span>
+            </span>
+            <span class="a-catc__btn">시작하기<svg class="a-mi a-catc__arrow" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></span>
+          </button>
+          <button class="a-catc" data-cat="alignment" type="button" data-soon aria-haspopup="dialog">
+            <span class="a-catc__body">
+              <span class="a-catc__iconbox"><span class="a-ico a-ico--alignment" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span><span class="a-ico__s a-ico__s--3"></span><span class="a-ico__s a-ico__s--4"></span><span class="a-ico__s a-ico__s--5"></span></span></span></span>
+              <span class="a-catc__name">Alignment</span>
+              <span class="a-catc__desc">정렬을 다루는 감각</span>
+            </span>
+            <span class="a-catc__btn">시작하기<svg class="a-mi a-catc__arrow" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></span>
+          </button>
+          <button class="a-catc" data-cat="hierarchy" type="button" data-soon aria-haspopup="dialog">
+            <span class="a-catc__body">
+              <span class="a-catc__iconbox"><span class="a-ico a-ico--hierarchy" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span><span class="a-ico__s a-ico__s--3"></span></span></span></span>
+              <span class="a-catc__name">Hierarchy</span>
+              <span class="a-catc__desc">시각적 우선순위를 다루는 감각</span>
+            </span>
+            <span class="a-catc__btn">시작하기<svg class="a-mi a-catc__arrow" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></span>
+          </button>
+          <button class="a-catc" data-cat="composition" type="button" data-soon aria-haspopup="dialog">
+            <span class="a-catc__body">
+              <span class="a-catc__iconbox"><span class="a-ico a-ico--composition" aria-hidden="true"><span class="a-ico__g"><span class="a-ico__s a-ico__s--1"></span><span class="a-ico__s a-ico__s--2"></span></span></span></span>
+              <span class="a-catc__name">Composition</span>
+              <span class="a-catc__desc">요소를 조합하는 감각</span>
+            </span>
+            <span class="a-catc__btn">시작하기<svg class="a-mi a-catc__arrow" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><g> <path d="M3 9H14.25M9.75 4.125L14.625 9L9.75 13.875" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/> </g></svg></span>
+          </button>
+        </div>
+      </div>
+      <div class="a-cat__mo a-mo">
+        <div class="a-toggle" role="group" aria-label="테스트 모드" data-toggle>
+            <button class="a-toggle__item is-active" aria-pressed="true" type="button" data-mode-btn="basic">BASIC</button>
+            <button class="a-toggle__item" aria-pressed="false" type="button" data-mode-btn="pro">PRO</button>
+          </div>
+        <h1 class="a-catm__title">어떤 디자인 감각을 테스트할까요?</h1>
+        <p class="a-catm__sub">원하는 카테고리를 선택해보세요.</p>
+        <div class="a-catm__list">
+          <a class="a-catm" data-cat="typography" href="test-basic.html" data-cat-start>
+            <img class="a-catm__dot" src="assets/a/accent-dot.svg" alt="" />
+            <span class="a-catm__name">Typography</span>
+            <span class="a-catm__desc">글자를 다루는 감각</span>
+            <span class="a-catm__arrow" aria-hidden="true">→</span>
+          </a>
+          <button class="a-catm" data-cat="spacing" type="button" data-soon aria-haspopup="dialog">
+            <img class="a-catm__dot" src="assets/a/accent-dot.svg" alt="" />
+            <span class="a-catm__name">Spacing</span>
+            <span class="a-catm__desc">여백을 다루는 감각</span>
+            <span class="a-catm__arrow" aria-hidden="true">→</span>
+          </button>
+          <button class="a-catm" data-cat="alignment" type="button" data-soon aria-haspopup="dialog">
+            <img class="a-catm__dot" src="assets/a/accent-dot.svg" alt="" />
+            <span class="a-catm__name">Alignment</span>
+            <span class="a-catm__desc">정렬을 다루는 감각</span>
+            <span class="a-catm__arrow" aria-hidden="true">→</span>
+          </button>
+          <button class="a-catm" data-cat="hierarchy" type="button" data-soon aria-haspopup="dialog">
+            <img class="a-catm__dot" src="assets/a/accent-dot.svg" alt="" />
+            <span class="a-catm__name">Hierarchy</span>
+            <span class="a-catm__desc">시각적 우선순위를 다루는 감각</span>
+            <span class="a-catm__arrow" aria-hidden="true">→</span>
+          </button>
+          <button class="a-catm" data-cat="composition" type="button" data-soon aria-haspopup="dialog">
+            <img class="a-catm__dot" src="assets/a/accent-dot.svg" alt="" />
+            <span class="a-catm__name">Composition</span>
+            <span class="a-catm__desc">요소를 조합하는 감각</span>
+            <span class="a-catm__arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Coming Soon (A안 Dialog / Confirm 161:1164 스타일 · 구현 제안) ===== -->
+  <div class="a-modal a-modal--dialog" data-modal="soon" aria-hidden="true">
+    <button class="a-modal__dim" type="button" aria-label="닫기" data-modal-close tabindex="-1"></button>
+    <div class="a-modal__dialog a-dialog" role="dialog" aria-modal="true" aria-labelledby="a-soon-title" aria-describedby="a-soon-body">
+      <div class="a-dialog__text">
+        <h2 class="a-dialog__title" id="a-soon-title">아직 준비 중이에요!</h2>
+        <p class="a-dialog__body" id="a-soon-body" data-soon-body>곧 만나볼 수 있도록 준비하고 있어요.</p>
+      </div>
+      <div class="a-dialog__actions">
+        <button class="a-dialog__btn a-dialog__btn--confirm" type="button" data-modal-close>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/a-common.js"></script>
+  <script src="js/a-category.js"></script>
+  <span id="a-ready" hidden></span>
+</body>
+</html>

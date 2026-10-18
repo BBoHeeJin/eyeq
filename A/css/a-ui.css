@@ -1,0 +1,176 @@
+/* =========================================================
+   EYEQ A안 — 공통 UI 컴포넌트 (Level · Category · Test · Result 페이지)
+   Figma 컴포넌트: Button / Level Start(83:240) · Button / Next(141:1064) · Button / Prev(181:1583)
+   Toggle / Mode(166:1183) · Dialog / Confirm(161:1164) · 진행률 · 힌트
+   크기 = Figma px × 단위(--k) — PC 시안 값 / 모바일은 각 페이지 CSS에서 조정
+   ========================================================= */
+
+/* ---------- 아이콘: 원본 SVG를 HTML에 넣고 선 색만 글자색(상태별)으로 ---------- */
+.a-mi {
+  display: block;
+  flex: none;
+  width: calc(18 * var(--k));
+  height: calc(18 * var(--k));
+  overflow: visible;
+}
+
+/* ---------- 버튼 (pill 224×56) ---------- */
+.a-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--k));
+  width: calc(224 * var(--k));
+  height: calc(56 * var(--k));
+  border-radius: 999px;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(17 * var(--k));
+  line-height: calc(24 * var(--k));
+  white-space: nowrap;
+  transition: background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out, gap 200ms ease-out;
+}
+.a-btn--primary { background: var(--color-primary); color: var(--color-white); }
+.a-btn--tint { background: var(--color-primary-tint); color: var(--color-primary); }
+.a-btn--dark { background: var(--color-text); color: var(--color-white); }
+.a-btn--prev { background: var(--color-white); border: 1.5px solid var(--color-pro-card-border); color: var(--color-text-sub); }
+.a-btn:disabled, .a-btn.is-disabled { cursor: default; }
+.a-btn--primary:disabled { background: var(--color-border); color: var(--color-text-sub); }       /* Button / Next Disabled */
+.a-btn--prev:disabled { border-color: var(--color-border); color: var(--color-line); }             /* Button / Prev Disabled */
+@media (hover: hover) {
+  .a-btn--primary:not(:disabled):hover { background: var(--color-primary-hover); gap: calc(14 * var(--k)); }  /* Button / Next Hover */
+  .a-btn--tint:hover, .a-btn--dark:hover { background: var(--color-primary); color: var(--color-white); }   /* Button / Level Start Hover */
+  .a-btn--prev:not(:disabled):hover { border-color: var(--color-primary); color: var(--color-primary); }    /* Button / Prev Hover */
+}
+
+/* ---------- Toggle / Mode (166:1183) ---------- */
+.a-toggle {
+  display: inline-flex;
+  gap: calc(4 * var(--k));
+  padding: calc(4 * var(--k));
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+}
+.a-toggle.is-pro { background: var(--color-white); }
+.a-toggle__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(128 * var(--k));
+  height: calc(48 * var(--k));
+  border-radius: 999px;
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: calc(16 * var(--k));
+  line-height: calc(22 * var(--k));
+  letter-spacing: 0.04em;
+  color: var(--color-text-sub);
+  transition: background-color 200ms ease-out, color 200ms ease-out;
+}
+.a-toggle__item.is-active { color: var(--color-white); background: var(--color-primary); cursor: default; }
+.a-toggle.is-pro .a-toggle__item.is-active { background: var(--color-text); }
+@media (hover: hover) { .a-toggle__item:not(.is-active):hover { color: var(--color-text); } }   /* 구현 제안 */
+
+/* ---------- 페이지 제목 (eyebrow · 제목 · 설명) ---------- */
+.a-ptitle { display: flex; flex-direction: column; gap: calc(12 * var(--k)); white-space: nowrap; }
+.a-ptitle__eyebrow {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(13 * var(--k));
+  line-height: calc(18 * var(--k));
+  letter-spacing: 0.2em;
+  color: var(--color-primary);
+}
+.a-ptitle__h {
+  margin: 0;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(36 * var(--k));
+  line-height: calc(46 * var(--k));
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+.a-ptitle__h em { color: var(--color-primary); }
+.a-ptitle__sub {
+  font-family: var(--font-kr);
+  font-size: calc(16 * var(--k));
+  line-height: calc(24 * var(--k));
+  color: var(--color-text-sub);
+}
+
+/* ---------- 진행률 (Q1 / 3) ---------- */
+.a-qprog { display: flex; flex-direction: column; align-items: flex-end; gap: calc(16 * var(--k)); }
+.a-qprog__count { display: flex; align-items: baseline; gap: calc(10 * var(--k)); font-family: var(--font-en); white-space: nowrap; }
+.a-qprog__q { font-weight: 700; font-size: calc(52 * var(--k)); line-height: calc(60 * var(--k)); color: var(--color-primary); }
+.a-qprog__t { font-weight: 600; font-size: calc(26 * var(--k)); line-height: calc(32 * var(--k)); color: var(--color-text-sub); }
+.a-qprog__bar { display: flex; gap: calc(8 * var(--k)); }
+.a-qprog__bar span { width: calc(88 * var(--k)); height: calc(8 * var(--k)); border-radius: calc(4 * var(--k)); background: var(--color-border); transition: background-color 250ms ease-out; }
+.a-qprog__bar span.is-on { background: var(--color-primary); }
+
+/* ---------- 힌트 ---------- */
+.a-hint { display: flex; align-items: center; gap: calc(14 * var(--k)); white-space: nowrap; }
+.a-hint__icon { position: relative; flex: none; width: calc(32 * var(--k)); height: calc(32 * var(--k)); }
+.a-hint__icon img { position: absolute; left: -0.21%; right: -0.21%; top: -10.83%; width: 100.42%; height: 110.83%; }
+.a-hint__label { font-family: var(--font-kr); font-weight: 700; font-size: calc(20 * var(--k)); line-height: calc(28 * var(--k)); color: var(--color-primary); }
+.a-hint__bar { flex: none; width: 1.5px; height: calc(20 * var(--k)); background: var(--color-line); }
+.a-hint__text { font-family: var(--font-kr); font-size: calc(20 * var(--k)); line-height: calc(28 * var(--k)); color: var(--color-text-sub); }
+
+/* ---------- Dialog (Dialog / Confirm 161:1164) — 모드 전환 · Coming Soon ---------- */
+.a-dialog {
+  --p: min(var(--uh), calc((100vh - 48px) / 300));
+  display: flex;
+  flex-direction: column;
+  gap: calc(28 * var(--p));
+  width: calc(460 * var(--p));
+  padding: calc(40 * var(--p)) calc(36 * var(--p)) calc(32 * var(--p));
+  border-radius: calc(28 * var(--p));
+  background: var(--color-white);
+  filter: drop-shadow(0 calc(24 * var(--p)) calc(30 * var(--p)) rgba(10, 15, 38, 0.18));
+}
+.a-dialog__text { display: flex; flex-direction: column; gap: calc(10 * var(--p)); }
+.a-dialog__title { margin: 0; font-family: var(--font-kr); font-weight: 700; font-size: calc(22 * var(--p)); line-height: calc(32 * var(--p)); letter-spacing: -0.01em; color: var(--color-text); }
+.a-dialog__body { font-family: var(--font-kr); font-size: calc(15 * var(--p)); line-height: calc(24 * var(--p)); color: var(--color-text-sub); }
+.a-dialog__actions { display: flex; gap: calc(12 * var(--p)); }
+.a-dialog__btn {
+  flex: 1 1 0;
+  height: calc(52 * var(--p));
+  border-radius: 999px;
+  background: var(--color-surface);
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(16 * var(--p));
+  line-height: calc(22 * var(--p));
+  color: var(--color-text);
+  transition: background-color 200ms ease-out;
+}
+.a-dialog__btn--confirm { background: var(--color-text); color: var(--color-white); }
+@media (hover: hover) {
+  .a-dialog__btn:hover { background: #eaecf0; }                       /* 구현 제안 */
+  .a-dialog__btn--confirm:hover { background: var(--color-primary); } /* 구현 제안 */
+}
+.a-modal--dialog .a-modal__dim { background: var(--color-dim-dialog); }
+
+/* =========================================================
+   Compact (<1024) — 모바일 시안 값
+   ========================================================= */
+@media (max-width: 1023px) {
+  .a-toggle { gap: calc(2.56 * var(--k)); padding: calc(2.56 * var(--k)); border-width: 0.64px; }
+  .a-toggle__item { width: calc(81.92 * var(--k)); height: calc(30.72 * var(--k)); font-size: calc(10.24 * var(--k)); line-height: calc(14.08 * var(--k)); }
+
+  .a-qprog { flex-direction: row; align-items: center; gap: calc(16 * var(--k)); width: calc(280 * var(--k)); }
+  .a-qprog__bar { flex: 1 1 0; gap: calc(6 * var(--k)); }
+  .a-qprog__bar span { flex: 1 1 0; width: auto; height: calc(6 * var(--k)); }
+  .a-qprog__count { order: 2; gap: calc(4 * var(--k)); }
+  .a-qprog__q { font-size: calc(20 * var(--k)); line-height: calc(24 * var(--k)); }
+  .a-qprog__t { font-size: max(12px, calc(14 * var(--k))); line-height: calc(20 * var(--k)); }
+
+  .a-hint { gap: calc(8 * var(--k)); white-space: normal; }
+  .a-hint__label { flex: none; white-space: nowrap; }
+  .a-hint__text { min-width: 0; word-break: keep-all; }
+  .a-hint__icon { width: calc(22.4 * var(--k)); height: calc(22.4 * var(--k)); }
+  .a-hint__label, .a-hint__text { font-size: max(12px, calc(14 * var(--k))); line-height: calc(20 * var(--k)); }
+  .a-hint__bar { height: calc(14 * var(--k)); }
+
+  .a-dialog { --p: var(--k); width: calc(342 * var(--p)); }
+}

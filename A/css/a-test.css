@@ -1,0 +1,140 @@
+/* =========================================================
+   EYEQ A안 — TYPOGRAPHY 테스트 공통 레이아웃 + BASIC 보기
+   PC: BASIC Q1 142:1166 · PRO Q1 183:1520 — 본문 x 80 · 문제 y 167 − 116 = 51 · 답 영역 y 212
+   Mobile: 194:1835 (BASIC) · 211:1938 (PRO)
+   Option / Logo (141:1051): Default → Selected(파랑 2px 테두리 · 체크 · 그림자)
+   Q2(글자 크기)·Q3(자간 비교)는 시안에 없어 Q1 형식에 맞춰 새로 구성 (사용자 요청)
+   ========================================================= */
+.a-page-pro, .a-page-pro body { background: var(--color-pro-page); }
+
+.a-test { --e1: calc(var(--ex) * 0.3); --e2: calc(var(--ex) * 0.4); --eh: calc(var(--ex) * 0.2); }
+.a-test__row {
+  position: absolute;
+  left: calc(80 * var(--k));
+  top: calc(51 * var(--k) + var(--e1));
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: calc(1760 * var(--k));
+}
+.a-test__right { display: flex; align-items: flex-start; gap: calc(48 * var(--k)); padding-top: calc(22 * var(--k)); }
+.a-test__answer {
+  position: absolute;
+  left: calc(80 * var(--k));
+  top: calc(212 * var(--k) + var(--e2));
+  display: flex;
+  flex-direction: column;
+  gap: calc(36 * var(--k));
+  width: calc(1760 * var(--k));
+}
+.a-test--pro .a-test__answer { gap: calc(24 * var(--k)); }
+.a-test__bottom { display: flex; align-items: center; justify-content: space-between; height: calc(56 * var(--k)); }
+.a-test__btns { display: flex; gap: calc(12 * var(--k)); }
+.a-test__btns [hidden] { display: none; }
+
+/* ---------- 보기 (Options 142:1030) ---------- */
+.a-opts-box { padding: calc(32 * var(--k)); border-radius: calc(28 * var(--k)); background: var(--color-surface); }
+.a-opts { display: flex; gap: calc(32 * var(--k)); }
+.a-opts[hidden] { display: none; }
+.a-opt {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  height: calc(505 * var(--k) + var(--eh));
+  border: 1.5px solid var(--color-border);
+  border-radius: calc(20 * var(--k));
+  background: var(--color-white);
+  overflow: hidden;
+  transition: border-color 200ms ease-out, box-shadow 200ms ease-out;
+}
+.a-opt[aria-checked="true"] {
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 calc(12 * var(--k)) calc(16 * var(--k)) 0 rgba(9, 83, 234, 0.1);
+}
+@media (hover: hover) { .a-opt[aria-checked="false"]:hover { border-color: #b9c9ff; } }   /* 구현 제안 */
+.a-opt__letter, .a-opt__check {
+  position: absolute;
+  top: calc(26 * var(--k));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(44 * var(--k));
+  height: calc(44 * var(--k));
+  border-radius: 50%;
+}
+.a-opt__letter { left: calc(26 * var(--k)); background: var(--color-border); font-family: var(--font-en); font-weight: 700; font-size: calc(19 * var(--k)); line-height: calc(24 * var(--k)); color: var(--color-text); }
+.a-opt__check { right: calc(26 * var(--k)); background: var(--color-primary); opacity: 0; transform: scale(0.6); transition: opacity 200ms ease-out, transform 200ms ease-out; }
+.a-opt__check img { width: calc(22 * var(--k)); height: calc(22 * var(--k)); }
+.a-opt[aria-checked="true"] .a-opt__check { opacity: 1; transform: none; }
+.a-opt__art { --s: var(--k); display: flex; align-items: center; justify-content: center; }
+.a-opt__logo { width: calc(436 * var(--s)); height: calc(185.2 * var(--s)); }
+
+/* Q2 글자 크기 — 이벤트 포스터 (PRO 포스터 서체 IBM Plex Sans KR · 구성은 새로 만듦) */
+.a-q2p {
+  --ps: var(--s);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--ps));
+  width: calc(300 * var(--ps));
+  height: calc(380 * var(--ps));
+  padding: calc(22 * var(--ps));
+  border: 1px solid #e4e4e4;
+  background: var(--color-white);
+  box-shadow: 0 calc(12 * var(--ps)) calc(32 * var(--ps)) 0 rgba(0, 0, 0, 0.08);
+  font-family: var(--font-plex);
+  text-align: center;
+  white-space: nowrap;
+  color: #111111;
+}
+.a-q2p__l { display: block; font-weight: 500; font-size: calc(17 * var(--ps)); line-height: calc(26 * var(--ps)); }
+.a-q2p--flat .a-q2p__l--1, .a-q2p--flat .a-q2p__l--2 { letter-spacing: 0.06em; }
+.a-q2p--flat .a-q2p__l--4, .a-q2p--flat .a-q2p__l--5 { color: #333333; }
+.a-q2p--hier .a-q2p__l--1 { font-size: calc(14 * var(--ps)); line-height: calc(20 * var(--ps)); letter-spacing: 0.12em; color: #333333; }
+.a-q2p--hier .a-q2p__l--2 { font-weight: 600; font-size: calc(18 * var(--ps)); letter-spacing: 0.06em; }
+.a-q2p--hier .a-q2p__l--3 { font-weight: 700; font-size: calc(28 * var(--ps)); line-height: calc(40 * var(--ps)); letter-spacing: -0.02em; white-space: nowrap; }
+.a-q2p--hier .a-q2p__l--4, .a-q2p--hier .a-q2p__l--5 { font-size: calc(15 * var(--ps)); line-height: calc(22 * var(--ps)); color: #333333; }
+
+/* Q3 자간 비교 — Logo / Cafe mellow – Serif(141:1025) 배치 그대로, 자간만 다름 */
+.a-q3l { position: relative; display: block; width: calc(436 * var(--s)); height: calc(185.2 * var(--s)); }
+.a-q3l > * { position: absolute; white-space: nowrap; }
+.a-q3l__cafe { left: calc(26 * var(--s)); top: calc(53.2 * var(--s)); font-family: var(--font-en); font-weight: 600; font-size: calc(30 * var(--s)); line-height: normal; letter-spacing: calc(12.6 * var(--s)); color: #111111; }
+.a-q3l__word { left: calc(-4.03 * var(--s)); top: calc(73.64 * var(--s)); font-family: var(--font-caslon); font-size: calc(132 * var(--s)); line-height: normal; letter-spacing: -0.02em; color: #111111; }
+.a-q3l__leaf { left: calc(305.97 * var(--s)); top: 0; width: calc(74.4 * var(--s)); height: calc(115.2 * var(--s)); }
+.a-q3l--wide { width: calc(620 * var(--s)); }
+.a-q3l--wide .a-q3l__word { letter-spacing: 0.22em; }
+.a-q3l--wide .a-q3l__leaf { left: calc(436 * var(--s)); }
+
+/* =========================================================
+   Compact (<1024) — 모바일 시안: 토글 → 제목 → 진행률 → 보기 → 힌트 → 다음 버튼
+   ========================================================= */
+@media (max-width: 1023px) {
+  .a-test { display: flex; flex-direction: column; align-items: stretch; gap: calc(19 * var(--k)); padding: var(--mp-t) var(--mp-x) var(--mp-b); }
+  .a-test__row, .a-test__right, .a-test__answer { display: contents; }
+  .a-test__row, .a-test__answer { position: static; }
+  .a-test .a-toggle { order: 1; align-self: flex-start; }
+  .a-test .a-ptitle { order: 2; }
+  .a-test .a-qprog { order: 3; }
+  .a-opts-box, .a-editor { order: 4; }
+  .a-test__bottom { order: 5; }
+  .a-ptitle__eyebrow, .a-ptitle__sub { display: none; }
+  .a-ptitle__h { font-size: calc(21 * var(--k)); line-height: calc(30 * var(--k)); letter-spacing: -0.01em; white-space: normal; }
+
+  .a-opts-box { margin-top: 0; padding: calc(12 * var(--k)); border-radius: calc(20 * var(--k)); }
+  .a-opts { flex-direction: column; gap: calc(10 * var(--k)); }
+  .a-opt { flex: none; height: calc(156 * var(--k)); border-radius: calc(16 * var(--k)); }
+  .a-opt__letter, .a-opt__check { top: calc(12 * var(--k)); width: calc(32.12 * var(--k)); height: calc(32.12 * var(--k)); }
+  .a-opt__letter { left: calc(12 * var(--k)); font-size: calc(13.87 * var(--k)); line-height: calc(17.52 * var(--k)); }
+  .a-opt__check { right: calc(12 * var(--k)); }
+  .a-opt__check img { width: calc(16.06 * var(--k)); height: calc(16.06 * var(--k)); }
+  .a-opt__art { --s: calc(var(--k) * 0.45); }
+  .a-q2p { --ps: calc(var(--k) * 0.34); }
+
+  .a-test__bottom { flex-direction: column; align-items: stretch; height: auto; margin-top: auto; }
+  .a-test .a-hint { padding: calc(8 * var(--k)) 0 calc(24 * var(--k)); }
+  .a-test__btns { gap: calc(10 * var(--k)); }
+  .a-test__btns .a-btn { flex: 1 1 0; width: auto; height: calc(56 * var(--k)); }
+}
