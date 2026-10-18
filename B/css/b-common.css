@@ -608,7 +608,7 @@ em { font-style: normal; }
   .b-canvas { --ex: clamp(0px, 100svh - var(--header-h) - 968 * var(--k), 200 * var(--k)); }
 }
 @media (max-width: 1023px) {
-  .b-canvas { --ex: 0px; width: calc(390 * var(--k)); height: calc(var(--canvas-h) * var(--k)); }
+  .b-canvas { --ex: 0px; width: calc(390 * var(--k)); height: calc(var(--ph) * var(--k)); }   /* 모든 페이지 같은 기준 높이 */
 }
 
 /* =========================================================

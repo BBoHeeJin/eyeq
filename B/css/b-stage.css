@@ -448,7 +448,7 @@
   /* Mobile Main Stage Card (352:7215) 350×172 */
   .b-mcard {
     left: calc(20 * var(--k));
-    top: calc(133 * var(--k));
+    top: calc(145 * var(--k));
     width: calc(350 * var(--k));
     height: calc(172 * var(--k));
     border-width: calc(1.5 * var(--k));
@@ -506,16 +506,18 @@
   .b-sbtn--soon { box-shadow: none; filter: none; font-size: calc(13 * var(--k)); }
   .b-sbtn--soon img { width: calc(14 * var(--k)); height: calc(14 * var(--k)); }
 
-  /* Mobile Stage Card (350:7318) 350×64 · 간격 8 */
+  /* Mobile Stage Card (350:7318) 350×64 · 간격 8 → 공통 기준 높이에 맞춰 78 · 간격 10 (목록 아래 = 게임 버튼 아래와 같은 위치)
+     카드 안 요소는 7 아래로 옮겨 세로 가운데 유지 */
   .b-slist {
     left: calc(20 * var(--k));
-    top: calc(319 * var(--k));
+    top: calc(333 * var(--k));
     flex-direction: column;
-    gap: calc(8 * var(--k));
+    gap: calc(10 * var(--k));
   }
   .b-scard {
+    --cy: 7;
     width: calc(350 * var(--k));
-    height: calc(64 * var(--k));
+    height: calc(78 * var(--k));
     border-radius: calc(16 * var(--k));
     -webkit-backdrop-filter: blur(calc(3 * var(--k)));
     backdrop-filter: blur(calc(3 * var(--k)));
@@ -527,14 +529,14 @@
     filter: drop-shadow(0 0 calc(9 * var(--k)) rgba(47, 91, 255, 0.7));
     box-shadow: inset 0 0 calc(14 * var(--k)) 0 rgba(76, 107, 255, 0.45);
   }
-  .b-scard__no { left: calc((14 - var(--bw)) * var(--k)); top: calc((10 - var(--bw)) * var(--k)); font-size: calc(11 * var(--k)); }
-  .b-scard .b-ico { --is: 0.5; left: calc((36 - var(--bw)) * var(--k)); top: calc((11 - var(--bw)) * var(--k)); }
-  .b-scard__name { left: calc((104 - var(--bw)) * var(--k)); right: auto; top: calc((12 - var(--bw)) * var(--k)); font-size: calc(15 * var(--k)); }
-  .b-scard__desc { left: calc((104 - var(--bw)) * var(--k)); right: auto; top: calc((34 - var(--bw)) * var(--k)); font-size: max(11px, calc(12 * var(--k))); }
+  .b-scard__no { left: calc((14 - var(--bw)) * var(--k)); top: calc((var(--cy) + 10 - var(--bw)) * var(--k)); font-size: calc(11 * var(--k)); }
+  .b-scard .b-ico { --is: 0.5; left: calc((36 - var(--bw)) * var(--k)); top: calc((var(--cy) + 11 - var(--bw)) * var(--k)); }
+  .b-scard__name { left: calc((104 - var(--bw)) * var(--k)); right: auto; top: calc((var(--cy) + 12 - var(--bw)) * var(--k)); font-size: calc(15 * var(--k)); }
+  .b-scard__desc { left: calc((104 - var(--bw)) * var(--k)); right: auto; top: calc((var(--cy) + 34 - var(--bw)) * var(--k)); font-size: max(11px, calc(12 * var(--k))); }
   .b-scard__progress { display: none; }
   .b-scard__lock {
     left: calc((300 - var(--bw)) * var(--k));
-    top: calc((14 - var(--bw)) * var(--k));
+    top: calc((var(--cy) + 14 - var(--bw)) * var(--k));
     width: calc(36 * var(--k));
     height: calc(36 * var(--k));
   }
@@ -542,7 +544,7 @@
   .b-scard__go {
     display: block;
     left: calc((300 - var(--bw)) * var(--k));
-    top: calc((14 - var(--bw)) * var(--k));
+    top: calc((var(--cy) + 14 - var(--bw)) * var(--k));
     width: calc(36 * var(--k));
     height: calc(36 * var(--k));
   }
