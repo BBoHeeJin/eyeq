@@ -1,0 +1,7 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="43" height="43" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Arrow Button">
+<rect x="0.5" y="0.5" width="42" height="42" rx="21" fill="white"/>
+<rect x="0.5" y="0.5" width="42" height="42" rx="21" stroke="#DFE2E8"/>
+<path id="icon/arrow" d="M27.2095 17.1382C28.1619 18.1766 28.9855 18.9679 29.6802 19.5122C30.3748 20.0493 31.0301 20.4504 31.646 20.7153V21.1987C30.937 21.5425 30.2495 21.9829 29.5835 22.52C28.9175 23.05 28.1226 23.8306 27.1987 24.8618H26.3716C27.0448 23.4224 27.7502 22.3159 28.4878 21.5425H11.354V20.4575H28.4878C27.9435 19.7629 27.564 19.2472 27.3491 18.9106C27.1343 18.5741 26.8156 17.9832 26.3931 17.1382H27.2095Z" fill="black"/>
+</g>
+</svg>

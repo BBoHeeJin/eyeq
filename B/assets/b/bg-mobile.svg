@@ -1,0 +1,56 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="390" height="891" viewBox="0 0 390 891" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Background" clip-path="url(#clip0_0_191)">
+<ellipse id="Top Glow" cx="195" cy="10" rx="280" ry="180" fill="url(#paint0_radial_0_191)"/>
+<g id="Block / L" opacity="0.55" clip-path="url(#clip1_0_191)">
+<path id="Vector" d="M-40 278L-22 260H48L30 278H-40Z" fill="#4A47A8"/>
+<path id="Vector_2" d="M30 278L48 260V820L30 838V278Z" fill="url(#paint1_linear_0_191)"/>
+<path id="Vector_3" d="M30 278H-40V838H30V278Z" fill="url(#paint2_linear_0_191)"/>
+</g>
+<g id="Block / R" opacity="0.55" clip-path="url(#clip2_0_191)">
+<path id="Vector_4" d="M350 298L332 280H402L420 298H350Z" fill="#4A47A8"/>
+<path id="Vector_5" d="M350 298L332 280V800L350 818V298Z" fill="url(#paint3_linear_0_191)"/>
+<path id="Vector_6" d="M420 298H350V818H420V298Z" fill="url(#paint4_linear_0_191)"/>
+</g>
+<ellipse id="Floor Glow" cx="195" cy="650" rx="260" ry="90" fill="url(#paint5_radial_0_191)"/>
+<rect id="Vignette" width="390" height="844" fill="url(#paint6_radial_0_191)"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_191" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(195 10) scale(280 180)">
+<stop stop-color="#4A47B8" stop-opacity="0.5"/>
+<stop offset="1" stop-color="#1D1B52" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="paint1_linear_0_191" x1="30" y1="260" x2="30" y2="838" gradientUnits="userSpaceOnUse">
+<stop stop-color="#25236A"/>
+<stop offset="1" stop-color="#131236"/>
+</linearGradient>
+<linearGradient id="paint2_linear_0_191" x1="-40" y1="278" x2="-40" y2="838" gradientUnits="userSpaceOnUse">
+<stop stop-color="#34318A"/>
+<stop offset="1" stop-color="#1A1946"/>
+</linearGradient>
+<linearGradient id="paint3_linear_0_191" x1="332" y1="280" x2="332" y2="818" gradientUnits="userSpaceOnUse">
+<stop stop-color="#25236A"/>
+<stop offset="1" stop-color="#131236"/>
+</linearGradient>
+<linearGradient id="paint4_linear_0_191" x1="350" y1="298" x2="350" y2="818" gradientUnits="userSpaceOnUse">
+<stop stop-color="#34318A"/>
+<stop offset="1" stop-color="#1A1946"/>
+</linearGradient>
+<radialGradient id="paint5_radial_0_191" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(195 650) scale(260 90)">
+<stop stop-color="#3C3FC4" stop-opacity="0.4"/>
+<stop offset="1" stop-color="#17164A" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint6_radial_0_191" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(195 422) scale(195 422)">
+<stop offset="0.6" stop-color="#0A0920" stop-opacity="0"/>
+<stop offset="1" stop-color="#0A0920" stop-opacity="0.45"/>
+</radialGradient>
+<clipPath id="clip0_0_191">
+<rect width="390" height="891" fill="white"/>
+</clipPath>
+<clipPath id="clip1_0_191">
+<rect width="88" height="578" fill="white" transform="translate(-40 260)"/>
+</clipPath>
+<clipPath id="clip2_0_191">
+<rect width="88" height="538" fill="white" transform="translate(332 280)"/>
+</clipPath>
+</defs>
+</svg>
