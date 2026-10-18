@@ -1,0 +1,556 @@
+/* =========================================================
+   EYEQ B안 — GAME PLAY (Game Board 330:6486)
+   캔버스: PC 1920×968 (헤더 아래) / Mobile 390×776 (한 화면에 들어오도록 세로 간격 압축 — 다른 페이지와 같은 방식)
+   모든 크기 = Figma px × 단위(--k)
+
+   PC 배치 (사용자 요청으로 시안에서 변경):
+   - 상단 한 줄: 왼쪽 Stage Info(로고 정렬선) · 가운데 미션 배지+타이틀 · 오른쪽 진행 바(헤더 아이콘 끝 정렬선)
+   - 답안 카드 3장 = 헤더 좌우 정렬선(로고 왼쪽 끝 ~ 프로필 아이콘 오른쪽 끝)에 맞춤
+   - 정답/오답 피드백은 타이틀 자리에 표시, 시안 대비 약 1.15배
+   - 세로로 긴 화면은 남는 높이(--ex)를 요소 사이로 분배 (b-common.css)
+   ========================================================= */
+
+.b-game > * { position: absolute; }
+/* 헤더 정렬선 → 캔버스 좌표 (캔버스는 화면 가운데 배치) */
+.b-game { --gl: calc(88 * var(--uh) - (100vw - 1920 * var(--k)) / 2); --gr: calc(104 * var(--uh) - (100vw - 1920 * var(--k)) / 2); }
+
+/* ---------- Level Card (PC) — 헤더 캐릭터 정보(313:3575)를 1.5배로 옮김 · 왼쪽 = 로고 정렬선 ----------
+   모바일·태블릿은 헤더에 그대로 두고 이 카드는 숨김 */
+.b-glevel {
+  left: var(--gl);
+  top: calc(64 * var(--k) + var(--ex) * 0.3);
+  display: flex;
+  align-items: center;
+  gap: calc(20 * var(--k));
+  font-family: var(--font-en);
+  line-height: normal;
+  white-space: nowrap;
+}
+.b-glevel__profile {
+  position: relative;
+  flex: none;
+  width: calc(72 * var(--k));
+  height: calc(72 * var(--k));
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--gradient-profile);
+  border: calc(2 * var(--k)) solid rgba(132, 148, 255, 0.9);
+  box-shadow: 0 0 calc(18 * var(--k)) 0 rgba(76, 107, 255, 0.45);
+}
+.b-glevel__profile img {
+  position: absolute;
+  left: calc(-12 * var(--k));
+  top: calc(-7.5 * var(--k));
+  width: calc(87 * var(--k));
+  height: calc(87 * var(--k));
+  object-fit: contain;
+}
+.b-glevel__info { display: flex; flex-direction: column; gap: calc(10 * var(--k)); }
+.b-glevel__row { display: flex; align-items: baseline; gap: calc(12 * var(--k)); }
+.b-glevel__lv { font-weight: 700; font-size: calc(24 * var(--k)); color: var(--color-white); }
+.b-glevel__xp { font-weight: 500; font-size: calc(16 * var(--k)); color: var(--color-level-sub); }
+.b-glevel__bar {
+  position: relative;
+  width: calc(200 * var(--k));
+  height: calc(8 * var(--k));
+  border-radius: calc(4 * var(--k));
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+.b-glevel__fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: max(calc(8 * var(--k)), calc(var(--xp-ratio, 0) * 100%));
+  border-radius: inherit;
+  background: var(--gradient-indicator-h);
+}
+/* PC 게임 화면: 헤더의 캐릭터 정보는 레벨 카드로 옮겼으므로 숨김 (알림·프로필 위치는 그대로) */
+@media (min-width: 1024px) {
+  .b-page-game .b-header .b-charinfo { display: none; }
+}
+
+/* ---------- Mission Progress (326:4311) — PC 424×64 · 오른쪽 = 헤더 아이콘 끝 ---------- */
+.b-progress {
+  right: var(--gr);
+  top: calc(64 * var(--k) + var(--ex) * 0.3);
+  width: calc(424 * var(--k));
+  height: calc(64 * var(--k));
+  --tx: 22; --ty: 20; --tw: 380; --th: 4;
+}
+.b-progress > * { position: absolute; }
+.b-progress__track, .b-progress__fill {
+  left: calc(var(--tx) * var(--k));
+  top: calc(var(--ty) * var(--k));
+  height: calc(var(--th) * var(--k));
+  border-radius: calc(2 * var(--k));
+}
+.b-progress__track { width: calc(var(--tw) * var(--k)); background: rgba(255, 255, 255, 0.14); }
+.b-progress__fill {
+  width: calc(var(--fill, 0) * var(--tw) * var(--k));
+  background: var(--gradient-progress-fill);
+  box-shadow: 0 0 calc(8 * var(--k)) 0 rgba(76, 107, 255, 0.8);
+}
+.b-pnode {
+  --cx: 22;
+  left: calc(var(--cx) * var(--k));
+  top: calc(22 * var(--k));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(20 * var(--k));
+  height: calc(20 * var(--k));
+  border-radius: 50%;
+  background: #1a1e48;
+  border: calc(2 * var(--k)) solid rgba(255, 255, 255, 0.28);
+  transform: translate(-50%, -50%);
+}
+.b-pnode[data-node="2"] { --cx: 212; }
+.b-pnode[data-node="3"] { --cx: 402; }
+.b-pnode img { position: absolute; max-width: none; display: none; }
+.b-pnode__ring { width: calc(62 * var(--k)); height: calc(62 * var(--k)); left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.b-pnode__check { width: calc(16 * var(--k)); height: calc(16 * var(--k)); left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.b-pnode.is-current { width: calc(30 * var(--k)); height: calc(30 * var(--k)); background: none; border: 0; }
+.b-pnode.is-current .b-pnode__ring.b-pc { display: block; }
+.b-pnode.is-done {
+  width: calc(28 * var(--k));
+  height: calc(28 * var(--k));
+  border: 0;
+  background: var(--gradient-blue-badge);
+  box-shadow: 0 0 calc(10 * var(--k)) 0 rgba(61, 99, 255, 0.6);
+}
+.b-pnode.is-done .b-pnode__check.b-pc { display: block; }
+.b-plabel {
+  --cx: 22;
+  left: calc(var(--cx) * var(--k));
+  top: calc(42 * var(--k));
+  transform: translateX(-50%);
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(14 * var(--k));
+  line-height: normal;
+  color: var(--color-progress-off);
+}
+.b-plabel[data-label="2"] { --cx: 212; }
+.b-plabel[data-label="3"] { --cx: 402; }
+.b-plabel.is-on { color: var(--color-progress-on); }
+
+/* ---------- Mission Badge (358:8046) ---------- */
+.b-mbadge {
+  left: 50%;
+  top: calc(26 * var(--k) + var(--ex) * 0.3);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(162 * var(--k));
+  height: calc(30 * var(--k));
+  border-radius: calc(16 * var(--k));
+  border: 1px solid rgba(74, 88, 200, 0.6);
+  background: rgba(28, 34, 102, 0.9);
+  transform: translateX(-50%);
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(13 * var(--k));
+  line-height: normal;
+  letter-spacing: 0.14em;                  /* 1.82 / 13 */
+  color: #c9cbff;
+  white-space: nowrap;
+}
+
+/* ---------- 문제 타이틀 ---------- */
+.b-gtitle { left: 0; right: 0; top: calc(70 * var(--k) + var(--ex) * 0.3); text-align: center; }
+.b-gtitle[hidden] { display: none; }
+.b-gtitle__h {
+  margin: 0;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(52 * var(--k));
+  line-height: normal;
+  letter-spacing: -0.02em;                 /* -1.04 / 52 */
+  color: var(--color-white);
+  text-shadow: 0 calc(4 * var(--k)) calc(14 * var(--k)) rgba(5, 5, 31, 0.5);
+  white-space: nowrap;
+}
+.b-gtitle__accent {
+  background: linear-gradient(90deg, #5c82ff 0%, #2f55ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+.b-gtitle__desc {
+  margin: 0;
+  position: absolute;                       /* 제목 ↔ 설명 = 배지 ↔ 제목 간격 (사용자 요청) */
+  left: 0; right: 0;
+  top: calc(var(--desc-y, 79) * var(--k));
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: calc(19 * var(--k));
+  line-height: normal;
+  color: var(--color-stage-desc);
+  white-space: nowrap;
+}
+
+/* =========================================================
+   Feedback (327:4448) — 원본 컴포넌트 × 배율 --fs (PC 0.68 · 시안 0.592에서 확대 / Mobile 0.36)
+   ========================================================= */
+.b-fb {
+  --fs: 0.68;
+  --f: calc(var(--fs) * var(--k));
+  --fw: 662; --cl: 402; --mt: 44;
+  left: 50%;
+  top: calc(60 * var(--k) + var(--ex) * 0.3);
+  width: calc(var(--fw) * var(--f));
+  height: calc(250 * var(--f));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.b-fb[hidden] { display: none; }
+/* 피드백 캐릭터 발이 답안 카드 뒤로 비치지 않도록 카드 윗선에서 잘라냄 (사용자 요청)
+   아래쪽 잘라낼 양 = 피드백 높이 − (카드 top − 피드백 top) */
+.b-fb { clip-path: inset(-100vh -100vw calc(250 * var(--f) - 202 * var(--k) - var(--ex) * 0.15) -100vw); }
+.b-fb[data-type="wrong"]  { --fw: 870; --cl: 610; --mt: 44; }
+.b-fb[data-type="combo2"] { --fw: 832; --cl: 572; --mt: 38; }
+.b-fb[data-type="combo3"] { --fw: 870; --cl: 610; --mt: 38; }
+.b-fb > * { position: absolute; }
+.b-fb__msg {
+  left: 0;
+  top: calc(var(--mt) * var(--f));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(8 * var(--f));
+}
+.b-fb__row { display: flex; align-items: center; gap: calc(6 * var(--f)); }
+.b-fb__title {
+  font-family: var(--font-en);
+  font-weight: 900;
+  font-style: italic;
+  font-size: calc(100 * var(--f));
+  line-height: normal;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #ffffff 0%, #c9d4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 calc(6 * var(--f)) 0 rgba(5, 5, 31, 0.6)) drop-shadow(0 calc(6 * var(--f)) calc(12 * var(--f)) rgba(47, 85, 255, 0.75));
+  padding-right: calc(8 * var(--f));        /* 이탤릭 끝 잘림 방지 */
+}
+.b-fb[data-type="wrong"] .b-fb__title {
+  background-image: linear-gradient(180deg, #ff8a96 0%, #ff4d63 100%);
+  filter: drop-shadow(0 calc(6 * var(--f)) 0 rgba(5, 5, 31, 0.6)) drop-shadow(0 calc(6 * var(--f)) calc(12 * var(--f)) rgba(255, 77, 99, 0.75));
+}
+.b-fb[data-type^="combo"] .b-fb__title {
+  background-image: linear-gradient(180deg, #fff6da 0%, #ffb547 100%);
+  filter: drop-shadow(0 calc(6 * var(--f)) 0 rgba(5, 5, 31, 0.6)) drop-shadow(0 calc(6 * var(--f)) calc(12 * var(--f)) rgba(255, 138, 42, 0.75));
+}
+.b-fb__flame { position: relative; flex: none; width: calc(52 * var(--f)); height: calc(64 * var(--f)); }
+.b-fb__flame[hidden] { display: none; }
+.b-fb__flame img { position: absolute; left: calc(-10 * var(--f)); top: calc(-14 * var(--f)); width: calc(72 * var(--f)); height: calc(92 * var(--f)); max-width: none; }
+.b-fb__rewards { display: flex; align-items: center; gap: calc(12 * var(--f)); min-height: calc(52 * var(--f)); }
+.b-fb__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(7 * var(--f)) calc(22 * var(--f));
+  border-radius: calc(24 * var(--f));
+  border: calc(1.5 * var(--f)) solid rgba(255, 255, 255, 0.3);
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: calc(24 * var(--f));
+  line-height: normal;
+  color: var(--color-white);
+  white-space: nowrap;
+}
+.b-fb__badge[hidden] { display: none; }
+.b-fb__badge--xp {
+  background: linear-gradient(90deg, #5c7dff 0%, #2f55ff 100%);
+  filter: drop-shadow(0 calc(4 * var(--f)) calc(4.5 * var(--f)) rgba(61, 99, 255, 0.6));
+}
+.b-fb__badge--xp.is-red {
+  background: linear-gradient(90deg, #ff7a88 0%, #e8475a 100%);
+  filter: drop-shadow(0 calc(4 * var(--f)) calc(4.5 * var(--f)) rgba(255, 77, 99, 0.6));
+}
+.b-fb__badge--combo {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: linear-gradient(90deg, #ffe08a 0%, #ffa53d 100%);
+  color: #3a1c00;
+  transform: rotate(4deg);
+  filter: drop-shadow(0 calc(4 * var(--f)) calc(4.5 * var(--f)) rgba(255, 159, 67, 0.55));
+}
+.b-fb__react {
+  left: calc(var(--cl) * var(--f));
+  top: 0;
+  width: calc(240 * var(--f));
+  height: calc(240 * var(--f));
+}
+.b-fb__react img { position: absolute; left: 0; top: 0; width: calc(300 * var(--f)); height: calc(300 * var(--f)); max-width: none; object-fit: contain; }
+.b-fb__fx { left: calc((var(--cl) - 40) * var(--f)); top: calc(-10 * var(--f)); width: calc(320 * var(--f)); height: calc(260 * var(--f)); }
+.b-fb__sp { position: absolute; max-width: none; }
+.b-fb__sp--1 { left: calc(272 * var(--f)); top: calc(32 * var(--f));  width: calc(50 * var(--f)); }
+.b-fb__sp--2 { left: calc(288 * var(--f)); top: calc(112 * var(--f)); width: calc(38 * var(--f)); }
+.b-fb__sp--3 { left: calc(12 * var(--f));  top: calc(22 * var(--f));  width: calc(34 * var(--f)); }
+.b-fb__sp--4 { left: calc(42 * var(--f));  top: calc(192 * var(--f)); width: calc(30 * var(--f)); }
+.b-fb__sp--5 { left: calc(292 * var(--f)); top: calc(182 * var(--f)); width: calc(32 * var(--f)); }
+.b-fb__sp--w { left: calc(272 * var(--f)); top: calc(42 * var(--f));  width: calc(30 * var(--f)); display: none; }
+.b-fb[data-type="wrong"] .b-fb__sp { display: none; }
+.b-fb[data-type="wrong"] .b-fb__sp--w { display: block; }
+/* 등장 — Feedback 설명: CSS scale/fade 단순 애니메이션 */
+.b-fb.is-in { animation: b-fb-in 320ms cubic-bezier(.2, .9, .3, 1.2) both; }
+@keyframes b-fb-in {
+  from { opacity: 0; transform: translateX(-50%) scale(0.85); }
+  to   { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+/* =========================================================
+   Answer Card (326:4385) — PC: 헤더 정렬선 사이 3등분 × 510 (시안 466×459) · 간격 24
+   카드 안 요소는 시안 × 약 1.11 · 좌표 = (바깥 기준 − 테두리 --bw)
+   ========================================================= */
+.b-answers {
+  left: var(--gl);
+  right: var(--gr);
+  top: calc(262 * var(--k) + var(--ex) * 0.45);
+  display: flex;
+  gap: calc(24 * var(--k));
+}
+.b-ans {
+  --bw: 1.5;
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: calc(510 * var(--k) + var(--ex) * 0.3);
+  border-radius: calc(26 * var(--k));
+  border: calc(var(--bw) * var(--k)) solid rgba(88, 103, 216, 0.35);
+  background: var(--gradient-answer);
+  filter: drop-shadow(0 calc(16 * var(--k)) calc(16 * var(--k)) rgba(3, 4, 26, 0.5));
+  text-align: left;
+  transition: transform 200ms ease-out, opacity 200ms ease-out;
+}
+.b-ans::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--inset, none);
+  pointer-events: none;
+}
+.b-ans > * { position: absolute; }
+.b-ans__badge {
+  left: calc((30 - var(--bw)) * var(--k));
+  top: calc((30 - var(--bw)) * var(--k));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(52 * var(--k));
+  height: calc(52 * var(--k));
+  border-radius: 50%;
+  border: calc(1.5 * var(--k)) solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: calc(24 * var(--k));
+  line-height: normal;
+  color: var(--color-white);
+}
+.b-ans__copy {
+  left: calc((72 - var(--bw)) * var(--k));
+  top: calc(50% + 40 * var(--k));
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: calc(24 * var(--k));
+  width: calc(340 * var(--k));
+  height: calc(250 * var(--k));
+  white-space: nowrap;
+}
+.b-ans__kr {
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(40 * var(--k));
+  line-height: calc(60 * var(--k));
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+}
+.b-ans__kr span { display: block; }
+.b-ans__en {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(13 * var(--k));
+  line-height: calc(20 * var(--k));
+  letter-spacing: 0.18em;                  /* 2.16 / 12 */
+  color: var(--color-copy-en);
+}
+.b-ans__en span { display: block; }
+/* Answer Copy (326:4350) — 미션별 단 하나의 속성만 다름 */
+.b-ans__copy.is-wide .b-ans__kr    { letter-spacing: 0.14em; }      /* M1 자간 +14% */
+.b-ans__copy.is-regular .b-ans__kr { font-weight: 400; }            /* M2 Regular */
+.b-ans__copy.is-small .b-ans__kr   { font-size: calc(35.5 * var(--k)); } /* M3: 시안 32/36 비율 유지 */
+
+.b-ans__status { display: none; }
+.b-ans__status {
+  right: calc((30 - var(--bw)) * var(--k));
+  top: calc((30 - var(--bw)) * var(--k));
+  align-items: center;
+  justify-content: center;
+  width: calc(52 * var(--k));
+  height: calc(52 * var(--k));
+  border-radius: 50%;
+  border: calc(1.5 * var(--k)) solid rgba(255, 255, 255, 0.35);
+}
+.b-ans__status img { width: calc(26 * var(--k)); height: calc(26 * var(--k)); }
+
+/* Hover — Figma 미정의 · 구현 제안 */
+@media (hover: hover) and (min-width: 1024px) {
+  .b-answers:not(.is-locked) .b-ans:not(.is-selected):hover { border-color: rgba(132, 148, 255, 0.6); }
+}
+.b-answers.is-locked .b-ans { cursor: default; }
+
+/* Selected — 블루 테두리 + 글로우, -10px 상승 */
+.b-ans.is-selected {
+  --bw: 3;
+  border-color: var(--color-answer-selected);
+  background: var(--gradient-answer-selected);
+  filter: drop-shadow(0 0 calc(20 * var(--k)) rgba(47, 91, 255, 0.75));
+  --inset: inset 0 0 calc(26 * var(--k)) 0 rgba(76, 107, 255, 0.45);
+  transform: translateY(calc(-10 * var(--k)));
+}
+/* Correct — 체크 */
+.b-ans.is-correct {
+  --bw: 3.5;
+  border-color: var(--color-answer-correct);
+  background: var(--gradient-answer-correct);
+  filter: drop-shadow(0 0 calc(28 * var(--k)) rgba(47, 91, 255, 0.95));
+  --inset: inset 0 0 calc(30 * var(--k)) 0 rgba(92, 125, 255, 0.55);
+}
+/* Wrong — 코랄 레드 + X */
+.b-ans.is-wrong {
+  --bw: 3.5;
+  border-color: var(--color-answer-wrong);
+  background: var(--gradient-answer-wrong);
+  filter: drop-shadow(0 0 calc(22 * var(--k)) rgba(255, 77, 99, 0.6));
+  --inset: inset 0 0 calc(26 * var(--k)) 0 rgba(255, 93, 108, 0.4);
+}
+.b-ans.is-selected .b-ans__badge, .b-ans.is-correct .b-ans__badge {
+  border: 0;
+  background: var(--gradient-blue-badge);
+  box-shadow: 0 0 calc(12 * var(--k)) 0 rgba(61, 99, 255, 0.7);
+}
+.b-ans.is-wrong .b-ans__badge {
+  border: 0;
+  background: var(--gradient-red-badge);
+  box-shadow: 0 0 calc(12 * var(--k)) 0 rgba(255, 77, 99, 0.6);
+}
+.b-ans.is-correct .b-ans__status--check, .b-ans.is-wrong .b-ans__status--x { display: flex; }
+.b-ans__status--check { background: var(--gradient-blue-badge); box-shadow: 0 0 calc(14 * var(--k)) 0 rgba(61, 99, 255, 0.8); }
+.b-ans__status--x { background: var(--gradient-red-badge); box-shadow: 0 0 calc(14 * var(--k)) 0 rgba(255, 77, 99, 0.8); }
+/* 비선택 카드 밝기 (Selected 단계 72% · Correct 단계 42%) */
+.b-ans.is-dim { opacity: 0.72; }
+.b-ans.is-faded { opacity: 0.42; }
+
+/* ---------- 하단 버튼 ---------- */
+.b-gactions {
+  left: calc(651 * var(--k));
+  top: calc(812 * var(--k) + var(--ex) * 0.9);
+  display: flex;
+  align-items: center;
+  gap: calc(48 * var(--k));
+}
+
+/* =========================================================
+   Compact (<1024) — Mobile Game Board (372:8376) 390×776
+   ========================================================= */
+@media (max-width: 1023px) {
+  .b-glevel { display: none; }
+
+  /* 모바일: Stage Info 제거, 진행 바 가운데 (사용자 요청) */
+  .b-progress {
+    right: auto;
+    left: calc(95 * var(--k));
+    top: calc(12 * var(--k));
+    width: calc(200 * var(--k));
+    height: calc(46 * var(--k));
+    --tx: 15; --ty: 13.5; --tw: 170; --th: 3;
+  }
+  .b-pnode { --cx: 15; top: calc(15 * var(--k)); width: calc(14.4 * var(--k)); height: calc(14.4 * var(--k)); border-width: calc(1.44 * var(--k)); }
+  .b-pnode[data-node="2"] { --cx: 100; }
+  .b-pnode[data-node="3"] { --cx: 185; }
+  .b-pnode__ring { width: calc(44.64 * var(--k)); height: calc(44.64 * var(--k)); }
+  .b-pnode__check { width: calc(11.52 * var(--k)); height: calc(11.52 * var(--k)); }
+  .b-pnode.is-current { width: calc(21.6 * var(--k)); height: calc(21.6 * var(--k)); }
+  .b-pnode.is-done { width: calc(20.16 * var(--k)); height: calc(20.16 * var(--k)); box-shadow: 0 0 calc(7.2 * var(--k)) 0 rgba(61, 99, 255, 0.6); }
+  .b-pnode img.b-mo { display: none !important; }
+  .b-pnode.is-current .b-pnode__ring.b-mo, .b-pnode.is-done .b-pnode__check.b-mo { display: block !important; }
+  .b-plabel { --cx: 15; top: calc(31 * var(--k)); font-size: calc(11 * var(--k)); }
+  .b-plabel[data-label="2"] { --cx: 100; }
+  .b-plabel[data-label="3"] { --cx: 185; }
+
+  .b-mbadge {
+    top: calc(68 * var(--k));
+    width: calc(128 * var(--k));
+    height: calc(24 * var(--k));
+    border-radius: calc(12 * var(--k));
+    font-size: calc(10.5 * var(--k));
+  }
+  .b-gtitle { top: calc(100 * var(--k)); }
+  .b-gtitle__h { font-size: calc(28 * var(--k)); letter-spacing: -0.02em; text-shadow: none; }
+  .b-gtitle__desc { --desc-y: 45; margin: 0; font-size: max(12px, calc(14 * var(--k))); }
+
+  .b-fb { --fs: 0.36; top: calc(90 * var(--k)); clip-path: inset(-100vh -100vw calc(250 * var(--f) - 86 * var(--k)) -100vw); }
+
+  .b-answers {
+    right: auto;
+    left: calc(20 * var(--k));
+    top: calc(176 * var(--k));
+    flex-direction: column;
+    gap: calc(12 * var(--k));
+  }
+  .b-ans {
+    flex: none;
+    width: calc(350 * var(--k));
+    height: calc(164 * var(--k));
+    border-radius: calc(16.9 * var(--k));
+    filter: drop-shadow(0 calc(9.6 * var(--k)) calc(9.6 * var(--k)) rgba(3, 4, 26, 0.5));
+  }
+  .b-ans__badge {
+    left: calc((14 - var(--bw)) * var(--k));
+    top: calc((14 - var(--bw)) * var(--k));
+    width: calc(28 * var(--k));
+    height: calc(28 * var(--k));
+    border-width: calc(0.875 * var(--k));
+    font-size: calc(12.833 * var(--k));
+  }
+  .b-ans__copy {
+    left: calc((60 - var(--bw)) * var(--k));
+    top: calc((26 - var(--bw)) * var(--k));
+    transform: none;
+    gap: calc(8 * var(--k));
+    width: calc(240 * var(--k));
+    height: calc(129 * var(--k));
+  }
+  .b-ans__copy.is-wide { gap: calc(9 * var(--k)); }
+  .b-ans__kr { font-size: calc(18 * var(--k)); line-height: calc(27 * var(--k)); }
+  .b-ans__copy.is-small .b-ans__kr { font-size: calc(16 * var(--k)); }
+  .b-ans__en { font-size: calc(9 * var(--k)); line-height: calc(13 * var(--k)); }
+  .b-ans__status {
+    right: calc((14 - var(--bw)) * var(--k));
+    top: calc((14 - var(--bw)) * var(--k));
+    width: calc(28 * var(--k));
+    height: calc(28 * var(--k));
+    border-width: calc(0.875 * var(--k));
+  }
+  .b-ans__status img { width: calc(14 * var(--k)); height: calc(14 * var(--k)); }
+  .b-ans.is-selected { filter: drop-shadow(0 0 calc(12 * var(--k)) rgba(47, 91, 255, 0.75)); --inset: inset 0 0 calc(15.6 * var(--k)) 0 rgba(76, 107, 255, 0.45); }
+  .b-ans.is-correct { filter: drop-shadow(0 0 calc(16.8 * var(--k)) rgba(47, 91, 255, 0.95)); --inset: inset 0 0 calc(18 * var(--k)) 0 rgba(92, 125, 255, 0.55); }
+  .b-ans.is-wrong { filter: drop-shadow(0 0 calc(13.2 * var(--k)) rgba(255, 77, 99, 0.6)); --inset: inset 0 0 calc(15.6 * var(--k)) 0 rgba(255, 93, 108, 0.4); }
+  .b-ans.is-selected .b-ans__badge, .b-ans.is-correct .b-ans__badge { box-shadow: 0 0 calc(7 * var(--k)) 0 rgba(61, 99, 255, 0.7); }
+  .b-ans.is-wrong .b-ans__badge { box-shadow: 0 0 calc(7 * var(--k)) 0 rgba(255, 77, 99, 0.6); }
+  .b-ans__status--check { box-shadow: 0 0 calc(8.17 * var(--k)) 0 rgba(61, 99, 255, 0.8); }
+  .b-ans__status--x { box-shadow: 0 0 calc(8.17 * var(--k)) 0 rgba(255, 77, 99, 0.8); }
+
+  .b-gactions {
+    left: calc(20 * var(--k));
+    top: calc(708 * var(--k));
+    gap: calc(12 * var(--k));
+  }
+}

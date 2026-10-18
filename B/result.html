@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko" class="b-page-result">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>EYEQ — Stage Clear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,500;0,600;0,700;0,800;0,900;1,900&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 헤더·카드 내용을 채운 뒤 첫 화면을 그림 (페이지 이동 시 깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#b-ready" blocking="render" />
+  <link rel="stylesheet" href="css/b-tokens.css" />
+  <link rel="stylesheet" href="css/b-common.css" />
+  <link rel="stylesheet" href="css/b-result.css" />
+</head>
+<body class="b-page">
+  <!-- 배경: PC 330:6379 / Mobile 378:10484 -->
+  <div class="b-bg b-bg--game" aria-hidden="true">
+    <img class="b-bg__img b-bg__img--pc" src="assets/b/bg-clear-pc.svg" alt="" />
+    <div class="b-bg__mo">
+      <img class="b-bg__glow" src="assets/b/top-glow-mobile.svg" alt="" />
+      <span class="b-cube" style="--x:-24.38;--y:-31.25;--s:74;--rot:-18deg;--o:.55"></span>
+      <span class="b-cube" style="--x:346.25;--y:103.34;--s:62;--rot:16deg;--o:.7"></span>
+      <span class="b-cube" style="--x:345.26;--y:767.8;--s:60;--rot:18deg;--o:.5"></span>
+      <span class="b-bg__vignette"></span>
+    </div>
+  </div>
+
+  <!-- ===== Header — Character Selected (313:3575 / Mobile 349:7179) ===== -->
+  <header class="b-header b-header--selected" data-header>
+    <a class="b-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="b-header__logo-img b-header__logo-img--pc" src="assets/b/logo-eyeq.svg" alt="EYEQ" />
+      <img class="b-header__logo-img b-header__logo-img--mo" src="assets/b/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="b-nav" aria-label="주요 메뉴">
+      <a class="b-nav__item" href="index.html">
+        <span class="b-nav__label">Home</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item is-active" href="stage.html" aria-current="page">
+        <span class="b-nav__label">Game</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <!-- Ranking · About: 기획·시안 없음 → Coming Soon 팝업 -->
+      <a class="b-nav__item" href="#" data-coming-soon aria-haspopup="dialog">
+        <span class="b-nav__label">Ranking</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item" href="#" data-coming-soon aria-haspopup="dialog">
+        <span class="b-nav__label">About</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+    </nav>
+    <div class="b-header__actions">
+      <div class="b-charinfo" data-charinfo role="img" aria-label="선택한 캐릭터">
+        <span class="b-charinfo__profile"><img data-char-img src="assets/b/char-eye.png" alt="" /></span>
+        <span class="b-charinfo__level">
+          <span class="b-charinfo__lv" data-lv-text>LV. 01</span>
+          <span class="b-charinfo__xp" data-xp-text>XP 0 / 100</span>
+          <span class="b-charinfo__bar"><span class="b-charinfo__fill"></span></span>
+        </span>
+        <span class="b-charinfo__divider" aria-hidden="true"></span>
+      </div>
+      <button class="b-header__icon-btn b-header__icon-btn--bell" type="button" aria-label="알림" data-coming-soon aria-haspopup="dialog">
+        <img class="b-icon--pc" src="assets/b/icon-notification.svg" alt="" />
+        <img class="b-icon--mo" src="assets/b/icon-notification-mobile.svg" alt="" />
+      </button>
+      <button class="b-header__icon-btn b-header__icon-btn--profile" type="button" aria-label="프로필" data-coming-soon aria-haspopup="dialog">
+        <img src="assets/b/icon-profile.svg" alt="" />
+      </button>
+      <button class="b-header__icon-btn b-header__menu-btn" type="button" aria-label="메뉴 열기"
+              aria-controls="b-menu" aria-expanded="false" data-menu-toggle>
+        <img class="b-header__menu-icon b-header__menu-icon--open" src="assets/b/icon-menu.svg" alt="" />
+        <img class="b-header__menu-icon b-header__menu-icon--close" src="assets/b/icon-close.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- 모바일 메뉴 — Closed Selected / Open Selected (349:7179) : Game 활성 -->
+  <div class="b-menu" id="b-menu" data-menu aria-hidden="true">
+    <div class="b-menu__scrim" data-menu-close></div>
+    <nav class="b-menu__panel" aria-label="모바일 메뉴">
+      <p class="b-menu__label">MENU</p>
+      <a class="b-menu__item" href="index.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Home</span></a>
+      <a class="b-menu__item is-active" href="stage.html" aria-current="page"><span class="b-menu__bar" aria-hidden="true"></span><span>Game</span></a>
+      <a class="b-menu__item" href="#" data-coming-soon aria-haspopup="dialog"><span class="b-menu__bar" aria-hidden="true"></span><span>Ranking</span></a>
+      <a class="b-menu__item" href="#" data-coming-soon aria-haspopup="dialog"><span class="b-menu__bar" aria-hidden="true"></span><span>About</span></a>
+    </nav>
+  </div>
+
+  <!-- ===== STAGE CLEAR (PC 330:6378 / Mobile 378:10429) ===== -->
+  <main class="b-main b-view">
+    <div class="b-canvas b-clear" style="--canvas-h:733" data-result>
+      <!-- 장식 (Mobile 전용: 큐브 3개 · 캐릭터 글로우 / PC는 배경 SVG에 포함) -->
+      <span class="b-clear__cube b-mo" style="--cx:64.02;--cy:178.33;--s:54;--rot:-18deg" aria-hidden="true"></span>
+      <span class="b-clear__cube b-mo" style="--cx:64.59;--cy:287.59;--s:36;--rot:-30deg" aria-hidden="true"></span>
+      <span class="b-clear__cube b-mo" style="--cx:321.47;--cy:177.45;--s:56;--rot:22deg" aria-hidden="true"></span>
+      <img class="b-clear__glow b-mo" src="assets/b/character-glow-mobile.svg" alt="" />
+
+      <h1 class="b-clear__title">
+        <span class="b-clear__stage">STAGE 01</span>
+        <span class="b-clear__clear">CLEAR!</span>
+      </h1>
+      <p class="b-clear__desc">타이포그래피 미션을 모두 완료했어요!</p>
+
+      <!-- Character (Happy) -->
+      <span class="b-clear__react" aria-hidden="true">
+        <img data-react-char src="assets/b/char-eye.png" alt="" />
+        <img data-react-face src="assets/b/expression-eye-happy.svg" alt="" />
+      </span>
+      <!-- Object / XP Card (rotate 14°) -->
+      <span class="b-clear__xpcard" aria-hidden="true"><span>XP</span></span>
+      <!-- Sparkles -->
+      <img class="b-clear__sp b-clear__sp--1" src="assets/b/clear-sparkle-1.svg" alt="" />
+      <img class="b-clear__sp b-clear__sp--2" src="assets/b/clear-sparkle-2.svg" alt="" />
+      <img class="b-clear__sp b-clear__sp--3" src="assets/b/clear-sparkle-3.svg" alt="" />
+      <img class="b-clear__sp b-clear__sp--4" src="assets/b/clear-sparkle-4.svg" alt="" />
+      <img class="b-clear__sp b-clear__sp--5" src="assets/b/clear-sparkle-5.svg" alt="" />
+      <img class="b-clear__sp b-clear__sp--6 b-pc" src="assets/b/clear-sparkle-6.svg" alt="" />
+
+      <!-- Result Panel (330:6466) / Result Card (378:10517) : 실제 기록 -->
+      <dl class="b-result">
+        <div class="b-result__item">
+          <span class="b-result__icon b-mo" aria-hidden="true"><img src="assets/b/result-icon-xp.svg" alt="" /></span>
+          <dt class="b-result__label">획득한 XP</dt>
+          <dd class="b-result__value" data-result-xp>+0 XP</dd>
+        </div>
+        <div class="b-result__item">
+          <span class="b-result__icon b-result__icon--round b-mo" aria-hidden="true"><img class="b-result__flame-mo" src="assets/b/result-icon-flame.svg" alt="" /></span>
+          <dt class="b-result__label">최대 콤보</dt>
+          <dd class="b-result__value"><img class="b-result__flame b-pc" src="assets/b/icon-flame-result.svg" alt="" /><span data-result-combo>0 COMBO</span></dd>
+        </div>
+        <div class="b-result__item">
+          <span class="b-result__icon b-result__icon--round b-mo" aria-hidden="true"><img class="b-result__target" src="assets/b/result-icon-target.svg" alt="" /></span>
+          <dt class="b-result__label">정답 수</dt>
+          <dd class="b-result__value" data-result-correct>0 / 3</dd>
+        </div>
+      </dl>
+
+      <a class="b-gbtn is-active b-clear__btn" href="stage.html">스테이지 선택으로 →</a>
+    </div>
+  </main>
+
+  <script src="js/b-common.js"></script>
+  <script src="js/b-result.js"></script>
+  <span id="b-ready" hidden></span>
+</body>
+</html>

@@ -1,0 +1,372 @@
+/* =========================================================
+   EYEQ B안 — Main (HOME / CHARACTER SELECT)
+   모든 크기 = Figma 디자인 px × 단위(--k)
+   PC(≥1024)  : --k = --u   (1920×1080 기준)
+   Compact(<1024): --k = --c (390×844 기준, 태블릿은 같은 구조로 재배치)
+   공통(Base·Header·Menu)은 b-common.css
+   ========================================================= */
+
+/* =========================================================
+   Main layout — PC
+   세로 리듬(확정): 헤더 → 14 → 타이틀그룹 168 → 54 → 캐러셀 525 → 55 → CTA 80 → 72
+   남는 높이는 위·아래로 균등 분배
+   ========================================================= */
+.b-main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--header-h));
+  min-height: calc(100svh - var(--header-h));
+  padding: calc(14 * var(--k)) 0 calc(72 * var(--k));
+}
+
+/* ---------- Intro (Title Group 305:3532) ---------- */
+.b-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(22 * var(--k));
+  text-align: center;
+}
+.b-intro__title {
+  margin: 0;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  /* 사용자 요청으로 축소 (Figma 54/74 → 46/63, 비율 유지) */
+  font-size: calc(46 * var(--k));
+  line-height: calc(63 * var(--k));
+  letter-spacing: -0.015em;               /* -0.81 / 54 */
+  color: var(--color-white);
+  text-shadow: 0 calc(4 * var(--k)) calc(16 * var(--k)) rgba(8, 5, 31, 0.5);
+  white-space: nowrap;
+}
+.b-intro__accent { color: var(--color-accent-text); }
+.b-intro__sub {
+  margin: 0;
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: max(12px, calc(22 * var(--k)));
+  line-height: calc(36 * var(--k));
+  color: var(--color-text-sub);
+}
+.b-intro__sub-line { display: block; white-space: nowrap; }
+
+/* =========================================================
+   Character Carousel — PC (1289×525)
+   ========================================================= */
+.b-carousel {
+  position: relative;
+  flex: none;
+  width: calc(1289 * var(--k));
+  height: calc(525 * var(--k));
+  margin-top: calc(54 * var(--k));
+}
+.b-carousel__track { position: absolute; inset: 0; }
+
+/* 역할별 위치 (확정) */
+.b-card {
+  /* PC Default (344×500) */
+  --w: 344; --h: 500; --r: 28; --bw: 1.5;
+  --x: 84; --y: 23;
+  --fig: 300; --fig-top: 46.5; --fig-shift: 0%;
+  --name: 34; --name-top: 386.5;
+  --desc: 20; --desc-top: 430.5; --desc-weight: 400; --desc-color: var(--color-text-card-desc);
+  --shadow: 0 calc(20 * var(--k)) calc(40 * var(--k)) 0 rgba(5, 5, 20, 0.45);
+  --inset: none;
+  --sel: 0;
+}
+.b-card.is-next { --x: 861; }
+.b-card.is-selected {
+  /* PC Selected (393×525) */
+  --w: 393; --h: 525; --bw: 3;
+  --x: 448; --y: 0;
+  --fig: 350; --fig-top: 33;
+  --name: 42; --name-top: 407;
+  --desc: 22; --desc-top: 461; --desc-weight: 500; --desc-color: var(--color-text-card-desc-selected);
+  --shadow: 0 0 calc(60 * var(--k)) calc(6 * var(--k)) rgba(79, 93, 255, 0.75);
+  --inset: inset 0 calc(2 * var(--k)) calc(24 * var(--k)) 0 rgba(255, 255, 255, 0.28);
+  --sel: 1;
+  z-index: 2;
+}
+.b-card.is-selected .b-card__figure--eye { --fig-shift: -3.22%; }
+
+.b-card {
+  position: absolute;
+  left: calc(var(--x) * var(--k));
+  top: calc(var(--y) * var(--k));
+  width: calc(var(--w) * var(--k));
+  height: calc(var(--h) * var(--k));
+  display: block;
+  overflow: hidden;
+  border-radius: calc(var(--r) * var(--k));
+  border: calc(var(--bw) * var(--k)) solid var(--color-border-card);
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition:
+    left 300ms ease-out, top 300ms ease-out,
+    width 300ms ease-out, height 300ms ease-out,
+    border-color 300ms ease-out, border-width 300ms ease-out,
+    box-shadow 300ms ease-out;
+}
+.b-card.is-selected { border-color: var(--color-border-selected); cursor: default; }
+.b-card.no-anim, .b-card.no-anim *, .b-card.no-anim::after { transition: none !important; }
+.b-card::after {               /* inner shadow (Selected) */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--inset);
+  pointer-events: none;
+}
+.b-card__bg {
+  position: absolute;
+  inset: 0;
+  transition: opacity 300ms ease-out;
+}
+.b-card__bg--default { background: var(--gradient-card-default); opacity: calc(1 - var(--sel)); }
+.b-card__bg--selected { background: var(--gradient-card-selected); opacity: var(--sel); }
+
+/* Inner Light / Floor Shadow — 카드 가로 중앙 기준 (확정 좌표) */
+.b-card__light, .b-card__shadow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 300ms ease-out;
+  pointer-events: none;
+}
+.b-card__light--default  { width: calc(420 * var(--k)); height: calc(240 * var(--k)); top: calc(248.5 * var(--k)); opacity: calc(1 - var(--sel)); }
+.b-card__light--selected { width: calc(520 * var(--k)); height: calc(300 * var(--k)); top: calc(267 * var(--k));   opacity: var(--sel); }
+.b-card__shadow--default { width: calc(230 * var(--k)); height: calc(40 * var(--k));  top: calc(320.5 * var(--k)); opacity: calc(1 - var(--sel)); }
+.b-card__shadow--selected{ width: calc(270 * var(--k)); height: calc(46 * var(--k));  top: calc(349 * var(--k));   opacity: var(--sel); }
+
+.b-card__figure {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--fig-top) * var(--k));
+  width: calc(var(--fig) * var(--k));
+  height: calc(var(--fig) * var(--k));
+  transform: translateX(-50%);
+  overflow: hidden;
+  transition: width 300ms ease-out, height 300ms ease-out, top 300ms ease-out;
+}
+.b-card__figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: translateX(var(--fig-shift));
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.b-card__name, .b-card__desc {
+  position: absolute;
+  left: 0;
+  right: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+.b-card__name {
+  top: calc(var(--name-top) * var(--k));
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: calc(var(--name) * var(--k));
+  letter-spacing: 0.02em;                 /* 0.84/42, 0.68/34 … */
+  color: var(--color-white);
+}
+.b-card__desc {
+  top: calc(var(--desc-top) * var(--k));
+  font-family: var(--font-kr);
+  font-weight: var(--desc-weight);
+  font-size: max(11px, calc(var(--desc) * var(--k)));
+  color: var(--desc-color);
+}
+
+/* ---------- Arrows — PC (Carousel Arrow 302:3475, 84px) ---------- */
+.b-carousel__controls { display: contents; }
+.b-arrow {
+  position: absolute;
+  top: calc(200 * var(--k));
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(84 * var(--k));
+  height: calc(84 * var(--k));
+  border-radius: 50%;
+  background: var(--gradient-arrow);
+  border: calc(1.5 * var(--k)) solid var(--color-border-arrow);
+  filter: drop-shadow(0 calc(10 * var(--k)) calc(12 * var(--k)) rgba(5, 5, 26, 0.5));
+}
+.b-arrow--prev { left: calc(-20 * var(--k)); }
+.b-arrow--next { left: calc(1225 * var(--k)); }
+.b-arrow img { width: calc(28 * var(--k)); height: calc(28 * var(--k)); }
+.b-dots { display: none; }
+
+/* ---------- CTA — PC (Primary Button 302:3487, 400×80) ---------- */
+.b-cta {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(400 * var(--k));
+  height: calc(80 * var(--k));
+  margin-top: calc(55 * var(--k));
+  border-radius: calc(50 * var(--k));
+  border: calc(1.5 * var(--k)) solid var(--color-border-button);
+  background: var(--gradient-button-primary);
+  box-shadow: inset 0 calc(2 * var(--k)) calc(10 * var(--k)) 0 rgba(255, 255, 255, 0.25);
+  filter: drop-shadow(0 calc(8 * var(--k)) calc(20 * var(--k)) rgba(90, 99, 255, 0.55));
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(26 * var(--k));
+  line-height: normal;
+  color: var(--color-white);
+  white-space: nowrap;
+}
+@media (min-width: 1024px) and (hover: hover) {
+  .b-cta:hover {
+    border-color: var(--color-border-button-hover);
+    background: var(--gradient-button-primary-hover);
+    filter: drop-shadow(0 calc(8 * var(--k)) calc(28 * var(--k)) rgba(90, 99, 255, 0.85));
+  }
+}
+
+/* =========================================================
+   Compact (<1024) — Mobile 시안 구조 (태블릿은 같은 구조, 양옆 카드가 더 노출)
+   세로 리듬(확정): 헤더 → 18 → 타이틀 76 → 14 → 서브 22 → 27 → 캐러셀 436 → 24 → CTA 60
+   ========================================================= */
+@media (max-width: 1023px) {
+  .b-main {
+    padding: calc(18 * var(--k)) 0 calc(24 * var(--k) + env(safe-area-inset-bottom, 0px));
+  }
+  .b-intro { gap: calc(14 * var(--k)); padding: 0 calc(24 * var(--k)); }
+  .b-intro__title {
+    /* 사용자 요청으로 축소 (Figma 28/38 → 24/33, 비율 유지) */
+    font-size: calc(24 * var(--k));
+    line-height: calc(33 * var(--k));
+    letter-spacing: -0.03em;               /* -0.84 / 28 */
+    text-shadow: 0 calc(3 * var(--k)) calc(10 * var(--k)) rgba(8, 5, 31, 0.5);
+  }
+  .b-intro__line { display: block; }
+  .b-intro__sub {
+    font-size: max(12px, calc(14 * var(--k)));
+    line-height: calc(22 * var(--k));
+  }
+  .b-intro__sub-line--pc-only { display: none; }
+
+  /* Mobile Character Carousel (390×436, 내부 클립) */
+  .b-carousel {
+    width: 100%;
+    height: calc(436 * var(--k));
+    margin-top: calc(27 * var(--k));
+    overflow: hidden;
+  }
+  /* 좌우만 잘라 양옆 카드를 숨기고, 위·아래는 열어 선택 카드 글로우가 끊기지 않게 함 */
+  @supports (overflow: clip) { .b-carousel { overflow-x: clip; overflow-y: visible; } }
+  .b-carousel__track {
+    inset: auto;
+    top: calc(18 * var(--k));
+    left: 0;
+    right: 0;
+    height: calc(336 * var(--k));
+    touch-action: pan-y;
+  }
+
+  .b-card {
+    /* Unselected 196×290 */
+    --w: 196; --h: 290; --r: 24; --bw: 1.2;
+    --y: 23;
+    --fig: 172; --fig-top: 10.8;
+    --name: 24; --name-top: 194.8;
+    --desc: 14; --desc-top: 232.8;
+    --shadow: 0 calc(14 * var(--k)) calc(28 * var(--k)) 0 rgba(5, 5, 20, 0.45);
+    left: calc(50% + var(--cx) * var(--k));
+    --cx: -330;                           /* 선택 카드 중심 기준: -118 -16 -196 */
+  }
+  .b-card.is-next { --cx: 134; }          /* 118 + 16 */
+  .b-card .b-card__figure--eye { --fig-shift: -2.08%; }
+  .b-card.is-selected {
+    /* Selected 236×336 */
+    --w: 236; --h: 336; --bw: 2.5;
+    --y: 0; --cx: -118;
+    --fig: 212; --fig-top: 11.5;
+    --name: 30; --name-top: 235.5;
+    --desc: 16; --desc-top: 279.5;
+    --shadow: 0 0 calc(40 * var(--k)) calc(4 * var(--k)) rgba(79, 93, 255, 0.7);
+    --inset: inset 0 calc(2 * var(--k)) calc(18 * var(--k)) 0 rgba(255, 255, 255, 0.25);
+  }
+  .b-card.is-selected .b-card__figure--eye { --fig-shift: -2.06%; }
+
+  .b-card__light--default  { width: calc(260 * var(--k)); height: calc(150 * var(--k)); top: calc(148.8 * var(--k)); }
+  .b-card__light--selected { width: calc(320 * var(--k)); height: calc(190 * var(--k)); top: calc(167.5 * var(--k)); }
+  .b-card__shadow--default { width: calc(130 * var(--k)); height: calc(24 * var(--k));  top: calc(168.8 * var(--k)); }
+  .b-card__shadow--selected{ width: calc(160 * var(--k)); height: calc(28 * var(--k));  top: calc(203.5 * var(--k)); }
+
+  /* Carousel Controls (top 380, 화살표 44 · 점 10) */
+  .b-carousel__controls {
+    position: absolute;
+    top: calc(380 * var(--k));
+    left: 0;
+    right: 0;
+    height: calc(44 * var(--k));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(28 * var(--k));
+  }
+  .b-arrow {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: calc(44 * var(--k));
+    height: calc(44 * var(--k));
+    border-width: calc(1.2 * var(--k));
+    filter: drop-shadow(0 calc(6 * var(--k)) calc(7 * var(--k)) rgba(3, 4, 26, 0.45));
+  }
+  .b-arrow--prev, .b-arrow--next { left: auto; }
+  .b-arrow img { width: calc(18 * var(--k)); height: calc(18 * var(--k)); }
+  .b-arrow::before {               /* 터치 영역 최소 44px 확보 (시각 크기 유지) */
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: max(44px, 100%); height: max(44px, 100%);
+    transform: translate(-50%, -50%);
+  }
+
+  .b-dots { display: flex; align-items: center; gap: calc(10 * var(--k)); }
+  .b-dots__dot {
+    position: relative;
+    width: calc(10 * var(--k));
+    height: calc(10 * var(--k));
+    border-radius: 50%;
+    background: var(--color-indicator-inactive);
+  }
+  .b-dots__dot::before {            /* 터치 영역 확장 (시각 크기는 10 유지) */
+    content: "";
+    position: absolute;
+    inset: -8px -5px;
+  }
+  .b-dots__dot.is-active {
+    background: var(--gradient-indicator-v);
+    box-shadow: var(--glow-indicator-dot);
+    cursor: default;
+  }
+
+  /* Mobile CTA (342×60, 좌우 24) */
+  .b-cta {
+    width: min(calc(100% - 48 * var(--k)), calc(342 * var(--k)));
+    height: calc(60 * var(--k));
+    margin-top: calc(24 * var(--k));
+    border-radius: calc(30 * var(--k));
+    box-shadow: inset 0 calc(2 * var(--k)) calc(8 * var(--k)) 0 rgba(255, 255, 255, 0.25);
+    filter: drop-shadow(0 calc(8 * var(--k)) calc(15 * var(--k)) rgba(90, 99, 255, 0.55));
+    font-size: calc(19 * var(--k));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; }
+}

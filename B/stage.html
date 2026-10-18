@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko" class="b-page-stage">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>EYEQ — 스테이지 선택</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,500;0,600;0,700;0,800;0,900;1,900&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 헤더·카드 내용을 채운 뒤 첫 화면을 그림 (페이지 이동 시 깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#b-ready" blocking="render" />
+  <link rel="stylesheet" href="css/b-tokens.css" />
+  <link rel="stylesheet" href="css/b-common.css" />
+  <link rel="stylesheet" href="css/b-stage.css" />
+</head>
+<body class="b-page">
+  <!-- 배경: PC 316:4114 / Mobile 352:8431 -->
+  <div class="b-bg b-bg--game" aria-hidden="true">
+    <img class="b-bg__img b-bg__img--pc" src="assets/b/bg-stage-pc.svg" alt="" />
+    <div class="b-bg__mo">
+      <img class="b-bg__glow" src="assets/b/top-glow-mobile.svg" alt="" />
+      <span class="b-cube" style="--x:-24.38;--y:-31.25;--s:74;--rot:-18deg;--o:.55"></span>
+      <span class="b-cube" style="--x:342.25;--y:173.34;--s:62;--rot:16deg;--o:.7"></span>
+      <span class="b-cube" style="--x:324.79;--y:182.55;--s:30;--rot:-12deg;--o:.8;--b:0px"></span>
+      <span class="b-cube" style="--x:-33.97;--y:304.84;--s:52;--rot:12deg;--o:.45"></span>
+      <span class="b-cube" style="--x:365.89;--y:458.74;--s:56;--rot:-20deg;--o:.5"></span>
+      <span class="b-cube" style="--x:-23.21;--y:611.31;--s:64;--rot:-14deg;--o:.45"></span>
+      <span class="b-cube" style="--x:345.26;--y:767.8;--s:60;--rot:18deg;--o:.5"></span>
+      <span class="b-bg__vignette"></span>
+    </div>
+  </div>
+
+  <!-- ===== Header — Character Selected (313:3575 / Mobile 349:7179) ===== -->
+  <header class="b-header b-header--selected" data-header>
+    <a class="b-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="b-header__logo-img b-header__logo-img--pc" src="assets/b/logo-eyeq.svg" alt="EYEQ" />
+      <img class="b-header__logo-img b-header__logo-img--mo" src="assets/b/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="b-nav" aria-label="주요 메뉴">
+      <a class="b-nav__item" href="index.html">
+        <span class="b-nav__label">Home</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item is-active" href="stage.html" aria-current="page">
+        <span class="b-nav__label">Game</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <!-- Ranking · About: 기획·시안 없음 → Coming Soon 팝업 -->
+      <a class="b-nav__item" href="#" data-coming-soon aria-haspopup="dialog">
+        <span class="b-nav__label">Ranking</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item" href="#" data-coming-soon aria-haspopup="dialog">
+        <span class="b-nav__label">About</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+    </nav>
+    <div class="b-header__actions">
+      <div class="b-charinfo" data-charinfo role="img" aria-label="선택한 캐릭터">
+        <span class="b-charinfo__profile"><img data-char-img src="assets/b/char-eye.png" alt="" /></span>
+        <span class="b-charinfo__level">
+          <span class="b-charinfo__lv" data-lv-text>LV. 01</span>
+          <span class="b-charinfo__xp" data-xp-text>XP 0 / 100</span>
+          <span class="b-charinfo__bar"><span class="b-charinfo__fill"></span></span>
+        </span>
+        <span class="b-charinfo__divider" aria-hidden="true"></span>
+      </div>
+      <button class="b-header__icon-btn b-header__icon-btn--bell" type="button" aria-label="알림" data-coming-soon aria-haspopup="dialog">
+        <img class="b-icon--pc" src="assets/b/icon-notification.svg" alt="" />
+        <img class="b-icon--mo" src="assets/b/icon-notification-mobile.svg" alt="" />
+      </button>
+      <button class="b-header__icon-btn b-header__icon-btn--profile" type="button" aria-label="프로필" data-coming-soon aria-haspopup="dialog">
+        <img src="assets/b/icon-profile.svg" alt="" />
+      </button>
+      <button class="b-header__icon-btn b-header__menu-btn" type="button" aria-label="메뉴 열기"
+              aria-controls="b-menu" aria-expanded="false" data-menu-toggle>
+        <img class="b-header__menu-icon b-header__menu-icon--open" src="assets/b/icon-menu.svg" alt="" />
+        <img class="b-header__menu-icon b-header__menu-icon--close" src="assets/b/icon-close.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- 모바일 메뉴 — Closed Selected / Open Selected (349:7179) : Game 활성 -->
+  <div class="b-menu" id="b-menu" data-menu aria-hidden="true">
+    <div class="b-menu__scrim" data-menu-close></div>
+    <nav class="b-menu__panel" aria-label="모바일 메뉴">
+      <p class="b-menu__label">MENU</p>
+      <a class="b-menu__item" href="index.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Home</span></a>
+      <a class="b-menu__item is-active" href="stage.html" aria-current="page"><span class="b-menu__bar" aria-hidden="true"></span><span>Game</span></a>
+      <a class="b-menu__item" href="#" data-coming-soon aria-haspopup="dialog"><span class="b-menu__bar" aria-hidden="true"></span><span>Ranking</span></a>
+      <a class="b-menu__item" href="#" data-coming-soon aria-haspopup="dialog"><span class="b-menu__bar" aria-hidden="true"></span><span>About</span></a>
+    </nav>
+  </div>
+
+  <!-- ===== STAGE SELECT (PC 316:4113 / Mobile 352:8430) ===== -->
+  <main class="b-main b-view">
+    <div class="b-canvas b-stage" style="--canvas-h:733">
+      <div class="b-stage__head">
+        <p class="b-stage__eyebrow">STAGE SELECT</p>
+        <h1 class="b-stage__title">
+          <span class="b-pc">어떤 <em class="b-stage__accent">감각</em>부터 성장시켜 볼까요?</span>
+          <span class="b-mo">어떤 <em class="b-stage__accent">감각</em>을 키워볼까요?</span>
+        </h1>
+        <p class="b-stage__desc">
+          <span class="b-pc">다양한 디자인 감각을 훈련하며, 더 좋은 디자인을 보는 눈을 키워보세요.</span>
+          <span class="b-mo">원하는 스테이지를 선택해 디자인 감각을 키워보세요.</span>
+        </p>
+      </div>
+
+      <!-- Main Stage Card (315:3793 / Mobile 352:7368) : 선택한 스테이지 정보 -->
+      <section class="b-mcard" aria-live="polite" aria-labelledby="b-mcard-name">
+        <img class="b-mcard__bg b-pc" src="assets/b/character-stage-bg.svg" alt="" />
+        <img class="b-mcard__bg b-mo" src="assets/b/character-stage-bg-mobile.svg" alt="" />
+        <img class="b-mcard__char" data-char-img src="assets/b/char-eye.png" alt="" />
+        <div class="b-mcard__bubble" aria-hidden="true">
+          <img class="b-mcard__tail" src="assets/b/bubble-tail.svg" alt="" />
+          <span class="b-mcard__bubble-box"></span>
+          <p class="b-mcard__bubble-text b-pc">오늘은<br />어떤 감각을<br />키워볼까요?</p>
+          <p class="b-mcard__bubble-text b-mo">어떤 감각을<br />키워볼까?</p>
+        </div>
+        <span class="b-mcard__divider" aria-hidden="true"></span>
+        <div class="b-mcard__info">
+          <p class="b-mcard__no" data-stage-no>STAGE 01</p>
+          <h2 class="b-mcard__name" id="b-mcard-name" data-stage-name>Typography</h2>
+          <p class="b-mcard__desc">
+            <span class="b-pc" data-stage-desc>글자의 차이를 발견하는 눈</span>
+            <span class="b-mo" data-stage-desc-mo>글자의 차이를<br />발견하는 눈</span>
+          </p>
+          <a class="b-sbtn" href="game.html" data-play>PLAY NOW&nbsp;&nbsp;→</a>
+          <button class="b-sbtn b-sbtn--soon" type="button" data-soon hidden>
+            <img src="assets/b/icon-lock-button.svg" alt="" />COMING SOON
+          </button>
+        </div>
+        <span class="b-mcard__count" data-stage-count>1 / 5</span>
+        <div class="b-mcard__icon" data-stage-icon aria-hidden="true"></div>
+      </section>
+
+      <!-- Stage Cards (314:3714 / Mobile 350:7318) -->
+      <div class="b-slist" role="group" aria-label="스테이지 목록">
+        <button class="b-scard" type="button" data-stage="typography"></button>
+        <button class="b-scard" type="button" data-stage="spacing"></button>
+        <button class="b-scard" type="button" data-stage="alignment"></button>
+        <button class="b-scard" type="button" data-stage="hierarchy"></button>
+        <button class="b-scard" type="button" data-stage="composition"></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Coming Soon Popup (PC 391:10542 / Mobile 391:10553) -->
+  <div class="b-modal" data-modal="soon" aria-hidden="true">
+    <button class="b-modal__dim" type="button" tabindex="-1" aria-label="닫기" data-modal-close data-modal-dim></button>
+    <div class="b-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="b-soon-title" tabindex="-1">
+      <h2 class="b-modal__title" id="b-soon-title">아직 준비 중이에요!</h2>
+      <p class="b-modal__body">
+        <span>더 다양한 디자인 감각 테스트를 준비하고 있어요.</span>
+        <span>지금은 타이포그래피 스테이지를 즐겨보세요!</span>
+      </p>
+      <div class="b-modal__actions">
+        <button class="b-modal__btn" type="button" data-modal-close>취소</button>
+        <button class="b-modal__btn b-modal__btn--confirm" type="button" data-modal-close data-modal-confirm>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/b-common.js"></script>
+  <script src="js/b-stage.js"></script>
+  <span id="b-ready" hidden></span>
+</body>
+</html>

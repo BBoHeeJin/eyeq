@@ -1,0 +1,16 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="17.8095" height="22" viewBox="0 0 17.8095 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon / Flame">
+<path id="Vector" d="M9.58963 0.725353C10.2746 5.52023 15.7545 8.26015 15.7545 14.425C15.7545 16.2417 15.0328 17.9839 13.7482 19.2685C12.4636 20.5531 10.7213 21.2748 8.90464 21.2748C7.08796 21.2748 5.34568 20.5531 4.06109 19.2685C2.7765 17.9839 2.05483 16.2417 2.05483 14.425C2.05483 11.0001 4.10977 8.94513 5.47974 7.57517C5.47974 10.3151 6.8497 11.6851 8.21966 11.6851C7.53468 8.26015 8.21966 4.15026 9.58963 0.725353Z" fill="url(#paint0_linear_0_208)"/>
+<path id="Vector_2" d="M8.90496 10.3151C9.58994 13.055 12.3299 13.74 12.3299 16.4799C12.3299 17.3882 11.969 18.2594 11.3267 18.9017C10.6844 19.544 9.8133 19.9048 8.90496 19.9048C7.99662 19.9048 7.12548 19.544 6.48318 18.9017C5.84089 18.2594 5.48005 17.3882 5.48005 16.4799C5.48005 14.4249 7.535 13.74 8.90496 10.3151Z" fill="url(#paint1_linear_0_208)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_208" x1="2.05483" y1="0.725353" x2="2.05483" y2="21.2748" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFD25A"/>
+<stop offset="1" stop-color="#FF5A2A"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_208" x1="5.48005" y1="10.3151" x2="5.48005" y2="19.9048" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFF6C8"/>
+<stop offset="1" stop-color="#FFB547"/>
+</linearGradient>
+</defs>
+</svg>

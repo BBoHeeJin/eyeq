@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>EYEQ — 어떤 눈과 함께 디자인 감각을 키워볼까요?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 헤더·카드 내용을 채운 뒤 첫 화면을 그림 (페이지 이동 시 깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#b-ready" blocking="render" />
+  <link rel="stylesheet" href="css/b-tokens.css" />
+  <link rel="stylesheet" href="css/b-common.css" />
+  <link rel="stylesheet" href="css/b-main.css" />
+</head>
+<body class="b-page">
+  <!-- 배경: 페이지 그라데이션 + Figma 배경 장식 SVG (PC 305:3484 / Mobile 340:7129) -->
+  <div class="b-bg" aria-hidden="true">
+    <img class="b-bg__img b-bg__img--pc" src="assets/b/bg-pc.svg" alt="" />
+    <img class="b-bg__img b-bg__img--mo" src="assets/b/bg-mobile.svg" alt="" />
+  </div>
+
+  <!-- ===== Header ===== -->
+  <header class="b-header" data-header>
+    <a class="b-header__logo" href="./" aria-label="EYEQ 홈">
+      <img class="b-header__logo-img b-header__logo-img--pc" src="assets/b/logo-eyeq.svg" alt="EYEQ" />
+      <img class="b-header__logo-img b-header__logo-img--mo" src="assets/b/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+
+    <!-- PC 내비게이션 (Navigation Item 302:3482) -->
+    <nav class="b-nav" aria-label="주요 메뉴">
+      <a class="b-nav__item is-active" href="./" aria-current="page">
+        <span class="b-nav__label">Home</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item" href="stage.html">
+        <span class="b-nav__label">Game</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <!-- Ranking · About: 기획·시안 없음 → Coming Soon 팝업 -->
+      <a class="b-nav__item" href="#" data-coming-soon aria-haspopup="dialog">
+        <span class="b-nav__label">Ranking</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item" href="#" data-coming-soon aria-haspopup="dialog">
+        <span class="b-nav__label">About</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+    </nav>
+
+    <div class="b-header__actions">
+      <!-- 알림·프로필: 연결 대상 없음 (범위 외) -->
+      <button class="b-header__icon-btn b-header__icon-btn--bell" type="button" aria-label="알림" data-coming-soon aria-haspopup="dialog">
+        <img class="b-icon--pc" src="assets/b/icon-notification.svg" alt="" />
+        <img class="b-icon--mo" src="assets/b/icon-notification-mobile.svg" alt="" />
+      </button>
+      <button class="b-header__icon-btn b-header__icon-btn--profile" type="button" aria-label="프로필" data-coming-soon aria-haspopup="dialog">
+        <img src="assets/b/icon-profile.svg" alt="" />
+      </button>
+      <!-- 모바일·태블릿 메뉴 버튼 (Mobile Header 337:7016) -->
+      <button class="b-header__icon-btn b-header__menu-btn" type="button" aria-label="메뉴 열기"
+              aria-controls="b-menu" aria-expanded="false" data-menu-toggle>
+        <img class="b-header__menu-icon b-header__menu-icon--open" src="assets/b/icon-menu.svg" alt="" />
+        <img class="b-header__menu-icon b-header__menu-icon--close" src="assets/b/icon-close.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- 모바일·태블릿 메뉴 (Mobile Navigation Menu 337:7072) -->
+  <div class="b-menu" id="b-menu" data-menu aria-hidden="true">
+    <div class="b-menu__scrim" data-menu-close></div>
+    <nav class="b-menu__panel" aria-label="모바일 메뉴">
+      <p class="b-menu__label">MENU</p>
+      <a class="b-menu__item is-active" href="./" aria-current="page">
+        <span class="b-menu__bar" aria-hidden="true"></span><span>Home</span>
+      </a>
+      <a class="b-menu__item" href="stage.html">
+        <span class="b-menu__bar" aria-hidden="true"></span><span>Game</span>
+      </a>
+      <a class="b-menu__item" href="#" data-coming-soon aria-haspopup="dialog">
+        <span class="b-menu__bar" aria-hidden="true"></span><span>Ranking</span>
+      </a>
+      <a class="b-menu__item" href="#" data-coming-soon aria-haspopup="dialog">
+        <span class="b-menu__bar" aria-hidden="true"></span><span>About</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- ===== Main (HOME / CHARACTER SELECT) ===== -->
+  <main class="b-main">
+    <div class="b-intro">
+      <h1 class="b-intro__title">
+        <span class="b-intro__line">어떤 <em class="b-intro__accent">눈</em>과 함께</span>
+        <span class="b-intro__line">디자인 감각을 키워볼까요?</span>
+      </h1>
+      <p class="b-intro__sub">
+        <span class="b-intro__sub-line b-intro__sub-line--pc-only">각 캐릭터는 특별한 개성을 가지고 있어요,</span>
+        <span class="b-intro__sub-line">당신의 디자인 여정을 함께할 눈을 선택해보세요.</span>
+      </p>
+    </div>
+
+    <!-- Character Carousel (PC 303:3502 / Mobile 340:7106) -->
+    <section class="b-carousel" aria-roledescription="carousel" aria-label="캐릭터 선택" data-carousel>
+      <div class="b-carousel__track" data-carousel-track>
+        <button class="b-card" type="button" data-char="FOCUS">
+          <span class="b-card__bg b-card__bg--default" aria-hidden="true"></span>
+          <span class="b-card__bg b-card__bg--selected" aria-hidden="true"></span>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-mobile.svg" /><img class="b-card__light b-card__light--default" src="assets/b/inner-light.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-selected-mobile.svg" /><img class="b-card__light b-card__light--selected" src="assets/b/inner-light-selected.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-mobile.svg" /><img class="b-card__shadow b-card__shadow--default" src="assets/b/floor-shadow.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-selected-mobile.svg" /><img class="b-card__shadow b-card__shadow--selected" src="assets/b/floor-shadow-selected.svg" alt="" /></picture>
+          <span class="b-card__figure"><img src="assets/b/char-focus.png" alt="" /></span>
+          <span class="b-card__name">FOCUS</span>
+          <span class="b-card__desc">집중하는 눈</span>
+        </button>
+        <button class="b-card" type="button" data-char="EYE">
+          <span class="b-card__bg b-card__bg--default" aria-hidden="true"></span>
+          <span class="b-card__bg b-card__bg--selected" aria-hidden="true"></span>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-mobile.svg" /><img class="b-card__light b-card__light--default" src="assets/b/inner-light.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-selected-mobile.svg" /><img class="b-card__light b-card__light--selected" src="assets/b/inner-light-selected.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-mobile.svg" /><img class="b-card__shadow b-card__shadow--default" src="assets/b/floor-shadow.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-selected-mobile.svg" /><img class="b-card__shadow b-card__shadow--selected" src="assets/b/floor-shadow-selected.svg" alt="" /></picture>
+          <span class="b-card__figure b-card__figure--eye"><img src="assets/b/char-eye.png" alt="" /></span>
+          <span class="b-card__name">EYE</span>
+          <span class="b-card__desc">호기심 많은 눈</span>
+        </button>
+        <button class="b-card" type="button" data-char="SPARK">
+          <span class="b-card__bg b-card__bg--default" aria-hidden="true"></span>
+          <span class="b-card__bg b-card__bg--selected" aria-hidden="true"></span>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-mobile.svg" /><img class="b-card__light b-card__light--default" src="assets/b/inner-light.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-selected-mobile.svg" /><img class="b-card__light b-card__light--selected" src="assets/b/inner-light-selected.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-mobile.svg" /><img class="b-card__shadow b-card__shadow--default" src="assets/b/floor-shadow.svg" alt="" /></picture>
+          <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-selected-mobile.svg" /><img class="b-card__shadow b-card__shadow--selected" src="assets/b/floor-shadow-selected.svg" alt="" /></picture>
+          <span class="b-card__figure"><img src="assets/b/char-spark.png" alt="" /></span>
+          <span class="b-card__name">SPARK</span>
+          <span class="b-card__desc">반짝이는 눈</span>
+        </button>
+      </div>
+
+      <div class="b-carousel__controls">
+        <button class="b-arrow b-arrow--prev" type="button" aria-label="이전 캐릭터" data-carousel-prev>
+          <img class="b-icon--pc" src="assets/b/chevron-left.svg" alt="" />
+          <img class="b-icon--mo" src="assets/b/chevron-left-mobile.svg" alt="" />
+        </button>
+        <div class="b-dots" role="group" aria-label="캐릭터 위치">
+          <button class="b-dots__dot" type="button" data-carousel-dot="FOCUS" aria-label="FOCUS"></button>
+          <button class="b-dots__dot" type="button" data-carousel-dot="EYE" aria-label="EYE"></button>
+          <button class="b-dots__dot" type="button" data-carousel-dot="SPARK" aria-label="SPARK"></button>
+        </div>
+        <button class="b-arrow b-arrow--next" type="button" aria-label="다음 캐릭터" data-carousel-next>
+          <img class="b-icon--pc" src="assets/b/chevron-right.svg" alt="" />
+          <img class="b-icon--mo" src="assets/b/chevron-right-mobile.svg" alt="" />
+        </button>
+      </div>
+      <p class="b-sr-only" aria-live="polite" data-carousel-status></p>
+    </section>
+
+    <!-- CTA (PC Primary Button 302:3487 / Mobile CTA 337:7088): 선택 캐릭터 저장 → STAGE SELECT -->
+    <button class="b-cta" type="button" data-cta>이 캐릭터로 시작하기 →</button>
+  </main>
+
+  <script src="js/b-common.js"></script>
+  <script src="js/b-main.js"></script>
+  <span id="b-ready" hidden></span>
+</body>
+</html>

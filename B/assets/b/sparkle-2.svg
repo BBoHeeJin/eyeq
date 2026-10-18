@@ -1,0 +1,21 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="22.496" height="22.496" viewBox="0 0 22.496 22.496" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Sparkle" filter="url(#filter0_d_0_2096)">
+<g clip-path="url(#clip0_0_2096)">
+<path id="Vector" d="M11.248 4.736C11.8992 10.2712 12.2248 10.5968 17.76 11.248C12.2248 11.8992 11.8992 12.2248 11.248 17.76C10.5968 12.2248 10.2712 11.8992 4.736 11.248C10.2712 10.5968 10.5968 10.2712 11.248 4.736Z" fill="#FFD66B"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_0_2096" x="0" y="0" width="22.496" height="22.496" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="2.368"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.839216 0 0 0 0 0.419608 0 0 0 0.6 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_2096"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_2096" result="shape"/>
+</filter>
+<clipPath id="clip0_0_2096">
+<rect width="13.024" height="13.024" fill="white" transform="translate(4.736 4.736)"/>
+</clipPath>
+</defs>
+</svg>

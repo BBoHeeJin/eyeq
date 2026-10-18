@@ -1,0 +1,554 @@
+/* =========================================================
+   EYEQ B안 — STAGE SELECT (PC 316:4113 / Mobile 352:8430)
+   캔버스: PC 1920×968 (헤더 아래) / Mobile 390×733
+   모든 크기 = Figma px × 단위(--k)
+   ========================================================= */
+
+/* ---------- 타이틀 그룹 (316:4159) ---------- */
+.b-stage__head {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(24 * var(--k) + var(--ex) * 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.b-stage__eyebrow {
+  margin: 0 0 calc(16 * var(--k));
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(15 * var(--k));
+  line-height: normal;
+  letter-spacing: 0.42em;                 /* 6.3 / 15 */
+  color: var(--color-eyebrow);
+  margin-right: -0.42em;                  /* 자간 끝 여백 보정 (가운데 정렬) */
+}
+.b-stage__title {
+  margin: 0 0 calc(12 * var(--k));
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: calc(52 * var(--k));
+  line-height: calc(66 * var(--k));
+  letter-spacing: -0.02em;                /* -1.04 / 52 */
+  color: var(--color-white);
+  text-shadow: 0 calc(4 * var(--k)) calc(16 * var(--k)) rgba(5, 5, 31, 0.5);
+  white-space: nowrap;
+}
+.b-stage__accent {
+  background: linear-gradient(180deg, #4f72ff 0%, #2f55ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+.b-stage__desc {
+  margin: 0;
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: calc(19 * var(--k));
+  line-height: calc(28 * var(--k));
+  color: var(--color-menu-text);
+  white-space: nowrap;
+}
+
+/* =========================================================
+   Stage Icon (314:3578) — 기준 110×84, --is 배율 (카드 1 · 메인 2.55 · 모바일 0.5)
+   ========================================================= */
+.b-ico {
+  --u2: calc(var(--is) * var(--k));
+  position: relative;
+  display: block;
+  width: calc(110 * var(--u2));
+  height: calc(84 * var(--u2));
+}
+.b-ico > * { position: absolute; display: block; }
+.b-ico__bar {
+  background: linear-gradient(180deg, #9a9ed2 0%, #5a5e92 100%);
+  box-shadow: 0 calc(6 * var(--u2)) calc(10 * var(--u2)) 0 rgba(5, 5, 26, 0.45);
+}
+/* Typography — A a */
+.b-ico--typography {
+  font-family: var(--font-en);
+  font-weight: 800;
+  line-height: normal;
+  white-space: nowrap;
+}
+.b-ico__A {
+  left: calc(6 * var(--u2));
+  top: calc(-6 * var(--u2));
+  font-size: calc(84 * var(--u2));
+  letter-spacing: calc(-2 * var(--u2));
+  color: var(--color-white);
+  text-shadow: 0 calc(5 * var(--u2)) calc(8 * var(--u2)) rgba(5, 5, 26, 0.5);
+}
+.b-ico__a {
+  left: calc(65 * var(--u2));
+  top: calc(25 * var(--u2));
+  font-size: calc(58 * var(--u2));
+  background: linear-gradient(180deg, #6c8cff 0%, #2f55f5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 calc(5 * var(--u2)) calc(4 * var(--u2)) rgba(5, 5, 26, 0.5));
+}
+/* Spacing — 두 세로 막대 + 화살표 */
+.b-ico--spacing .b-ico__bar { top: calc(3 * var(--u2)); width: calc(24 * var(--u2)); height: calc(78 * var(--u2)); border-radius: calc(7 * var(--k)); }
+.b-ico--spacing .b-ico__bar:nth-child(1) { left: calc(8 * var(--u2)); }
+.b-ico--spacing .b-ico__bar:nth-child(2) { left: calc(78 * var(--u2)); }
+.b-ico__arrow { left: calc(30 * var(--u2)); top: calc(32 * var(--u2)); width: calc(50 * var(--u2)); height: calc(32 * var(--u2)); max-width: none; }
+/* Alignment — 가이드 + 정렬된 가로선 */
+.b-ico__guide {
+  left: calc(10 * var(--u2)); top: calc(2 * var(--u2));
+  width: calc(6 * var(--u2)); height: calc(80 * var(--u2));
+  border-radius: calc(3 * var(--u2));
+  background: linear-gradient(180deg, #7c98ff 0%, #4c6bff 100%);
+  box-shadow: 0 calc(6 * var(--u2)) calc(10 * var(--u2)) 0 rgba(5, 5, 26, 0.45);
+}
+.b-ico--alignment .b-ico__bar { left: calc(24 * var(--u2)); height: calc(11 * var(--u2)); border-radius: calc(5.5 * var(--u2)); }
+.b-ico--alignment .b-ico__bar:nth-child(2) { top: calc(8 * var(--u2));  width: calc(78 * var(--u2)); }
+.b-ico--alignment .b-ico__bar:nth-child(3) { top: calc(26 * var(--u2)); width: calc(64 * var(--u2)); }
+.b-ico--alignment .b-ico__bar:nth-child(4) { top: calc(44 * var(--u2)); width: calc(78 * var(--u2)); }
+.b-ico--alignment .b-ico__bar:nth-child(5) { top: calc(62 * var(--u2)); width: calc(56 * var(--u2)); }
+/* Hierarchy — 위계 가로선 */
+.b-ico--hierarchy .b-ico__bar:nth-child(1) {
+  left: calc(10 * var(--u2)); top: calc(2 * var(--u2)); width: calc(90 * var(--u2)); height: calc(20 * var(--u2));
+  border-radius: calc(7 * var(--k));
+  background: linear-gradient(90deg, #9ab1ff 0%, #5f7cff 100%);
+}
+.b-ico--hierarchy .b-ico__bar:nth-child(2) {
+  left: calc(23 * var(--u2)); top: calc(32 * var(--u2)); width: calc(64 * var(--u2)); height: calc(17 * var(--u2));
+  border-radius: calc(6 * var(--k));
+}
+.b-ico--hierarchy .b-ico__bar:nth-child(3) {
+  left: calc(34 * var(--u2)); top: calc(58 * var(--u2)); width: calc(42 * var(--u2)); height: calc(15 * var(--u2));
+  border-radius: calc(6 * var(--k));
+  background: linear-gradient(180deg, #7b7fae 0%, #50547f 100%);
+}
+/* Composition — 사각형 + 원 (SVG) */
+.b-ico__img { left: 0; top: 0; width: 100%; height: calc(96 * var(--u2)); max-width: none; }
+
+/* Typography 3D (Main Stage Card 315:3617) — 레이어 13장 + 그라데이션 앞면 */
+.b-ico3d {
+  position: absolute;
+  font-family: var(--font-en);
+  font-weight: 800;
+  line-height: normal;
+  white-space: nowrap;
+  filter: drop-shadow(calc(4.7 * var(--k)) calc(14.1 * var(--k)) calc(9.4 * var(--k)) rgba(5, 5, 31, 0.55));
+}
+.b-ico3d span { position: absolute; }
+.b-ico3d__A { font-size: calc(228.733 * var(--k)); color: #8a8fba; }
+.b-ico3d__a { font-size: calc(205.233 * var(--k)); color: #122c9e; }
+.b-ico3d__A.is-face, .b-ico3d__a.is-face { -webkit-background-clip: text; background-clip: text; color: transparent; }
+.b-ico3d__A.is-face { background-image: linear-gradient(180deg, #ffffff 0%, #d3d6f0 100%); }
+.b-ico3d__a.is-face { background-image: linear-gradient(180deg, #6383ff 0%, #1c43ee 100%); }
+
+/* =========================================================
+   Main Stage Card (315:3793) — PC 1447×360
+   좌표는 테두리 안쪽 기준 (Figma 코드값)
+   ========================================================= */
+.b-mcard {
+  position: absolute;
+  left: calc(239 * var(--k));
+  top: calc(200 * var(--k) + var(--ex) * 0.6);
+  width: calc(1447 * var(--k));
+  height: calc(360 * var(--k));
+  overflow: hidden;
+  border-radius: calc(32 * var(--k));
+  border: calc(2.5 * var(--k)) solid var(--color-stage-border);
+  background: var(--gradient-main-stage);
+  box-shadow: 0 0 calc(50 * var(--k)) calc(2 * var(--k)) rgba(47, 85, 255, 0.6);
+}
+.b-mcard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 calc(30 * var(--k)) 0 rgba(92, 123, 255, 0.5);
+  pointer-events: none;
+}
+.b-mcard > * { position: absolute; }
+.b-mcard__bg.b-pc {
+  left: calc(-122.5 * var(--k));             /* -2.5 − 700×17.14% */
+  top: calc(-112.5 * var(--k));              /* -2.5 − 360×30.56% */
+  width: calc(820 * var(--k));
+  height: calc(620 * var(--k));
+  max-width: none;
+}
+.b-mcard__char {
+  left: calc(229.5 * var(--k));
+  top: calc(19.5 * var(--k));
+  width: calc(330 * var(--k));
+  height: calc(330 * var(--k));
+  object-fit: contain;
+}
+.b-mcard__bubble {
+  left: calc(70.5 * var(--k));
+  top: calc(27.5 * var(--k));
+  width: calc(168 * var(--k));
+  height: calc(132 * var(--k));
+}
+.b-mcard__bubble > * { position: absolute; }
+.b-mcard__tail { left: calc(118 * var(--k)); top: calc(118 * var(--k)); width: calc(26 * var(--k)); height: calc(22 * var(--k)); }
+.b-mcard__bubble-box {
+  left: 0; top: 0;
+  width: calc(168 * var(--k));
+  height: calc(128 * var(--k));
+  border-radius: calc(26 * var(--k));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(223, 225, 255, 0.9) 100%);
+  box-shadow: 0 calc(10 * var(--k)) calc(24 * var(--k)) 0 rgba(13, 15, 77, 0.35);
+}
+.b-mcard__bubble-text {
+  left: 0; right: 0;
+  top: calc(24 * var(--k));
+  margin: 0;
+  font-family: var(--font-kr);
+  font-weight: 500;
+  font-size: calc(17 * var(--k));
+  line-height: calc(27 * var(--k));
+  text-align: center;
+  color: var(--color-bubble-text);
+  white-space: nowrap;
+}
+.b-mcard__divider {
+  left: calc(633.5 * var(--k));
+  top: calc(52.5 * var(--k));
+  width: 1px;
+  height: calc(248 * var(--k));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.22) 50%, rgba(255, 255, 255, 0) 100%);
+}
+.b-mcard__info {
+  left: calc(694.5 * var(--k));
+  top: calc(49.5 * var(--k));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.b-mcard__no {
+  margin: 0 0 calc(14 * var(--k));
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(16 * var(--k));
+  line-height: normal;
+  letter-spacing: 0.32em;                  /* 5.12 / 16 */
+  color: var(--color-stage-no);
+}
+.b-mcard__name {
+  margin: 0 0 calc(10 * var(--k));
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: calc(54 * var(--k));
+  line-height: normal;
+  letter-spacing: -0.01em;                 /* -0.54 / 54 */
+  color: var(--color-white);
+  text-shadow: 0 calc(4 * var(--k)) calc(12 * var(--k)) rgba(5, 5, 38, 0.5);
+  white-space: nowrap;
+}
+.b-mcard__desc {
+  margin: 0 0 calc(34 * var(--k));
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: calc(23 * var(--k));
+  line-height: normal;
+  color: var(--color-stage-desc);
+  white-space: nowrap;
+}
+.b-mcard__count {
+  left: calc(1316.5 * var(--k));
+  top: calc(27.5 * var(--k));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(96 * var(--k));
+  height: calc(40 * var(--k));
+  border-radius: calc(20 * var(--k));
+  border: calc(1.2 * var(--k)) solid rgba(255, 255, 255, 0.22);
+  background: rgba(10, 14, 58, 0.55);
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(17 * var(--k));
+  letter-spacing: 0.04em;                  /* 0.68 / 17 */
+  color: var(--color-white);
+  white-space: nowrap;
+}
+.b-mcard__icon { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.b-mcard__icon .b-ico3d { left: calc(1064.5 * var(--k)); top: calc(94.58 * var(--k)); width: calc(282 * var(--k)); height: calc(195.83 * var(--k)); }
+.b-mcard__icon .b-ico {
+  position: absolute;
+  --is: 2.55;
+  filter: drop-shadow(0 calc(10 * var(--k)) calc(20 * var(--k)) rgba(61, 85, 255, 0.45));
+}
+.b-mcard__icon .b-ico--spacing     { left: calc(1075.5 * var(--k)); top: calc(103.5 * var(--k)); }
+.b-mcard__icon .b-ico--alignment,
+.b-mcard__icon .b-ico--hierarchy   { left: calc(1057.5 * var(--k)); top: calc(103.5 * var(--k)); }
+.b-mcard__icon .b-ico--composition { left: calc(1075.5 * var(--k)); top: calc(89.5 * var(--k)); }
+.b-mcard__icon .b-ico--typography { display: none; }   /* PC는 3D 아이콘 사용 */
+
+/* Stage Button (314:3588) — Play Now / Coming Soon */
+.b-sbtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--k));
+  width: calc(262 * var(--k));
+  height: calc(72 * var(--k));
+  border-radius: calc(36 * var(--k));
+  border: calc(1.5 * var(--k)) solid rgba(142, 166, 255, 0.5);
+  background: var(--gradient-game-active);
+  box-shadow: inset 0 calc(2 * var(--k)) calc(8 * var(--k)) 0 rgba(255, 255, 255, 0.25);
+  filter: drop-shadow(0 calc(8 * var(--k)) calc(16 * var(--k)) rgba(47, 85, 255, 0.7));
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: calc(21 * var(--k));
+  line-height: normal;
+  letter-spacing: 0.04em;
+  color: var(--color-white);
+  white-space: pre;
+  transition: transform 120ms ease-out;
+}
+.b-sbtn:active { transform: scale(0.98); }   /* Active — 구현 제안 */
+.b-sbtn--soon {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: none;
+  filter: none;
+  font-size: calc(19 * var(--k));
+  color: var(--color-locked-text);
+  white-space: nowrap;
+}
+.b-sbtn--soon img { width: calc(20 * var(--k)); height: calc(20 * var(--k)); }
+.b-sbtn[hidden] { display: none; }
+
+/* =========================================================
+   Stage Card (314:3714) — PC 330×287, 5장 · 간격 20
+   좌표 = (Figma 바깥 좌표 − 테두리 --bw)
+   ========================================================= */
+.b-slist {
+  position: absolute;
+  left: calc(95 * var(--k));
+  top: calc(600 * var(--k) + var(--ex) * 0.85);
+  display: flex;
+  gap: calc(20 * var(--k));
+}
+.b-scard {
+  --bw: 1;
+  position: relative;
+  flex: none;
+  width: calc(330 * var(--k));
+  height: calc(287 * var(--k));
+  border-radius: calc(24 * var(--k));
+  border: calc(var(--bw) * var(--k)) solid rgba(255, 255, 255, 0.1);
+  background: var(--gradient-stage-card);
+  -webkit-backdrop-filter: blur(calc(6 * var(--k)));
+  backdrop-filter: blur(calc(6 * var(--k)));
+  filter: drop-shadow(0 calc(16 * var(--k)) calc(16 * var(--k)) rgba(3, 3, 15, 0.45));
+  text-align: center;
+}
+.b-scard.is-selected {
+  --bw: 3;
+  border-color: var(--color-stage-border);
+  background: var(--gradient-stage-card-selected);
+  filter: drop-shadow(0 0 calc(18 * var(--k)) rgba(47, 91, 255, 0.7));
+  box-shadow: inset 0 0 calc(28 * var(--k)) 0 rgba(76, 107, 255, 0.45);
+  cursor: default;
+}
+/* Hover — Figma 미정의 · 구현 제안 (테두리만 살짝 밝게) */
+@media (hover: hover) and (min-width: 1024px) {
+  .b-scard:not(.is-selected):hover { border-color: rgba(132, 148, 255, 0.45); }
+}
+.b-scard > * { position: absolute; }
+.b-scard__no {
+  left: calc((24 - var(--bw)) * var(--k));
+  top: calc((26 - var(--bw)) * var(--k));
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: calc(16 * var(--k));
+  line-height: normal;
+  letter-spacing: 0.16em;                  /* 2.56 / 16 */
+  color: var(--color-card-no);
+}
+.b-scard .b-ico { --is: 1; left: calc((110 - var(--bw)) * var(--k)); top: calc((46 - var(--bw)) * var(--k)); }
+.b-scard__name {
+  left: 0; right: 0;
+  top: calc((148 - var(--bw)) * var(--k));
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: calc(23 * var(--k));
+  line-height: normal;
+  color: var(--color-white);
+  white-space: nowrap;
+}
+.b-scard__desc {
+  left: 0; right: 0;
+  top: calc((186 - var(--bw)) * var(--k));
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: max(11px, calc(16 * var(--k)));
+  line-height: normal;
+  color: var(--color-card-desc);
+  white-space: nowrap;
+}
+.b-scard__progress {
+  left: calc((126 - var(--bw)) * var(--k));
+  top: calc((247 - var(--bw)) * var(--k));
+  width: calc(78 * var(--k));
+  height: calc(6 * var(--k));
+  border-radius: calc(3 * var(--k));
+  background: rgba(255, 255, 255, 0.18);
+}
+.b-scard.is-selected .b-scard__progress { background: linear-gradient(90deg, #7f9bff 0%, #4c6bff 100%); }
+.b-scard__lock {
+  left: calc((145 - var(--bw)) * var(--k));
+  top: calc((230 - var(--bw)) * var(--k));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(40 * var(--k));
+  height: calc(40 * var(--k));
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+.b-scard__lock img { width: calc(20 * var(--k)); height: calc(20 * var(--k)); }
+.b-scard__go { display: none; }
+
+/* =========================================================
+   Compact (<1024) — Mobile 352:8430 (390×733 캔버스, 헤더 아래 기준)
+   ========================================================= */
+@media (max-width: 1023px) {
+  .b-stage__head { top: calc(21 * var(--k)); }
+  .b-stage__eyebrow {
+    margin-bottom: calc(12 * var(--k));
+    font-size: calc(11 * var(--k));
+    letter-spacing: 0.4em;                 /* 4.4 / 11 */
+    margin-right: -0.4em;
+    color: var(--color-text-sub);
+  }
+  .b-stage__title {
+    margin-bottom: calc(7 * var(--k));
+    font-size: calc(28 * var(--k));
+    line-height: calc(38 * var(--k));
+    letter-spacing: -0.03em;
+    text-shadow: 0 calc(3 * var(--k)) calc(10 * var(--k)) rgba(8, 5, 31, 0.5);
+  }
+  .b-stage__accent {
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: var(--color-accent-text);
+  }
+  .b-stage__desc {
+    font-size: max(12px, calc(14 * var(--k)));
+    line-height: calc(20 * var(--k));
+    color: var(--color-text-sub);
+  }
+
+  /* Mobile Main Stage Card (352:7215) 350×172 */
+  .b-mcard {
+    left: calc(20 * var(--k));
+    top: calc(133 * var(--k));
+    width: calc(350 * var(--k));
+    height: calc(172 * var(--k));
+    border-width: calc(1.5 * var(--k));
+    border-radius: calc(22 * var(--k));
+    box-shadow: 0 0 calc(20 * var(--k)) calc(0.8 * var(--k)) rgba(47, 85, 255, 0.6);
+  }
+  .b-mcard::after { box-shadow: inset 0 0 calc(12 * var(--k)) 0 rgba(92, 123, 255, 0.5); }
+  .b-mcard__bg.b-mo {
+    position: absolute;
+    left: calc(-1.5 * var(--k));
+    top: calc(-1.5 * var(--k));
+    width: calc(200 * var(--k));
+    height: calc(172 * var(--k));
+    max-width: none;
+  }
+  .b-mcard__char { left: calc(28.5 * var(--k)); top: calc(52.5 * var(--k)); width: calc(112 * var(--k)); height: calc(112 * var(--k)); }
+  .b-mcard__bubble { left: calc(10.5 * var(--k)); top: calc(8.5 * var(--k)); width: calc(84 * var(--k)); height: calc(46 * var(--k)); }
+  .b-mcard__tail { left: calc(50 * var(--k)); top: calc(38 * var(--k)); width: calc(10.92 * var(--k)); height: calc(9.24 * var(--k)); }
+  .b-mcard__bubble-box {
+    width: calc(84 * var(--k));
+    height: calc(42 * var(--k));
+    border-radius: calc(12 * var(--k));
+    box-shadow: 0 calc(4 * var(--k)) calc(9.6 * var(--k)) 0 rgba(13, 15, 77, 0.35);
+  }
+  .b-mcard__bubble-text { top: calc(7 * var(--k)); font-size: calc(10 * var(--k)); line-height: calc(14 * var(--k)); }
+  .b-mcard__divider { left: calc(164.5 * var(--k)); top: calc(20.5 * var(--k)); height: calc(128 * var(--k)); }
+  .b-mcard__info { left: calc(178.5 * var(--k)); top: calc(16.5 * var(--k)); width: calc(156 * var(--k)); height: calc(140 * var(--k)); display: block; }
+  .b-mcard__info > * { position: absolute; left: 0; margin: 0; }
+  .b-mcard__no { top: 0; font-size: calc(10 * var(--k)); letter-spacing: 0.32em; }
+  .b-mcard__name { top: calc(16 * var(--k)); font-size: calc(20 * var(--k)); letter-spacing: -0.01em; }
+  .b-mcard__desc { top: calc(46 * var(--k)); font-size: calc(12 * var(--k)); line-height: calc(17 * var(--k)); }
+  .b-mcard__count { display: none; }
+  .b-mcard__icon .b-ico3d { display: none; }
+  .b-mcard__icon .b-ico--typography { display: block; }
+  .b-mcard__icon .b-ico,
+  .b-mcard__icon .b-ico--spacing,
+  .b-mcard__icon .b-ico--alignment,
+  .b-mcard__icon .b-ico--hierarchy,
+  .b-mcard__icon .b-ico--composition {
+    --is: 0.5;
+    left: calc(278.5 * var(--k));
+    top: calc(60.5 * var(--k));
+    filter: none;
+  }
+  .b-sbtn {
+    top: calc(98 * var(--k));
+    gap: calc(5 * var(--k));
+    width: calc(150 * var(--k));
+    height: calc(40 * var(--k));
+    border-radius: calc(20 * var(--k));
+    box-shadow: inset 0 calc(0.9 * var(--k)) calc(3.6 * var(--k)) 0 rgba(255, 255, 255, 0.25);
+    filter: drop-shadow(0 calc(3.6 * var(--k)) calc(7.2 * var(--k)) rgba(47, 85, 255, 0.7));
+    font-size: calc(13 * var(--k));
+  }
+  .b-sbtn--soon { box-shadow: none; filter: none; font-size: calc(13 * var(--k)); }
+  .b-sbtn--soon img { width: calc(14 * var(--k)); height: calc(14 * var(--k)); }
+
+  /* Mobile Stage Card (350:7318) 350×64 · 간격 8 */
+  .b-slist {
+    left: calc(20 * var(--k));
+    top: calc(319 * var(--k));
+    flex-direction: column;
+    gap: calc(8 * var(--k));
+  }
+  .b-scard {
+    width: calc(350 * var(--k));
+    height: calc(64 * var(--k));
+    border-radius: calc(16 * var(--k));
+    -webkit-backdrop-filter: blur(calc(3 * var(--k)));
+    backdrop-filter: blur(calc(3 * var(--k)));
+    filter: drop-shadow(0 calc(8 * var(--k)) calc(8 * var(--k)) rgba(3, 3, 15, 0.45));
+    text-align: left;
+  }
+  .b-scard.is-selected {
+    --bw: 1.5;
+    filter: drop-shadow(0 0 calc(9 * var(--k)) rgba(47, 91, 255, 0.7));
+    box-shadow: inset 0 0 calc(14 * var(--k)) 0 rgba(76, 107, 255, 0.45);
+  }
+  .b-scard__no { left: calc((14 - var(--bw)) * var(--k)); top: calc((10 - var(--bw)) * var(--k)); font-size: calc(11 * var(--k)); }
+  .b-scard .b-ico { --is: 0.5; left: calc((36 - var(--bw)) * var(--k)); top: calc((11 - var(--bw)) * var(--k)); }
+  .b-scard__name { left: calc((104 - var(--bw)) * var(--k)); right: auto; top: calc((12 - var(--bw)) * var(--k)); font-size: calc(15 * var(--k)); }
+  .b-scard__desc { left: calc((104 - var(--bw)) * var(--k)); right: auto; top: calc((34 - var(--bw)) * var(--k)); font-size: max(11px, calc(12 * var(--k))); }
+  .b-scard__progress { display: none; }
+  .b-scard__lock {
+    left: calc((300 - var(--bw)) * var(--k));
+    top: calc((14 - var(--bw)) * var(--k));
+    width: calc(36 * var(--k));
+    height: calc(36 * var(--k));
+  }
+  .b-scard__lock img { width: calc(18 * var(--k)); height: calc(18 * var(--k)); }
+  .b-scard__go {
+    display: block;
+    left: calc((300 - var(--bw)) * var(--k));
+    top: calc((14 - var(--bw)) * var(--k));
+    width: calc(36 * var(--k));
+    height: calc(36 * var(--k));
+  }
+  .b-scard__go img { position: absolute; max-width: none; }
+  .b-scard__go-default { left: 0; top: 0; width: 100%; height: 100%; }
+  .b-scard__go-selected { display: none; left: calc(-14 * var(--k)); top: calc(-10 * var(--k)); width: calc(64 * var(--k)); height: calc(64 * var(--k)); }
+  .b-scard.is-selected .b-scard__go-default { display: none; }
+  .b-scard.is-selected .b-scard__go-selected { display: block; }
+}
