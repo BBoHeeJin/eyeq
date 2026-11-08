@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="260" height="150" viewBox="0 0 260 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse id="Inner Light" cx="130" cy="75" rx="130" ry="75" fill="url(#paint0_radial_0_203)"/>
+<defs>
+<radialGradient id="paint0_radial_0_203" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(130 75) scale(130 75)">
+<stop stop-color="#6C68C8" stop-opacity="0.35"/>
+<stop offset="1" stop-color="#3A3878" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>
