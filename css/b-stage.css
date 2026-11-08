@@ -421,7 +421,8 @@
   .b-stage__head { top: calc(21 * var(--k)); }
   .b-stage__eyebrow {
     margin-bottom: calc(12 * var(--k));
-    font-size: calc(11 * var(--k));
+    font-size: max(10px, calc(11 * var(--k)));
+    line-height: calc(14 * var(--k));         /* 모든 페이지 같은 눈썹 줄 높이 */
     letter-spacing: 0.4em;                 /* 4.4 / 11 */
     margin-right: -0.4em;
     color: var(--color-text-sub);
@@ -439,6 +440,7 @@
     background-clip: border-box;
     color: var(--color-accent-text);
   }
+  .b-stage__desc { display: none; }         /* 모바일: 설명 문장 숨김 (PC 그대로) */
   .b-stage__desc {
     font-size: max(12px, calc(14 * var(--k)));
     line-height: calc(20 * var(--k));
@@ -448,7 +450,7 @@
   /* Mobile Main Stage Card (352:7215) 350×172 */
   .b-mcard {
     left: calc(20 * var(--k));
-    top: calc(145 * var(--k));
+    top: calc(117 * var(--k));                /* 머리 통일: 헤더 → 21 · 눈썹 14 · 12 · 제목 38 · 32 → 카드 (설명 문장 숨김, 145 → 117) */
     width: calc(350 * var(--k));
     height: calc(172 * var(--k));
     border-width: calc(1.5 * var(--k));
@@ -510,9 +512,9 @@
      카드 안 요소는 7 아래로 옮겨 세로 가운데 유지 */
   .b-slist {
     left: calc(20 * var(--k));
-    top: calc(333 * var(--k));
+    top: calc(317 * var(--k));                /* 카드 아래 28 · 목록 간격 14 → 목록 끝은 그대로 (아래 여백 24 유지) */
     flex-direction: column;
-    gap: calc(10 * var(--k));
+    gap: calc(14 * var(--k));
   }
   .b-scard {
     --cy: 7;

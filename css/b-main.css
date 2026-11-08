@@ -286,7 +286,7 @@
   .b-main {
     --pad-v: max(0px, (100vh - var(--header-h) - var(--ph) * var(--k)) / 2);
     justify-content: flex-start;
-    padding: calc(var(--pad-v) + 33 * var(--k)) 0 calc(var(--pad-v) + 24 * var(--k) + env(safe-area-inset-bottom, 0px));
+    padding: calc(var(--pad-v) + 47 * var(--k)) 0 calc(var(--pad-v) + 24 * var(--k) + env(safe-area-inset-bottom, 0px));   /* 제목 시작 = 다른 페이지 제목 시작 (21 + 눈썹 14 + 12) */
   }
   @supports (height: 100svh) { .b-main { --pad-v: max(0px, (100svh - var(--header-h) - var(--ph) * var(--k)) / 2); } }
   .b-intro { padding: 0 calc(24 * var(--k)); }
@@ -298,7 +298,8 @@
     text-shadow: 0 calc(3 * var(--k)) calc(10 * var(--k)) rgba(8, 5, 31, 0.5);
   }
   .b-intro__line { display: block; }
-  .b-intro__sub {                          /* 다른 페이지 모바일 설명과 동일: 14 · 1.5 · 제목↔설명 7 · 좁으면 자연 줄바꿈 */
+  .b-intro__sub { display: none; }        /* 모바일: 설명 문장 숨김 (PC 그대로) */
+  .b-intro__sub {
     margin-top: calc(7 * var(--k));
     font-size: max(12px, calc(14 * var(--k)));
     line-height: 1.5;
@@ -310,7 +311,7 @@
   .b-live {
     gap: calc(6 * var(--k));
     height: max(26px, calc(28 * var(--k)));
-    margin-top: calc(12 * var(--k));
+    margin-top: calc(16 * var(--k));
     padding: 0 calc(12 * var(--k)) 0 calc(11 * var(--k));
     font-size: max(11px, calc(12 * var(--k)));
   }
@@ -320,7 +321,7 @@
   .b-carousel {
     width: 100%;
     height: calc(436 * var(--k));
-    margin-top: calc(32 * var(--k));      /* 63 → 32: 접속자 배지(12 + 28)를 넣고 설명 간격(14 → 7)을 줄인 만큼 → 캐러셀·CTA 위치 거의 그대로 */
+    margin-top: calc(42 * var(--k));      /* 제목(47 시작) → 배지 16 · 배지 28 → 42 → 캐러셀 (캐러셀·CTA 위치는 이전과 같음) */
     overflow: hidden;
   }
   /* 좌우만 잘라 양옆 카드를 숨기고, 위·아래는 열어 선택 카드 글로우가 끊기지 않게 함 */

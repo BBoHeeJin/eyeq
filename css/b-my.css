@@ -503,3 +503,38 @@
   .b-page-my .b-mylist--recent > li { flex: 1 1 0; }        /* 오른쪽 열 높이에 맞춰 최근 기록 행이 고르게 늘어남 (빈 공간 없이) */
   .b-page-my .b-mylist--recent .b-mylist__row { height: auto; min-height: calc(84 * var(--k)); }
 }
+
+/* =========================================================
+   모바일·태블릿(<1024) 페이지 머리 통일 — My Page · Ranking (Stage·Home 과 같은 규칙)
+   단위: --c (Stage·Home·Game 화면과 같은 단위 → 실제 휴대폰에서 브라우저 툴바로 높이가 줄어도 페이지마다 크기·위치 동일)
+   헤더 → 눈썹 21 · 눈썹 줄 14 · 눈썹 → 제목 12 · 제목 줄 38 · 제목 → 첫 콘텐츠 32 · 설명 문장은 모바일에서 숨김
+   PC(≥1024)에는 영향 없음
+   ========================================================= */
+@media (max-width: 1023px) {
+  /* 위 여백 = Stage·Home 과 같은 계산 (화면이 기준 높이보다 길면 남는 높이의 절반 + 21) · 아래 여백 24 (같은 단위) */
+  .b-page-my, .b-page-rank { --pad-v: max(0px, (100vh - var(--header-h) - var(--ph) * var(--c)) / 2); }
+  @supports (height: 100svh) { .b-page-my, .b-page-rank { --pad-v: max(0px, (100svh - var(--header-h) - var(--ph) * var(--c)) / 2); } }
+  .b-page-my .b-my__in { padding-top: calc(var(--pad-v) + 21 * var(--c)); padding-bottom: calc(24 * var(--c)); }
+  .b-page-rank .b-rank__in { padding-top: calc(var(--pad-v) + 21 * var(--c)); padding-bottom: calc(24 * var(--c)); }
+  .b-page-my .b-my__head.b-phead, .b-page-rank .b-rk__head.b-phead { margin: 0; gap: 0; }
+  .b-page-my .b-phead__eyebrow, .b-page-rank .b-phead__eyebrow {
+    margin: 0 0 calc(12 * var(--c));
+    font-size: max(10px, calc(11 * var(--c)));
+    line-height: calc(14 * var(--c));
+    letter-spacing: 0.4em;
+    padding-left: 0.4em;
+  }
+  .b-page-my .b-my__title.b-phead__title {
+    margin: 0;
+    font-size: calc(28 * var(--c));
+    line-height: calc(38 * var(--c));
+    letter-spacing: -0.03em;
+  }
+  .b-page-rank .b-rk__title { margin: 0; gap: calc(10 * var(--c)); height: calc(38 * var(--c)); }
+  .b-page-rank .b-rk__title span { font-size: calc(32 * var(--c)); line-height: calc(38 * var(--c)); }   /* 영문 기울임 대문자 32 ≈ 한글 28 과 같은 시각 크기 */
+  .b-page-rank .b-rk__laurel { width: calc(19 * var(--c)); height: calc(38 * var(--c)); }
+  .b-page-my .b-phead__desc, .b-page-rank .b-phead__desc { display: none; }
+  /* 제목 → 첫 콘텐츠 32 (목록 간격을 뺀 만큼만 아래 여백) */
+  .b-page-my .b-my__head.b-phead { margin-bottom: calc(32 * var(--c) - 16 * var(--k)); }
+  .b-page-rank .b-rk__head.b-phead { margin-bottom: calc(32 * var(--c) - 12 * var(--k)); }
+}
