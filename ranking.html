@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko" class="b-page-rank">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script>/* 스크롤바 자리(항상 확보)를 뺀 실제 화면 폭 → 화면 단위 계산 기준 (모든 페이지 같은 값 · 첫 화면 전에 설정) */(function(d){var t=document.createElement("div");t.style.cssText="position:absolute;top:-999px;width:100px;height:50px;overflow:scroll;visibility:hidden";d.appendChild(t);var s=t.offsetWidth-t.clientWidth;d.removeChild(t);d.style.setProperty("--sbw",s+"px");d.style.setProperty("--vw",(innerWidth-s)+"px");})(document.documentElement);</script>
+  <title>EYEQ — Ranking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,500;0,600;0,700;0,800;0,900;1,900&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 헤더·카드 내용을 채운 뒤 첫 화면을 그림 (페이지 이동 시 깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#b-ready" blocking="render" />
+  <link rel="stylesheet" href="css/b-tokens.css" />
+  <link rel="stylesheet" href="css/b-common.css" />
+  <link rel="stylesheet" href="css/b-my.css" />
+  <link rel="stylesheet" href="css/b-rank.css" />
+</head>
+<body class="b-page">
+  <!-- 배경: PC 316:4114 / Mobile 352:8431 -->
+  <div class="b-bg b-bg--game" aria-hidden="true">
+    <img class="b-bg__img b-bg__img--pc" src="assets/b/bg-stage-pc.svg" alt="" />
+    <div class="b-bg__mo">
+      <img class="b-bg__glow" src="assets/b/top-glow-mobile.svg" alt="" />
+      <span class="b-cube" style="--x:-24.38;--y:-31.25;--s:74;--rot:-18deg;--o:.55"></span>
+      <span class="b-cube" style="--x:342.25;--y:173.34;--s:62;--rot:16deg;--o:.7"></span>
+      <span class="b-cube" style="--x:324.79;--y:182.55;--s:30;--rot:-12deg;--o:.8;--b:0px"></span>
+      <span class="b-cube" style="--x:-33.97;--y:304.84;--s:52;--rot:12deg;--o:.45"></span>
+      <span class="b-cube" style="--x:365.89;--y:458.74;--s:56;--rot:-20deg;--o:.5"></span>
+      <span class="b-cube" style="--x:-23.21;--y:611.31;--s:64;--rot:-14deg;--o:.45"></span>
+      <span class="b-cube" style="--x:345.26;--y:767.8;--s:60;--rot:18deg;--o:.5"></span>
+      <span class="b-bg__vignette"></span>
+    </div>
+  </div>
+
+  <!-- ===== Header — Character Selected (313:3575 / Mobile 349:7179) ===== -->
+  <header class="b-header b-header--selected" data-header>
+    <a class="b-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="b-header__logo-img b-header__logo-img--pc" src="assets/b/logo-eyeq.svg" alt="EYEQ" />
+      <img class="b-header__logo-img b-header__logo-img--mo" src="assets/b/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="b-nav" aria-label="주요 메뉴">
+      <a class="b-nav__item" href="index.html">
+        <span class="b-nav__label" data-text="Home">Home</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item" href="stage.html">
+        <span class="b-nav__label" data-text="Game">Game</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      
+      <a class="b-nav__item is-active" href="ranking.html" aria-current="page">
+        <span class="b-nav__label" data-text="Ranking">Ranking</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+    </nav>
+    <div class="b-header__actions">
+      <!-- QUICK PLAY: 5개 분야 랜덤 5문제 (PC 헤더 · 좁은 화면은 모바일 메뉴) -->
+      <a class="b-qp" href="game.html" data-quick><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
+      <div class="b-charinfo" data-charinfo role="img" aria-label="선택한 캐릭터">
+        <span class="b-charinfo__profile"><img data-char-img src="assets/b/char-eye.png" alt="" /></span>
+        <span class="b-charinfo__level">
+          <span class="b-charinfo__lv" data-lv-text>LV. 01</span>
+          <span class="b-charinfo__xp" data-xp-text>XP 0 / 100</span>
+          <span class="b-charinfo__bar"><span class="b-charinfo__fill"></span></span>
+        </span>
+        <span class="b-charinfo__divider" aria-hidden="true"></span>
+      </div>
+      <button class="b-header__icon-btn b-header__icon-btn--bell" type="button" aria-label="알림" aria-haspopup="dialog" aria-expanded="false" aria-controls="b-noti" data-noti-btn>
+        <img class="b-icon--pc" src="assets/b/icon-bell.svg" alt="" />
+        <img class="b-icon--mo" src="assets/b/icon-bell-mobile.svg" alt="" />
+        <span class="b-bell__dot" data-noti-dot hidden></span>
+      </button>
+      <a class="b-header__icon-btn b-header__icon-btn--profile" href="mypage.html" aria-label="마이페이지">
+        <img src="assets/b/icon-profile.svg" alt="" />
+      </a>
+      <button class="b-header__icon-btn b-header__menu-btn" type="button" aria-label="메뉴 열기"
+              aria-controls="b-menu" aria-expanded="false" data-menu-toggle>
+        <img class="b-header__menu-icon b-header__menu-icon--open" src="assets/b/icon-menu.svg" alt="" />
+        <img class="b-header__menu-icon b-header__menu-icon--close" src="assets/b/icon-close.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- 모바일 메뉴 — Ranking 활성 -->
+  <div class="b-menu" id="b-menu" data-menu aria-hidden="true">
+    <div class="b-menu__scrim" data-menu-close></div>
+    <nav class="b-menu__panel" aria-label="모바일 메뉴">
+      <p class="b-menu__label">MENU</p>
+      <a class="b-menu__item" href="index.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Home</span></a>
+      <a class="b-menu__item" href="stage.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Game</span></a>
+      <a class="b-menu__item is-active" href="ranking.html" aria-current="page"><span class="b-menu__bar" aria-hidden="true"></span><span>Ranking</span></a>
+      <a class="b-menu__item b-menu__item--quick" href="game.html" data-quick><span class="b-menu__bar" aria-hidden="true"></span><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
+      <a class="b-menu__item" href="mypage.html"><span class="b-menu__bar" aria-hidden="true"></span><span>My Page</span></a>
+    </nav>
+  </div>
+
+  <!-- ===== RANKING — LEVEL RACE 온라인 순위 (Supabase 실제 데이터 · 가짜 사용자 없음)
+       기존 시안 레이아웃 유지: [타이틀] / [구분 탭 | 규칙 안내] / [전체 순위표(+ 내 순위 고정 행) | MY RANK · TOP 5] ===== -->
+  <main class="b-main b-view">
+    <div class="b-canvas b-my b-rank" data-rank>
+      <div class="b-rank__in">
+        <div class="b-rk__head b-phead">
+          <p class="b-phead__eyebrow">LEVEL RACE</p>
+          <h1 class="b-rk__title"><svg class="b-rk__laurel" viewBox="0 0 40 80" aria-hidden="true"><path d="M30 76C14 66 8 48 12 26" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><ellipse cx="9" cy="60" rx="4" ry="9" transform="rotate(-40 9 60)" fill="currentColor"/><ellipse cx="6" cy="45" rx="4" ry="9" transform="rotate(-15 6 45)" fill="currentColor"/><ellipse cx="7" cy="30" rx="3.6" ry="8" transform="rotate(10 7 30)" fill="currentColor"/><ellipse cx="13" cy="16" rx="3.2" ry="7" transform="rotate(30 13 16)" fill="currentColor"/><ellipse cx="22" cy="66" rx="3.6" ry="8" transform="rotate(-70 22 66)" fill="currentColor"/><ellipse cx="18" cy="51" rx="3.4" ry="7.5" transform="rotate(-60 18 51)" fill="currentColor"/><ellipse cx="17" cy="36" rx="3" ry="7" transform="rotate(-40 17 36)" fill="currentColor"/></svg><span>RANKING</span><svg class="b-rk__laurel is-r" viewBox="0 0 40 80" aria-hidden="true"><path d="M30 76C14 66 8 48 12 26" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><ellipse cx="9" cy="60" rx="4" ry="9" transform="rotate(-40 9 60)" fill="currentColor"/><ellipse cx="6" cy="45" rx="4" ry="9" transform="rotate(-15 6 45)" fill="currentColor"/><ellipse cx="7" cy="30" rx="3.6" ry="8" transform="rotate(10 7 30)" fill="currentColor"/><ellipse cx="13" cy="16" rx="3.2" ry="7" transform="rotate(30 13 16)" fill="currentColor"/><ellipse cx="22" cy="66" rx="3.6" ry="8" transform="rotate(-70 22 66)" fill="currentColor"/><ellipse cx="18" cy="51" rx="3.4" ry="7.5" transform="rotate(-60 18 51)" fill="currentColor"/><ellipse cx="17" cy="36" rx="3" ry="7" transform="rotate(-40 17 36)" fill="currentColor"/></svg></h1>
+          <p class="b-rk__desc b-phead__desc">LV.10에 가장 빨리 도달한 플레이어가 1위!</p>
+        </div>
+
+        <div class="b-rk__bar">
+          <div class="b-rk__tabs" role="group" aria-label="순위 구분">
+            <button class="b-rk__tab" type="button" data-view="all" aria-pressed="true"><svg class="b-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19v-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>전체</span></button>
+            <button class="b-rk__tab" type="button" data-view="max" aria-pressed="false"><svg class="b-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8l4.5 4 4-6.5 4 6.5 4.5-4-1.8 10H5.3z" fill="currentColor"/></svg><span>LV.10 달성</span></button>
+            <button class="b-rk__tab" type="button" data-view="race" aria-pressed="false"><svg class="b-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>도전 중</span></button>
+          </div>
+          <p class="b-rk__info"><svg class="b-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.2" fill="currentColor"/></svg><span>LV.10 달성자: 실제 플레이 시간이 짧은 순 · 도전 중: 레벨 → XP 순 · <span data-rank-updated>불러오는 중…</span></span></p>
+        </div>
+
+        <div class="b-rk__main">
+          <!-- 전체 온라인 순위 -->
+          <section class="b-mycard b-rk__table" aria-label="전체 온라인 순위">
+            <div class="b-rtable" role="table" aria-label="전체 온라인 순위">
+              <div class="b-rtable__head" role="row">
+                <span role="columnheader">순위</span><span role="columnheader">플레이어</span><span role="columnheader">레벨</span><span role="columnheader">XP</span><span role="columnheader">상태</span><span role="columnheader">플레이 시간</span>
+              </div>
+              <div class="b-rtable__body" role="rowgroup" data-rank-list aria-live="polite" aria-busy="true"></div>
+            </div>
+            <div class="b-rk__mine" data-rank-mine hidden></div>
+          </section>
+
+          <div class="b-rk__side">
+            <!-- MY RANK -->
+            <section class="b-mycard b-rk__best" aria-labelledby="b-rk-my-t" data-rank-my></section>
+            <!-- TOP 5 (1~3 시상대 / 4~5 가로 카드) -->
+            <section class="b-mycard b-rk__top3 b-rk__top5" aria-labelledby="b-rk-top-t">
+              <header class="b-mycard__head"><h2 class="b-mycard__title" id="b-rk-top-t"><svg class="b-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8l4.5 4 4-6.5 4 6.5 4.5-4-1.8 10H5.3z" fill="currentColor"/></svg>TOP 5</h2><span class="b-rk__prov" data-rank-prov hidden>잠정 순위</span></header>
+              <ol class="b-podium" data-rank-top3></ol>
+              <ol class="b-rk__runners" data-rank-runners></ol>
+              <p class="b-rk__note" data-rank-note></p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/b-config.js"></script>
+  <script src="js/b-common.js"></script>
+  <script src="js/b-online.js"></script>
+  <script src="js/b-presence.js"></script>
+  <script src="js/b-achieve.js"></script>
+  <script src="js/b-stages.js"></script>
+  <script src="js/b-rank.js"></script>
+  <span id="b-ready" hidden></span>
+</body>
+</html>
