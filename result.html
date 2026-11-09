@@ -4,7 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <script>/* 스크롤바 자리(항상 확보)를 뺀 실제 화면 폭 → 화면 단위 계산 기준 (모든 페이지 같은 값 · 첫 화면 전에 설정) */(function(d){var t=document.createElement("div");t.style.cssText="position:absolute;top:-999px;width:100px;height:50px;overflow:scroll;visibility:hidden";d.appendChild(t);var s=t.offsetWidth-t.clientWidth;d.removeChild(t);d.style.setProperty("--sbw",s+"px");d.style.setProperty("--vw",(innerWidth-s)+"px");})(document.documentElement);</script>
-  <title>EYEQ — Stage Clear</title>
+  <title>EYEQ</title>
+  <!-- 탭 아이콘 · 홈 화면 아이콘 -->
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#1d1b52" />
+  <!-- 링크 미리보기 (카카오톡·메신저·SNS) — 이미지 주소는 전체 주소여야 함 -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="EYEQ" />
+  <meta property="og:title" content="EYEQ" />
+  <meta property="og:url" content="https://bboheejin.github.io/eyeq/" />
+  <meta property="og:image" content="https://bboheejin.github.io/eyeq/assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="EYEQ — SPARK · FOCUS · EYE" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://bboheejin.github.io/eyeq/assets/og-image.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,500;0,600;0,700;0,800;0,900;1,900&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
@@ -160,6 +177,7 @@
   <script src="js/b-online.js"></script>
   <script src="js/b-presence.js"></script>
   <script src="js/b-achieve.js"></script>
+  <script src="js/b-feedback.js"></script>
   <script src="js/b-stages.js"></script>
   <script src="js/b-result.js"></script>
   <span id="b-ready" hidden></span>

@@ -4,7 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <script>/* 스크롤바 자리(항상 확보)를 뺀 실제 화면 폭 → 화면 단위 계산 기준 (모든 페이지 같은 값 · 첫 화면 전에 설정) */(function(d){var t=document.createElement("div");t.style.cssText="position:absolute;top:-999px;width:100px;height:50px;overflow:scroll;visibility:hidden";d.appendChild(t);var s=t.offsetWidth-t.clientWidth;d.removeChild(t);d.style.setProperty("--sbw",s+"px");d.style.setProperty("--vw",(innerWidth-s)+"px");})(document.documentElement);</script>
-  <title>EYEQ — 어떤 눈과 함께 디자인 감각을 키워볼까요?</title>
+  <title>EYEQ</title>
+  <!-- 탭 아이콘 · 홈 화면 아이콘 -->
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#1d1b52" />
+  <!-- 링크 미리보기 (카카오톡·메신저·SNS) — 이미지 주소는 전체 주소여야 함 -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="EYEQ" />
+  <meta property="og:title" content="EYEQ" />
+  <meta property="og:url" content="https://bboheejin.github.io/eyeq/" />
+  <meta property="og:image" content="https://bboheejin.github.io/eyeq/assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="EYEQ — SPARK · FOCUS · EYE" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://bboheejin.github.io/eyeq/assets/og-image.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
@@ -171,6 +188,14 @@
           <span class="b-nick__count" data-nick-count aria-hidden="true">0 / 12</span>
         </span>
         <p class="b-nick__hint" id="b-nick-hint" aria-live="polite"><svg class="b-nick__info" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 10.5v6" stroke="#1c1e5c" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="7.3" r="1.4" fill="#1c1e5c"/></svg><span data-nick-hint>최대 12자 · 나중에 변경할 수 있어요.</span></p>
+        <!-- 디자인 전공 여부 (필수 · 둘 중 하나) — 통계용으로 프로필에 함께 저장 -->
+        <fieldset class="b-major" data-major>
+          <legend class="b-major__q">디자인을 전공하셨나요?</legend>
+          <span class="b-major__opts">
+            <label class="b-major__opt"><input type="radio" name="b-major" value="design" data-major-input /><span>디자인 전공자</span></label>
+            <label class="b-major__opt"><input type="radio" name="b-major" value="non_design" data-major-input /><span>비전공자</span></label>
+          </span>
+        </fieldset>
         <button class="b-modal__btn b-modal__btn--confirm b-nick__start" type="submit" data-nick-start disabled>EYEQ 시작하기 →</button>
       </form>
     </div>
@@ -178,10 +203,11 @@
 
   <script src="js/b-config.js"></script>
   <script src="js/b-common.js"></script>
+  <script src="js/b-main.js"></script><!-- 캐릭터 카드 상태를 먼저 그림 (뒤 스크립트를 기다리다 카드 크기가 바뀌어 보이는 것 방지) -->
   <script src="js/b-online.js"></script>
   <script src="js/b-presence.js"></script>
   <script src="js/b-achieve.js"></script>
-  <script src="js/b-main.js"></script>
+  <script src="js/b-feedback.js"></script>
   <span id="b-ready" hidden></span>
 </body>
 </html>
