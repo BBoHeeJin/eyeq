@@ -125,27 +125,21 @@
           <p class="b-my__desc b-phead__desc">플레이로 모은 포인트로 새로운 눈을 만나보세요.</p>
         </div>
 
-        <!-- 보유 포인트 · 보유 스킨 · 전체 스킨 -->
-        <section class="b-mycard b-shop__stats" aria-label="내 포인트와 스킨">
-          <div class="b-shop__stat b-shop__stat--pts">
-            <span class="b-shop__statlabel">보유 포인트</span>
-            <span class="b-shop__statval"><i aria-hidden="true">✦</i><b data-points-n>0</b><small>P</small></span>
-          </div>
-          <div class="b-shop__stat">
-            <span class="b-shop__statlabel">보유 스킨</span>
-            <span class="b-shop__statval"><b data-shop-owned>3</b></span>
-          </div>
-          <div class="b-shop__stat">
-            <span class="b-shop__statlabel">전체 스킨</span>
-            <span class="b-shop__statval"><b data-shop-total>6</b></span>
-          </div>
-          <p class="b-shop__how">정답 +10P · 퍼펙트 클리어 보너스 · LV.10 이후에도 계속 모을 수 있어요.</p>
-        </section>
+        <!-- 목록 머리: 왼쪽 적립 안내 · 오른쪽 보유 포인트 -->
+        <div class="b-shop__bar">
+          <p class="b-shop__how">정답 +10P · 퍼펙트 클리어 보너스로 포인트가 쌓여요</p>
+          <p class="b-shop__pts" aria-label="보유 포인트"><span class="b-shop__ptslabel">보유</span><i aria-hidden="true">✦</i><b data-points-n>0</b><small>P</small></p>
+        </div>
 
         <p class="b-shop__notice" role="status" data-shop-notice hidden></p>
 
-        <!-- 스킨 카드 (js/b-shop.js 가 채움 · 기본 3 · 신규 3 · 준비 중 3) -->
-        <ul class="b-shop__grid" data-shop-grid aria-label="스킨 목록"></ul>
+        <!-- 쇼케이스 + 스킨 목록
+             PC(≥1024): 왼쪽 선택한 스킨 크게 · 오른쪽 스킨 목록(3열 타일)
+             모바일·태블릿: 위 목록(옆으로 넘김) · 아래 선택한 스킨 -->
+        <div class="b-shop__main">
+          <div class="b-shelf" data-shop-shelf role="group" aria-label="스킨 고르기"></div>
+          <section class="b-stagebox" data-shop-stage aria-label="선택한 스킨"></section>
+        </div>
       </div>
     </div>
   </main>
