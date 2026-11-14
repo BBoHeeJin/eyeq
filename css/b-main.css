@@ -121,6 +121,7 @@
   --sel: 0;
 }
 .b-card.is-next { --x: 861; }
+.b-card.is-hidden { --x: 472; visibility: hidden; opacity: 0; pointer-events: none; z-index: 0; }   /* 보유 스킨이 늘어 4장 이상일 때: 보이지 않는 카드는 가운데 뒤 */
 .b-card.is-selected {
   /* PC Selected (393×525) */
   --w: 393; --h: 525; --bw: 3;
@@ -347,6 +348,7 @@
     --cx: -330;                           /* 선택 카드 중심 기준: -118 -16 -196 */
   }
   .b-card.is-next { --cx: 134; }          /* 118 + 16 */
+  .b-card.is-hidden { --cx: -98; }
   .b-card .b-card__figure--eye { --fig-shift: -2.08%; }
   .b-card.is-selected {
     /* Selected 236×336 */

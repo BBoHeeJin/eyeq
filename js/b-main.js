@@ -7,8 +7,10 @@
 (function () {
   "use strict";
 
-  var ORDER = window.EYEQ.CHARS;            // FOCUS / EYE / SPARK
-  var NAMES = { FOCUS: "FOCUS, 집중하는 눈", EYE: "EYE, 호기심 많은 눈", SPARK: "SPARK, 반짝이는 눈" };
+  var E0 = window.EYEQ;
+  var ORDER = E0.CHARS.slice();             // FOCUS / EYE / SPARK + 보유한 스킨 (상점 구매)
+  var NAMES = {};
+  function nameOf(id) { var s = E0.skin(id); return s ? s.name + ", " + s.alias : id; }
 
   function load() { return window.EYEQ.getCharacter(); }
   function save(v) { window.EYEQ.setCharacter(v); }
@@ -17,10 +19,40 @@
   var root = document.querySelector("[data-carousel]");
   if (root) {
     var cards = {};
+    var trackEl = root.querySelector("[data-carousel-track]");
+    var dotsEl = root.querySelector(".b-dots");
     Array.prototype.forEach.call(root.querySelectorAll(".b-card"), function (el) {
       cards[el.getAttribute("data-char")] = el;
     });
+    ORDER.forEach(function (id) { NAMES[id] = nameOf(id); });
     var dots = root.querySelectorAll("[data-carousel-dot]");
+    /* 상점에서 산 스킨: 기본 카드(SPARK)를 복제해 이미지·이름만 바꿔 뒤에 추가 (카드 디자인 동일) */
+    function addOwned() {
+      var added = false;
+      E0.ownedSkins().forEach(function (id) {
+        if (ORDER.indexOf(id) > -1) return;
+        var s = E0.skin(id); if (!s) return;
+        var el = cards.SPARK.cloneNode(true);
+        el.setAttribute("data-char", id);
+        el.classList.remove("is-selected", "is-prev", "is-next", "is-hidden");
+        el.removeAttribute("aria-current");
+        el.querySelector(".b-card__figure img").src = E0.charImg(id);
+        el.querySelector(".b-card__name").textContent = s.name;
+        el.querySelector(".b-card__desc").textContent = s.alias;
+        trackEl.appendChild(el);
+        cards[id] = el; ORDER.push(id); NAMES[id] = nameOf(id);
+        bindCard(id);
+        if (dotsEl) {
+          var dot = dotsEl.querySelector("[data-carousel-dot]").cloneNode(true);
+          dot.setAttribute("data-carousel-dot", id); dot.setAttribute("aria-label", s.name);
+          dot.classList.remove("is-active"); dot.removeAttribute("aria-current");
+          dotsEl.appendChild(dot); bindDot(dot);
+        }
+        added = true;
+      });
+      if (added) dots = root.querySelectorAll("[data-carousel-dot]");
+      return added;
+    }
     var status = root.querySelector("[data-carousel-status]");
     var current = load();
     var roles = {};
@@ -28,7 +60,7 @@
     function roleOf(name, sel) {
       var n = ORDER.length;
       var d = (ORDER.indexOf(name) - ORDER.indexOf(sel) + n) % n;
-      return d === 0 ? "is-selected" : d === 1 ? "is-next" : "is-prev";
+      return d === 0 ? "is-selected" : d === 1 ? "is-next" : d === n - 1 ? "is-prev" : "is-hidden";   // 4장 이상: 나머지는 가운데 뒤에 숨김
     }
 
     function render(sel, announce) {
@@ -38,11 +70,13 @@
         var prev = roles[name];
         // 양 끝을 가로지르는 카드(이전↔다음)는 이동 애니메이션 없이 자리만 바꿈
         // 첫 표시(prev 없음)와 양 끝을 가로지르는 카드(이전↔다음)는 애니메이션 없이 자리만 바꿈
-        var wraps = !prev || (prev === "is-prev" && next === "is-next") || (prev === "is-next" && next === "is-prev");
+        var wraps = !prev || (prev === "is-prev" && next === "is-next") || (prev === "is-next" && next === "is-prev") || prev === "is-hidden" || next === "is-hidden";
         if (wraps) el.classList.add("no-anim");
-        el.classList.remove("is-selected", "is-prev", "is-next");
+        el.classList.remove("is-selected", "is-prev", "is-next", "is-hidden");
         el.classList.add(next);
         roles[name] = next;
+        if (next === "is-hidden") { el.setAttribute("tabindex", "-1"); el.setAttribute("aria-hidden", "true"); }
+        else { el.removeAttribute("tabindex"); el.removeAttribute("aria-hidden"); }
         if (next === "is-selected") {
           el.setAttribute("aria-current", "true");
           el.setAttribute("aria-label", NAMES[name] + " (선택됨)");
@@ -71,15 +105,19 @@
 
     root.querySelector("[data-carousel-prev]").addEventListener("click", function () { step(-1); });
     root.querySelector("[data-carousel-next]").addEventListener("click", function () { step(1); });
-    ORDER.forEach(function (name) {
+    function bindCard(name) {
       cards[name].addEventListener("click", function () {
         if (suppressClick) return;
-        if (roles[name] !== "is-selected") render(name, true);
+        if (roles[name] !== "is-selected" && roles[name] !== "is-hidden") render(name, true);
       });
-    });
-    Array.prototype.forEach.call(dots, function (dot) {
+    }
+    function bindDot(dot) {
       dot.addEventListener("click", function () { render(dot.getAttribute("data-carousel-dot"), true); });
-    });
+    }
+    ORDER.forEach(bindCard);
+    Array.prototype.forEach.call(dots, bindDot);
+    addOwned();
+    window.addEventListener("eyeq:skins", function () { if (addOwned()) render(current, false); });
 
     /* 터치 스와이프 (Mobile Character Carousel 설명) */
     var track = root.querySelector("[data-carousel-track]");

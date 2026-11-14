@@ -99,6 +99,10 @@
       }
       var withMajor = !!E.getMajor() && !noMajorCol;
       return put(withMajor).catch(function (e) {
+        if (e && e.data && /skin_not_owned/.test(e.data.message || "")) {   // 서버에서 보유가 확인되지 않은 스킨 → 기본 캐릭터로 되돌리고 다시 저장
+          E.set("local", E.KEY.owned, "[]"); E.set("local", E.KEY.character, "EYE"); E.renderHeader();
+          return put(withMajor);
+        }
         if (withMajor && e.status === 400 && e.data && (e.data.code === "PGRST204" || /major/.test(e.data.message || ""))) {
           noMajorCol = true;                                            // 칸 없음 → 닉네임·캐릭터만 저장 (게임은 그대로 진행)
           return put(false).then(function () { return "partial"; });
@@ -156,6 +160,17 @@
   function canPlayOnline() {
     return enabled && !!E.getNickname() && E.hasCharacter() && w.navigator.onLine !== false;
   }
+
+  /* 게임 서버 미리 깨우기: 홈·게임 선택 화면에서 1분에 한 번 가벼운 요청 (계정·기록 생성 없음) */
+  (function warm() {
+    if (!enabled) return;
+    var f = (w.location.pathname.split("/").pop() || "index.html");
+    if (!/^(index|stage)\.html$|^$/.test(f)) return;
+    var last = Number(E.get("session", "eyeq.b.warm") || 0);
+    if (Date.now() - last < 60000) return;
+    E.set("session", "eyeq.b.warm", String(Date.now()));
+    try { w.fetch(URL_ + "/functions/v1/eyeq-game", { method: "OPTIONS", mode: "cors", cache: "no-store" }).catch(function () {}); } catch (e) { /* 무시 */ }
+  })();
 
   E.online = {
     startGame: startGame, ping: ping, serve: serve, answer: answer, canPlayOnline: canPlayOnline,

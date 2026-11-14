@@ -23,7 +23,7 @@
   var view = "all", data = null, mine = null, failed = false;
 
   /* ---------- 표시 형식 ---------- */
-  function avatarOf(a) { return E.charImg(CHARS.indexOf(a) > -1 ? a : "EYE"); }
+  function avatarOf(a) { return E.charImg(E.skin(a) ? a : "EYE"); }   // 기본 3종 + 상점 스킨
   function fmtTime(ms) {                                        // 12:34.5 / 1:02:03
     ms = Math.max(0, ms || 0);
     var t = Math.floor(ms / 100), ds = t % 10, s = Math.floor(t / 10) % 60, m = Math.floor(t / 600) % 60, h = Math.floor(t / 36000);
@@ -137,7 +137,7 @@
     head.appendChild(h);
     myEl.appendChild(head);
     var me = el("div", "b-rk__me");
-    var av = el("span", "b-rk__avatar"); var im = el("img"); im.src = E.charImg(mine && CHARS.indexOf(mine.avatar) > -1 ? mine.avatar : E.getCharacter()); im.alt = ""; av.appendChild(im);
+    var av = el("span", "b-rk__avatar"); var im = el("img"); im.src = E.charImg(mine && E.skin(mine.avatar) ? mine.avatar : E.getCharacter()); im.alt = ""; av.appendChild(im);
     me.appendChild(av);
     var info = el("div", "b-rk__meinfo");
     var nm = el("p", "b-rk__name"); nm.appendChild(el("span", "", mine ? mine.nickname : E.displayName()));

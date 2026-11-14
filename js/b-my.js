@@ -30,6 +30,19 @@
     return lv >= 10 ? "EYEQ 마스터" : lv >= 8 ? "디자인 탐정" : lv >= 6 ? "감각 수집가" : lv >= 3 ? "디테일 탐험가" : "관찰 새싹";   // LV.10 만렙 기준
   }
   $("[data-my-char]").setAttribute("src", E.charImg(E.getCharacter()));
+  /* 포인트 · 보유 스킨 · 내 스킨 관리(캐릭터 선택 팝업) */
+  function renderSkin() {
+    var o = $("[data-my-owned]"), t = $("[data-my-skintotal]");
+    if (o) o.textContent = E.ownedSkins().length;
+    if (t) t.textContent = E.SKINS.length;
+    $("[data-my-char]").setAttribute("src", E.charImg(E.getCharacter()));
+  }
+  renderSkin();
+  if (E.skins) {
+    E.skins.onChange(renderSkin);
+    var mg = $("[data-skin-manage]");
+    if (mg) mg.addEventListener("click", function () { E.skins.picker(null, function () { mg.focus(); }); });
+  }
   $("[data-title-text]").textContent = titleOf(L.level);
   $("[data-lv-num]").textContent = two(L.level);
   $("[data-lv-xp]").textContent = L.max ? fmtN(E.XP_MAX_TOTAL) + " / " + fmtN(E.XP_MAX_TOTAL) + " XP" : "XP " + L.xp + " / " + L.need;

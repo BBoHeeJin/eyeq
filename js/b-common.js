@@ -6,7 +6,18 @@
 (function (w, d) {
   "use strict";
 
-  var CHARS = ["FOCUS", "EYE", "SPARK"];
+  var CHARS = ["FOCUS", "EYE", "SPARK"];   // 기본 캐릭터 (무료 · 처음부터 사용)
+  /* 스킨 목록 (화면 표시용 · 가격·판매 여부는 서버 skins 표가 기준) — 새 스킨은 여기에 한 줄 + 이미지 추가
+     mood: 정답·오답 표정 이미지가 있는지 (없으면 게임 피드백에도 기본 이미지 그대로 · 다른 캐릭터 이미지를 섞지 않음) */
+  var SKINS = [
+    { id: "EYE",   name: "EYE",   alias: "호기심 많은 눈", desc: "모든 것을 새롭게 바라보는 호기심 많은 눈.",          price: 0,   base: true,  mood: true },
+    { id: "SPARK", name: "SPARK", alias: "반짝이는 눈",   desc: "번뜩이는 아이디어를 놓치지 않는 반짝이는 눈.",      price: 0,   base: true,  mood: true },
+    { id: "FOCUS", name: "FOCUS", alias: "집중하는 눈",   desc: "작은 차이까지 끝까지 살피는 집중하는 눈.",          price: 0,   base: true,  mood: true },
+    { id: "NOVA",  name: "NOVA",  alias: "탐험하는 눈",   desc: "새로운 세계를 탐험하며 특별한 시각을 발견하는 눈.", price: 300, base: false, mood: true },
+    { id: "WISH",  name: "WISH",  alias: "상상하는 눈",   desc: "작은 상상에서 새로운 가능성을 만들어 내는 눈.",     price: 500, base: false, mood: true },
+    { id: "PIXEL", name: "PIXEL", alias: "즐기는 눈",     desc: "게임처럼 즐겁게 디자인의 세계를 탐구하는 눈.",      price: 700, base: false, mood: true }
+  ];
+  function skin(id) { for (var i = 0; i < SKINS.length; i++) if (SKINS[i].id === id) return SKINS[i]; return null; }
   var KEY = {
     character: "eyeq.b.character",   // 메인에서 선택한 캐릭터 (기존 키 유지)
     xp: "eyeq.b.xp",                 // 누적 XP (헤더 LV/XP)
@@ -22,6 +33,8 @@
     race: "eyeq.b.race",             // 온라인 레이스 진행 (서버 값의 표시용 사본 · 서버가 기준)
     legacy: "eyeq.b.legacy",         // 레이스 이전 로컬 XP 보관본 {xp, savedAt} (삭제·변경 안 함)
     auth: "eyeq.b.auth",             // 익명 로그인 세션 (b-online.js)
+    owned: "eyeq.b.owned",           // 보유 스킨 id 목록 (서버 지갑의 표시용 사본 · 서버가 기준)
+    points: "eyeq.b.points",         // 보유 포인트 (서버 지갑의 표시용 사본)
     totals: "eyeq.b.totals"          // 개인 누적 통계 {plays, correct, total, solveMs, quick} (기록 200판 정리와 무관하게 계속 누적)
   };
   /* LEVEL RACE 레벨 규칙 (확정 · LV.10): 누적 XP 기준 · 모든 사용자 동일
@@ -60,13 +73,21 @@
   }
   function setJSON(kind, key, value) { set(kind, key, JSON.stringify(value)); }
 
+  /* 보유 스킨 (기본 3종 + 서버에서 확인한 구매 스킨) */
+  function ownedSkins() {
+    var list = getJSON("local", KEY.owned);
+    var out = CHARS.slice();
+    if (Array.isArray(list)) list.forEach(function (id) { var s = skin(id); if (s && !s.base && out.indexOf(id) < 0) out.push(id); });
+    return out;
+  }
+  function usable(v) { return CHARS.indexOf(v) > -1 || (!!skin(v) && ownedSkins().indexOf(v) > -1); }
   function getCharacter() {
     var v = get("local", KEY.character);
-    return CHARS.indexOf(v) > -1 ? v : "EYE";
+    return usable(v) ? v : "EYE";
   }
   /* 캐릭터 확정(메인 CTA). 캐릭터는 프로필 외형 → 바꿔도 XP·레벨·기록·업적·닉네임은 그대로 */
   function setCharacter(v) {
-    if (CHARS.indexOf(v) < 0) return;
+    if (!usable(v)) return;
     set("local", KEY.character, v);
     profileChanged();
   }
@@ -74,7 +95,16 @@
   function profileChanged() {
     try { w.dispatchEvent(new CustomEvent("eyeq:profile")); } catch (e) { /* 이전 브라우저 */ }
   }
-  function hasCharacter() { return CHARS.indexOf(get("local", KEY.character)) > -1; }
+  function hasCharacter() { return usable(get("local", KEY.character)); }
+  /* 포인트 (서버 값의 표시용 사본 · null = 아직 모름) */
+  function getPoints() { var v = get("local", KEY.points); return v === null || v === "" || isNaN(+v) ? null : +v; }
+  function renderPoints() {
+    var p = getPoints();
+    Array.prototype.forEach.call(d.querySelectorAll("[data-points-n]"), function (el) { el.textContent = (p === null ? 0 : p).toLocaleString("ko-KR"); });
+    Array.prototype.forEach.call(d.querySelectorAll("[data-points]"), function (el) {
+      el.setAttribute("aria-label", "보유 포인트 " + (p === null ? "확인 중" : p.toLocaleString("ko-KR") + "P") + " · 스킨 상점으로 이동");
+    });
+  }
 
   /* ---------- 닉네임 (메인 최초 설정 · 마이페이지 · 랭킹 공통) ---------- */
   var NAME_MAX = 12, DEFAULT_NAME = "EYEQPlayer";
@@ -193,11 +223,16 @@
   }
   function two(n) { return (n < 10 ? "0" : "") + n; }
 
-  function charImg(ch, mood) { return "assets/b/char-" + ch.toLowerCase() + (mood === "happy" || mood === "sad" ? "-" + mood : "") + ".png"; }   // mood: 맞힘 happy / 틀림·시간 초과 sad / 없으면 기본
+  function charImg(ch, mood) {
+    var s = skin(ch) || skin("EYE");
+    var m = s.mood && (mood === "happy" || mood === "sad") ? "-" + mood : "";   // 표정 이미지가 없는 스킨은 기본 이미지
+    return "assets/b/char-" + s.id.toLowerCase() + m + ".webp";
+  }   // mood: 맞힘 happy / 틀림·시간 초과 sad / 없으면 기본
 
   /* ---------- 헤더(+ 게임 화면 레벨 카드): 선택 캐릭터 · LV · XP ---------- */
   function renderHeader() {
     Array.prototype.forEach.call(d.querySelectorAll("[data-charinfo]"), renderCharInfo);
+    renderPoints();
   }
   function renderCharInfo(info) {
     var ch = getCharacter();
@@ -349,6 +384,7 @@
 
   w.EYEQ = {
     CHARS: CHARS,
+    SKINS: SKINS, skin: skin, ownedSkins: ownedSkins, usable: usable, getPoints: getPoints, renderPoints: renderPoints,
     KEY: KEY,
     get: get, set: set, remove: remove, getJSON: getJSON, setJSON: setJSON,
     getCharacter: getCharacter, setCharacter: setCharacter, charImg: charImg, levelInfo: levelInfo,

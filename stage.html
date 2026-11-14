@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <script>/* 스크롤바 자리(항상 확보)를 뺀 실제 화면 폭 → 화면 단위 계산 기준 (모든 페이지 같은 값 · 첫 화면 전에 설정) */(function(d){var t=document.createElement("div");t.style.cssText="position:absolute;top:-999px;width:100px;height:50px;overflow:scroll;visibility:hidden";d.appendChild(t);var s=t.offsetWidth-t.clientWidth;d.removeChild(t);d.style.setProperty("--sbw",s+"px");d.style.setProperty("--vw",(innerWidth-s)+"px");})(document.documentElement);</script>
   <title>EYEQ</title>
+  <!-- 게임 서버 연결을 미리 열어 둠 (첫 요청 대기 줄이기) -->
+  <link rel="preconnect" href="https://maczudkawekaqmvbgooc.supabase.co" crossorigin />
   <!-- 탭 아이콘 · 홈 화면 아이콘 -->
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
@@ -65,12 +67,15 @@
       <a class="b-nav__item" href="ranking.html">
         <span class="b-nav__label" data-text="Ranking">Ranking</span><span class="b-nav__bar" aria-hidden="true"></span>
       </a>
+      <a class="b-nav__item" href="shop.html">
+        <span class="b-nav__label" data-text="Shop">Shop</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
     </nav>
     <div class="b-header__actions">
       <!-- QUICK PLAY: 5개 분야 랜덤 5문제 (PC 헤더 · 좁은 화면은 모바일 메뉴) -->
       <a class="b-qp" href="game.html" data-quick><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
       <div class="b-charinfo" data-charinfo role="img" aria-label="선택한 캐릭터">
-        <span class="b-charinfo__profile"><img data-char-img src="assets/b/char-eye.png" alt="" /></span>
+        <span class="b-charinfo__profile"><img data-char-img src="assets/b/char-eye.webp" alt="" /></span>
         <span class="b-charinfo__level">
           <span class="b-charinfo__lv" data-lv-text>LV. 01</span>
           <span class="b-charinfo__xp" data-xp-text>XP 0 / 100</span>
@@ -78,6 +83,7 @@
         </span>
         <span class="b-charinfo__divider" aria-hidden="true"></span>
       </div>
+      <a class="b-pts" href="shop.html" data-points aria-label="보유 포인트 · 스킨 상점으로 이동"><span class="b-pts__ic" aria-hidden="true">✦</span><span class="b-pts__n" data-points-n>0</span><span class="b-pts__u">P</span></a>
       <button class="b-header__icon-btn b-header__icon-btn--bell" type="button" aria-label="알림" aria-haspopup="dialog" aria-expanded="false" aria-controls="b-noti" data-noti-btn>
         <img class="b-icon--pc" src="assets/b/icon-bell.svg" alt="" />
         <img class="b-icon--mo" src="assets/b/icon-bell-mobile.svg" alt="" />
@@ -102,6 +108,7 @@
       <a class="b-menu__item" href="index.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Home</span></a>
       <a class="b-menu__item is-active" href="stage.html" aria-current="page"><span class="b-menu__bar" aria-hidden="true"></span><span>Game</span></a>
       <a class="b-menu__item" href="ranking.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Ranking</span></a>
+      <a class="b-menu__item b-menu__item--shop" href="shop.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Shop</span><span class="b-menu__pts" data-points><span aria-hidden="true">✦</span> <span data-points-n>0</span> P</span></a>
       <a class="b-menu__item b-menu__item--quick" href="game.html" data-quick><span class="b-menu__bar" aria-hidden="true"></span><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
       <a class="b-menu__item" href="mypage.html"><span class="b-menu__bar" aria-hidden="true"></span><span>My Page</span></a>
     </nav>
@@ -126,7 +133,7 @@
       <section class="b-mcard" aria-live="polite" aria-labelledby="b-mcard-name">
         <img class="b-mcard__bg b-pc" src="assets/b/character-stage-bg.svg" alt="" />
         <img class="b-mcard__bg b-mo" src="assets/b/character-stage-bg-mobile.svg" alt="" />
-        <img class="b-mcard__char" data-char-img src="assets/b/char-eye.png" alt="" />
+        <img class="b-mcard__char" data-char-img src="assets/b/char-eye.webp" alt="" />
         <div class="b-mcard__bubble" aria-hidden="true">
           <img class="b-mcard__tail" src="assets/b/bubble-tail.svg" alt="" />
           <span class="b-mcard__bubble-box"></span>
@@ -182,6 +189,7 @@
   <script src="js/b-online.js"></script>
   <script src="js/b-presence.js"></script>
   <script src="js/b-achieve.js"></script>
+  <script src="js/b-skins.js"></script>
   <script src="js/b-feedback.js"></script>
   <script src="js/b-stages.js"></script>
   <script src="js/b-stage.js"></script>

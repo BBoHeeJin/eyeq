@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <script>/* 스크롤바 자리(항상 확보)를 뺀 실제 화면 폭 → 화면 단위 계산 기준 (모든 페이지 같은 값 · 첫 화면 전에 설정) */(function(d){var t=document.createElement("div");t.style.cssText="position:absolute;top:-999px;width:100px;height:50px;overflow:scroll;visibility:hidden";d.appendChild(t);var s=t.offsetWidth-t.clientWidth;d.removeChild(t);d.style.setProperty("--sbw",s+"px");d.style.setProperty("--vw",(innerWidth-s)+"px");})(document.documentElement);</script>
   <title>EYEQ</title>
+  <!-- 게임 서버 연결을 미리 열어 둠 (첫 요청 대기 줄이기) -->
+  <link rel="preconnect" href="https://maczudkawekaqmvbgooc.supabase.co" crossorigin />
   <!-- 탭 아이콘 · 홈 화면 아이콘 -->
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
@@ -57,11 +59,15 @@
       <a class="b-nav__item" href="ranking.html">
         <span class="b-nav__label" data-text="Ranking">Ranking</span><span class="b-nav__bar" aria-hidden="true"></span>
       </a>
+      <a class="b-nav__item" href="shop.html">
+        <span class="b-nav__label" data-text="Shop">Shop</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
     </nav>
 
     <div class="b-header__actions">
       <!-- QUICK PLAY: 5개 분야 랜덤 5문제 (PC 헤더 · 좁은 화면은 모바일 메뉴) -->
       <a class="b-qp" href="game.html" data-quick><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
+      <a class="b-pts" href="shop.html" data-points aria-label="보유 포인트 · 스킨 상점으로 이동"><span class="b-pts__ic" aria-hidden="true">✦</span><span class="b-pts__n" data-points-n>0</span><span class="b-pts__u">P</span></a>
       <!-- 알림·프로필: 연결 대상 없음 (범위 외) -->
       <button class="b-header__icon-btn b-header__icon-btn--bell" type="button" aria-label="알림" aria-haspopup="dialog" aria-expanded="false" aria-controls="b-noti" data-noti-btn>
         <img class="b-icon--pc" src="assets/b/icon-bell.svg" alt="" />
@@ -94,6 +100,7 @@
       <a class="b-menu__item" href="ranking.html">
         <span class="b-menu__bar" aria-hidden="true"></span><span>Ranking</span>
       </a>
+      <a class="b-menu__item b-menu__item--shop" href="shop.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Shop</span><span class="b-menu__pts" data-points><span aria-hidden="true">✦</span> <span data-points-n>0</span> P</span></a>
       <a class="b-menu__item b-menu__item--quick" href="game.html" data-quick><span class="b-menu__bar" aria-hidden="true"></span><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
       <a class="b-menu__item" href="mypage.html">
         <span class="b-menu__bar" aria-hidden="true"></span><span>My Page</span>
@@ -123,7 +130,7 @@
           <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-selected-mobile.svg" /><img class="b-card__light b-card__light--selected" src="assets/b/inner-light-selected.svg" alt="" /></picture>
           <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-mobile.svg" /><img class="b-card__shadow b-card__shadow--default" src="assets/b/floor-shadow.svg" alt="" /></picture>
           <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-selected-mobile.svg" /><img class="b-card__shadow b-card__shadow--selected" src="assets/b/floor-shadow-selected.svg" alt="" /></picture>
-          <span class="b-card__figure"><img src="assets/b/char-focus.png" alt="" /></span>
+          <span class="b-card__figure"><img src="assets/b/char-focus.webp" alt="" /></span>
           <span class="b-card__name">FOCUS</span>
           <span class="b-card__desc">집중하는 눈</span>
         </button>
@@ -134,7 +141,7 @@
           <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-selected-mobile.svg" /><img class="b-card__light b-card__light--selected" src="assets/b/inner-light-selected.svg" alt="" /></picture>
           <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-mobile.svg" /><img class="b-card__shadow b-card__shadow--default" src="assets/b/floor-shadow.svg" alt="" /></picture>
           <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-selected-mobile.svg" /><img class="b-card__shadow b-card__shadow--selected" src="assets/b/floor-shadow-selected.svg" alt="" /></picture>
-          <span class="b-card__figure b-card__figure--eye"><img src="assets/b/char-eye.png" alt="" /></span>
+          <span class="b-card__figure b-card__figure--eye"><img src="assets/b/char-eye.webp" alt="" /></span>
           <span class="b-card__name">EYE</span>
           <span class="b-card__desc">호기심 많은 눈</span>
         </button>
@@ -145,7 +152,7 @@
           <picture><source media="(max-width: 1023px)" srcset="assets/b/inner-light-selected-mobile.svg" /><img class="b-card__light b-card__light--selected" src="assets/b/inner-light-selected.svg" alt="" /></picture>
           <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-mobile.svg" /><img class="b-card__shadow b-card__shadow--default" src="assets/b/floor-shadow.svg" alt="" /></picture>
           <picture><source media="(max-width: 1023px)" srcset="assets/b/floor-shadow-selected-mobile.svg" /><img class="b-card__shadow b-card__shadow--selected" src="assets/b/floor-shadow-selected.svg" alt="" /></picture>
-          <span class="b-card__figure"><img src="assets/b/char-spark.png" alt="" /></span>
+          <span class="b-card__figure"><img src="assets/b/char-spark.webp" alt="" /></span>
           <span class="b-card__name">SPARK</span>
           <span class="b-card__desc">반짝이는 눈</span>
         </button>
@@ -178,7 +185,7 @@
     <button class="b-modal__dim" type="button" tabindex="-1" aria-label="닫기" data-modal-close data-modal-dim></button>
     <div class="b-modal__dialog b-nick" role="dialog" aria-modal="true" aria-labelledby="b-nick-title" aria-describedby="b-nick-desc" tabindex="-1">
       <button class="b-nick__close" type="button" aria-label="닫기" data-modal-close><img src="assets/b/icon-close.svg" alt="" /></button>
-      <span class="b-nick__char" aria-hidden="true"><img data-nick-char src="assets/b/char-eye.png" alt="" /></span>
+      <span class="b-nick__char" aria-hidden="true"><img data-nick-char src="assets/b/char-eye.webp" alt="" /></span>
       <h2 class="b-modal__title b-nick__title" id="b-nick-title">반가워요! 어떻게 불러드릴까요?</h2>
       <p class="b-modal__body b-nick__desc" id="b-nick-desc">게임에서 사용할 닉네임을 정해주세요.</p>
       <form class="b-nick__form" data-nick-form novalidate>
@@ -207,6 +214,7 @@
   <script src="js/b-online.js"></script>
   <script src="js/b-presence.js"></script>
   <script src="js/b-achieve.js"></script>
+  <script src="js/b-skins.js"></script>
   <script src="js/b-feedback.js"></script>
   <span id="b-ready" hidden></span>
 </body>

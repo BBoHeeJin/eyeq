@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko" class="b-page-my b-page-shop">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script>/* 스크롤바 자리(항상 확보)를 뺀 실제 화면 폭 → 화면 단위 계산 기준 (모든 페이지 같은 값 · 첫 화면 전에 설정) */(function(d){var t=document.createElement("div");t.style.cssText="position:absolute;top:-999px;width:100px;height:50px;overflow:scroll;visibility:hidden";d.appendChild(t);var s=t.offsetWidth-t.clientWidth;d.removeChild(t);d.style.setProperty("--sbw",s+"px");d.style.setProperty("--vw",(innerWidth-s)+"px");})(document.documentElement);</script>
+  <title>EYEQ</title>
+  <!-- 게임 서버 연결을 미리 열어 둠 (첫 요청 대기 줄이기) -->
+  <link rel="preconnect" href="https://maczudkawekaqmvbgooc.supabase.co" crossorigin />
+  <!-- 탭 아이콘 · 홈 화면 아이콘 -->
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#1d1b52" />
+  <!-- 링크 미리보기 (카카오톡·메신저·SNS) — 이미지 주소는 전체 주소여야 함 -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="EYEQ" />
+  <meta property="og:title" content="EYEQ" />
+  <meta property="og:url" content="https://bboheejin.github.io/eyeq/" />
+  <meta property="og:image" content="https://bboheejin.github.io/eyeq/assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="EYEQ — SPARK · FOCUS · EYE" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://bboheejin.github.io/eyeq/assets/og-image.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,500;0,600;0,700;0,800;0,900;1,900&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <!-- 스크립트가 헤더·카드 내용을 채운 뒤 첫 화면을 그림 (페이지 이동 시 깜빡임 방지, 지원 브라우저만) -->
+  <link rel="expect" href="#b-ready" blocking="render" />
+  <link rel="stylesheet" href="css/b-tokens.css" />
+  <link rel="stylesheet" href="css/b-common.css" />
+  <link rel="stylesheet" href="css/b-my.css" />
+  <link rel="stylesheet" href="css/b-shop.css" />
+</head>
+<body class="b-page">
+  <!-- 배경: PC 316:4114 / Mobile 352:8431 -->
+  <div class="b-bg b-bg--game" aria-hidden="true">
+    <img class="b-bg__img b-bg__img--pc" src="assets/b/bg-stage-pc.svg" alt="" />
+    <div class="b-bg__mo">
+      <img class="b-bg__glow" src="assets/b/top-glow-mobile.svg" alt="" />
+      <span class="b-cube" style="--x:-24.38;--y:-31.25;--s:74;--rot:-18deg;--o:.55"></span>
+      <span class="b-cube" style="--x:342.25;--y:173.34;--s:62;--rot:16deg;--o:.7"></span>
+      <span class="b-cube" style="--x:324.79;--y:182.55;--s:30;--rot:-12deg;--o:.8;--b:0px"></span>
+      <span class="b-cube" style="--x:-33.97;--y:304.84;--s:52;--rot:12deg;--o:.45"></span>
+      <span class="b-cube" style="--x:365.89;--y:458.74;--s:56;--rot:-20deg;--o:.5"></span>
+      <span class="b-cube" style="--x:-23.21;--y:611.31;--s:64;--rot:-14deg;--o:.45"></span>
+      <span class="b-cube" style="--x:345.26;--y:767.8;--s:60;--rot:18deg;--o:.5"></span>
+      <span class="b-bg__vignette"></span>
+    </div>
+  </div>
+
+  <!-- ===== Header — Character Selected (313:3575 / Mobile 349:7179) ===== -->
+  <header class="b-header b-header--selected" data-header>
+    <a class="b-header__logo" href="index.html" aria-label="EYEQ 홈">
+      <img class="b-header__logo-img b-header__logo-img--pc" src="assets/b/logo-eyeq.svg" alt="EYEQ" />
+      <img class="b-header__logo-img b-header__logo-img--mo" src="assets/b/logo-eyeq-mobile.svg" alt="EYEQ" />
+    </a>
+    <nav class="b-nav" aria-label="주요 메뉴">
+      <a class="b-nav__item" href="index.html">
+        <span class="b-nav__label" data-text="Home">Home</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item" href="stage.html">
+        <span class="b-nav__label" data-text="Game">Game</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      
+      <a class="b-nav__item" href="ranking.html">
+        <span class="b-nav__label" data-text="Ranking">Ranking</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+      <a class="b-nav__item is-active" href="shop.html" aria-current="page">
+        <span class="b-nav__label" data-text="Shop">Shop</span><span class="b-nav__bar" aria-hidden="true"></span>
+      </a>
+    </nav>
+    <div class="b-header__actions">
+      <!-- QUICK PLAY: 5개 분야 랜덤 5문제 (PC 헤더 · 좁은 화면은 모바일 메뉴) -->
+      <a class="b-qp" href="game.html" data-quick><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
+      <div class="b-charinfo" data-charinfo role="img" aria-label="선택한 캐릭터">
+        <span class="b-charinfo__profile"><img data-char-img src="assets/b/char-eye.webp" alt="" /></span>
+        <span class="b-charinfo__level">
+          <span class="b-charinfo__lv" data-lv-text>LV. 01</span>
+          <span class="b-charinfo__xp" data-xp-text>XP 0 / 100</span>
+          <span class="b-charinfo__bar"><span class="b-charinfo__fill"></span></span>
+        </span>
+        <span class="b-charinfo__divider" aria-hidden="true"></span>
+      </div>
+      <a class="b-pts" href="shop.html" data-points aria-label="보유 포인트 · 스킨 상점으로 이동"><span class="b-pts__ic" aria-hidden="true">✦</span><span class="b-pts__n" data-points-n>0</span><span class="b-pts__u">P</span></a>
+      <button class="b-header__icon-btn b-header__icon-btn--bell" type="button" aria-label="알림" aria-haspopup="dialog" aria-expanded="false" aria-controls="b-noti" data-noti-btn>
+        <img class="b-icon--pc" src="assets/b/icon-bell.svg" alt="" />
+        <img class="b-icon--mo" src="assets/b/icon-bell-mobile.svg" alt="" />
+        <span class="b-bell__dot" data-noti-dot hidden></span>
+      </button>
+      <a class="b-header__icon-btn b-header__icon-btn--profile" href="mypage.html" aria-label="마이페이지">
+        <img src="assets/b/icon-profile.svg" alt="" />
+      </a>
+      <button class="b-header__icon-btn b-header__menu-btn" type="button" aria-label="메뉴 열기"
+              aria-controls="b-menu" aria-expanded="false" data-menu-toggle>
+        <img class="b-header__menu-icon b-header__menu-icon--open" src="assets/b/icon-menu.svg" alt="" />
+        <img class="b-header__menu-icon b-header__menu-icon--close" src="assets/b/icon-close.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <!-- 모바일 메뉴 — My Page 활성 -->
+  <div class="b-menu" id="b-menu" data-menu aria-hidden="true">
+    <div class="b-menu__scrim" data-menu-close></div>
+    <nav class="b-menu__panel" aria-label="모바일 메뉴">
+      <p class="b-menu__label">MENU</p>
+      <a class="b-menu__item" href="index.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Home</span></a>
+      <a class="b-menu__item" href="stage.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Game</span></a>
+      <a class="b-menu__item" href="ranking.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Ranking</span></a>
+      <a class="b-menu__item b-menu__item--shop is-active" href="shop.html" aria-current="page"><span class="b-menu__bar" aria-hidden="true"></span><span>Shop</span><span class="b-menu__pts" data-points><span aria-hidden="true">✦</span> <span data-points-n>0</span> P</span></a>
+      <a class="b-menu__item b-menu__item--quick" href="game.html" data-quick><span class="b-menu__bar" aria-hidden="true"></span><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
+      <a class="b-menu__item" href="mypage.html"><span class="b-menu__bar" aria-hidden="true"></span><span>My Page</span></a>
+    </nav>
+  </div>
+
+  <!-- ===== MY PAGE — 플레이 기록 · 성장 현황 (브라우저 저장 데이터만 사용) ===== -->
+  <main class="b-main b-view">
+    <div class="b-canvas b-my b-shop" data-shop>
+      <div class="b-my__in">
+        <div class="b-my__head b-phead">
+          <p class="b-phead__eyebrow">POINT SHOP</p>
+          <h1 class="b-my__title b-phead__title b-shop__title"><span>SKIN SHOP</span></h1>
+          <p class="b-my__desc b-phead__desc">플레이로 모은 포인트로 새로운 눈을 만나보세요.</p>
+        </div>
+
+        <!-- 보유 포인트 · 보유 스킨 · 전체 스킨 -->
+        <section class="b-mycard b-shop__stats" aria-label="내 포인트와 스킨">
+          <div class="b-shop__stat b-shop__stat--pts">
+            <span class="b-shop__statlabel">보유 포인트</span>
+            <span class="b-shop__statval"><i aria-hidden="true">✦</i><b data-points-n>0</b><small>P</small></span>
+          </div>
+          <div class="b-shop__stat">
+            <span class="b-shop__statlabel">보유 스킨</span>
+            <span class="b-shop__statval"><b data-shop-owned>3</b></span>
+          </div>
+          <div class="b-shop__stat">
+            <span class="b-shop__statlabel">전체 스킨</span>
+            <span class="b-shop__statval"><b data-shop-total>6</b></span>
+          </div>
+          <p class="b-shop__how">정답 +10P · 퍼펙트 클리어 보너스 · LV.10 이후에도 계속 모을 수 있어요.</p>
+        </section>
+
+        <p class="b-shop__notice" role="status" data-shop-notice hidden></p>
+
+        <!-- 스킨 카드 (js/b-shop.js 가 채움 · 기본 3 · 신규 3 · 준비 중 3) -->
+        <ul class="b-shop__grid" data-shop-grid aria-label="스킨 목록"></ul>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/b-config.js"></script>
+  <script src="js/b-common.js"></script>
+  <script src="js/b-online.js"></script>
+  <script src="js/b-presence.js"></script>
+  <script src="js/b-achieve.js"></script>
+  <script src="js/b-skins.js"></script>
+  <script src="js/b-shop.js"></script>
+  <span id="b-ready" hidden></span>
+</body>
+</html>

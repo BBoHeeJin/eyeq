@@ -72,7 +72,7 @@
         "</span>" +
       "</form>" +
       '<div class="b-fb__done" data-fb-done hidden>' +
-        '<span class="b-fb__char" aria-hidden="true"><img src="assets/b/char-spark-happy.png" alt="" /></span>' +
+        '<span class="b-fb__char" aria-hidden="true"><img src="assets/b/char-spark-happy.webp" alt="" /></span>' +
         '<h2 class="b-fb__title" tabindex="-1" data-fb-done-title>소중한 의견 고마워요!</h2>' +
         '<p class="b-fb__desc">여러분의 의견으로 EYEQ는 더욱 성장할게요.</p>' +
         '<button class="b-fb__btn b-fb__btn--send b-fb__ok" type="button" data-fb-close>확인</button>' +

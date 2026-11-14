@@ -4,9 +4,9 @@
    - 카드 클릭 즉시 판정 (정답 확인 단계 없음) → 정답: 피드백 + '다음 문제로' / 오답: 피드백 + '다시 도전하기'
    - XP: 정답 30 → 40 → 50 (연속 정답 콤보), 오답 +5 (미션당 최초 1회, 재시도 오답은 0 · 배지 숨김)
    - 오답 시 콤보 0, '다시 도전하기' = 같은 미션 재시도(Attempt=Retry) · 판정 시 헤더 XP 가산
-   - 5초 스피드 게임: 문제가 플레이 가능해지면 카운트다운 → 카드 클릭(정답·오답) 즉시 정지
+   - 10초 스피드 게임(서버 설정값): 문제가 플레이 가능해지면 카운트다운 → 카드 클릭(정답·오답) 즉시 정지
      시간 초과 = 오답과 같은 처리('TIME OVER' 피드백, 오답 XP 규칙 그대로 · 미션당 첫 오답만 +5)
-     다시 도전·다음 문제 = 새 5초 / 피드백 중 정지 / 새로고침 시 남은 시간 복원(마감 시각 저장)
+     다시 도전·다음 문제 = 새 제한 시간 / 피드백 중 정지 / 새로고침 시 남은 시간 복원(마감 시각 저장)
    - ← 버튼: 미션 2·3 = 직전 문제를 맞힌 상태 그대로 다시 보기(재채점·XP 없음, 풀던 문제 타이머는 멈춤 →
      '다음 문제로'로 돌아오면 남은 시간부터 이어짐) / 미션 1 = STAGE SELECT
    상태 = { stage, seed, questions[3], mission, streak, attempt, selected, phase, deadline, timeLeft } + 기록
@@ -28,8 +28,9 @@
      온라인 = 서버가 문제 발급 · 정답 판정 · XP · 콤보 · 시간 기록 (브라우저 값은 믿지 않음, 화면은 서버 결과만 표시)
      오프라인(서버 연결 불가 · 프로필 없음) = 로컬 문제 · 로컬 판정 · 레이스/랭킹 미반영 */
   var OL = E.online;
-  var TIME = 5000;                 // 문제당 제한 시간 (ms)
-  var WARN = 2000;                 // 2초 이하 = 경고 색
+  var TIME = 10000;                // 문제당 제한 시간 (ms) — 온라인 판은 서버가 알려 주는 값(limit_ms)을 그대로 사용
+  var WARN = 3000;                 // 남은 시간 경고 색 (10초 → 3초 이하 · 5초 → 2초 이하)
+  function setLimit(ms) { TIME = ms > 0 ? ms : TIME; WARN = TIME >= 10000 ? 3000 : 2000; }
 
   /* ---------- 상태 ---------- */
   function fresh() {
@@ -58,6 +59,7 @@
     if (!s.log) s.log = {};
     if (!(s.frontier >= s.mission)) s.frontier = s.mission;
     if (typeof s.ready !== "boolean") s.ready = true;
+    if (s.limit > 0) setLimit(s.limit);                                        // 판 도중 새로고침: 그 판의 제한 시간 유지
     return s;
   }
   var st = E.getJSON("session", E.KEY.run);
@@ -136,7 +138,7 @@
   function remaining() { return st.deadline ? Math.max(0, st.deadline - Date.now()) : Math.max(0, st.timeLeft); }
   function drawTimer() {
     var ms = remaining();
-    var s = Math.ceil(ms / 100) / 10;                                     // 05.0s → 04.9s → … → 00.0s
+    var s = Math.ceil(ms / 100) / 10;                                     // 10.0s → 09.9s → … → 00.0s
     timerText.textContent = (s < 10 ? "0" : "") + s.toFixed(1) + "s";
     timerEl.style.setProperty("--t", (ms / TIME).toFixed(4));
     timerEl.classList.toggle("is-warn", ms <= WARN);
@@ -497,6 +499,8 @@
       return;
     }
     st.phase = "default";
+    setLimit(res.limit_ms || 5000);                                           // 서버 제한 시간 (limit_ms 없는 이전 서버 = 5초)
+    st.limit = TIME;
     st.timeLeft = res.remaining_ms;
     st.deadline = Date.now() + res.remaining_ms;
     loading = false;
@@ -562,8 +566,7 @@
       st.questions = [];
       for (var i = 0; i < N; i++) st.questions.push(null);
       save();
-      var p = function () { return OL.ping(r.session_id); };
-      return p().then(p).catch(function () { /* 측정 실패 = 보정 없음 */ });
+      return OL.ping(r.session_id).catch(function () { /* 측정 실패 = 보정 없음 */ });   // 지연 측정 1회 (시작 대기 줄이기)
     });
     return Promise.all([opened, beforeServe]).then(fetchQuestion, function () {
       return Promise.resolve(beforeServe).then(function () { st.online = null; save(); loading = false; booting = false; render(false); if (st.ready) syncTimer(); });
@@ -612,7 +615,7 @@
     if (!st.ready) countdown(function () { st.ready = true; save(); resumeOnline(); });
     else resumeOnline();
   } else if (!st.ready) {
-    drawTimer();                                                            // 05.0s 로 대기
+    drawTimer();                                                            // 처음 제한 시간으로 대기
     countdown(function () { st.ready = true; save(); render(false); syncTimer(); });
   } else syncTimer();
   // 뒤로 가기 캐시 복귀 시 저장 상태로 다시 그림
