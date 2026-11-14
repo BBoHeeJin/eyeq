@@ -516,6 +516,8 @@
   @supports (height: 100svh) { .b-page-my, .b-page-rank { --pad-v: max(0px, (100svh - var(--header-h) - var(--ph) * var(--c)) / 2); } }
   .b-page-my .b-my__in { padding-top: calc(var(--pad-v) + 21 * var(--c)); padding-bottom: calc(24 * var(--c)); }
   .b-page-rank .b-rank__in { padding-top: calc(var(--pad-v) + 21 * var(--c)); padding-bottom: calc(24 * var(--c)); }
+  /* 피드백 버튼(오른쪽 아래 48 + 16)이 있으면: 끝까지 내렸을 때 마지막 카드가 버튼 위로 올라오게 */
+  .has-fb.b-page-my .b-my__in, .has-fb.b-page-rank .b-rank__in { padding-bottom: calc(24 * var(--c) + 64px + env(safe-area-inset-bottom, 0px)); }
   .b-page-my .b-my__head.b-phead, .b-page-rank .b-rk__head.b-phead { margin: 0; gap: 0; }
   .b-page-my .b-phead__eyebrow, .b-page-rank .b-phead__eyebrow {
     margin: 0 0 calc(12 * var(--c));

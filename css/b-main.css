@@ -466,10 +466,29 @@
 .b-nick__input::placeholder { color: rgba(220, 218, 250, 0.8); }
 .b-nick__input:focus { border-color: #8e8cff; box-shadow: 0 0 0 3px rgba(100, 104, 244, 0.3); }
 .b-nick__count { position: absolute; right: calc(26 * var(--k)); top: 50%; transform: translateY(-50%); font-family: var(--font-en); font-weight: 600; font-size: max(12px, calc(18 * var(--k))); color: var(--color-result-label); pointer-events: none; font-variant-numeric: tabular-nums; }
-.b-nick__hint { display: flex; align-items: center; justify-content: center; gap: calc(8 * var(--k)); margin: 0 0 calc(18 * var(--k)); font-family: var(--font-kr); font-size: max(12px, calc(19 * var(--k))); color: var(--color-menu-text); }
+.b-nick__hint { display: flex; align-items: center; justify-content: center; gap: calc(8 * var(--k)); margin: 0 0 calc(6 * var(--k)); font-family: var(--font-kr); font-size: max(12px, calc(19 * var(--k))); color: var(--color-menu-text); }
 .b-nick__info { flex: none; width: calc(20 * var(--k)); height: calc(20 * var(--k)); min-width: 14px; min-height: 14px; color: #c9c8f5; }
 .b-nick__hint.is-error { color: #ff8a98; }
 .b-nick__hint.is-error .b-nick__info { color: #ff8a98; }
+/* 디자인 전공 여부 — 두 칸 선택 (기존 입력창과 같은 테두리·배경 톤) */
+.b-major { width: 100%; margin: 0 0 calc(18 * var(--k)); padding: 0; border: 0; min-width: 0; }
+.b-major__q { display: block; width: 100%; margin: 0 0 calc(10 * var(--k)); padding: 0; font-family: var(--font-kr); font-weight: 600; font-size: max(13px, calc(19 * var(--k))); color: var(--color-white); text-align: center; }
+.b-major__opts { display: grid; grid-template-columns: 1fr 1fr; gap: calc(12 * var(--k)); }
+.b-major__opt { position: relative; display: block; cursor: pointer; }
+.b-major__opt input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.b-major__opt span {
+  display: flex; align-items: center; justify-content: center;
+  height: calc(60 * var(--k)); min-height: 44px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(142, 140, 255, 0.4);
+  background: rgba(14, 15, 56, 0.55);
+  font-family: var(--font-kr); font-weight: 600; font-size: max(14px, calc(20 * var(--k)));
+  color: var(--color-menu-text);
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
+}
+@media (hover: hover) { .b-major__opt:hover span { border-color: rgba(142, 140, 255, 0.75); } }
+.b-major__opt input:checked + span { border-color: #a9a5ff; background: linear-gradient(180deg, rgba(122, 108, 255, 0.62) 0%, rgba(88, 84, 230, 0.55) 100%); color: var(--color-white); box-shadow: 0 0 calc(16 * var(--k)) 0 rgba(120, 104, 255, 0.55); }
+.b-major__opt input:focus-visible + span { box-shadow: 0 0 0 3px rgba(142, 140, 255, 0.6); }
 .b-nick__start {
   flex: none;
   width: 80%;
@@ -500,4 +519,9 @@
   .b-nick__hint { gap: 6px; margin-bottom: 8px; font-size: 12px; }
   .b-nick__info { width: 15px; height: 15px; }
   .b-nick__start { width: 100%; height: 54px; font-size: 17px; }
+  .b-nick__hint { margin-bottom: 4px; }
+  .b-major { margin-bottom: 8px; }
+  .b-major__q { margin-bottom: 8px; font-size: 14px; }
+  .b-major__opts { gap: 8px; }
+  .b-major__opt span { height: 46px; font-size: 15px; }
 }
