@@ -17,6 +17,7 @@
     history: "eyeq.b.history",       // 완료한 게임 기록 [{id, stage, at, correct, total, xp, maxCombo}] (마이페이지)
     badges: "eyeq.b.badges",         // 획득한 업적 {id: 획득 시각} (한 번 얻으면 유지)
     nickname: "eyeq.b.nickname",     // 마이페이지 닉네임 (브라우저 저장)
+    major: "eyeq.b.major",           // 디자인 전공 여부 (design | non_design) — 닉네임 설정 때 선택
     next: "eyeq.b.next",             // 프로필 설정 후 이어갈 곳 ("quick" = QUICK PLAY) · 탭 단위
     race: "eyeq.b.race",             // 온라인 레이스 진행 (서버 값의 표시용 사본 · 서버가 기준)
     legacy: "eyeq.b.legacy",         // 레이스 이전 로컬 XP 보관본 {xp, savedAt} (삭제·변경 안 함)
@@ -86,6 +87,15 @@
     set("local", KEY.nickname, n);
     profileChanged();
     return n;
+  }
+
+  /* ---------- 디자인 전공 여부 (닉네임 설정 때 함께 선택 · 서버 프로필에도 기록) ---------- */
+  var MAJORS = { design: "디자인 전공자", non_design: "비전공자" };
+  function getMajor() { var v = get("local", KEY.major); return MAJORS[v] ? v : null; }
+  function setMajor(v) {
+    if (!MAJORS[v]) return null;
+    if (get("local", KEY.major) !== v) { set("local", KEY.major, v); profileChanged(); }
+    return v;
   }
 
   /* ---------- 플레이 기록 (완료한 게임만 · 플레이 ID로 중복 저장 방지) ---------- */
@@ -346,6 +356,7 @@
     LEVELS: LEVELS, MAX_LEVEL: MAX_LEVEL, XP_MAX_TOTAL: XP_MAX_TOTAL, two: two,
     getHistory: getHistory, addPlay: addPlay, getTotals: getTotals, compareRecords: compareRecords, bestByStage: bestByStage,
     hasCharacter: hasCharacter, startQuick: startQuick, getNickname: getNickname, setNickname: setNickname, displayName: displayName, NAME_MAX: NAME_MAX,
+    getMajor: getMajor, setMajor: setMajor, MAJORS: MAJORS,
     renderHeader: renderHeader,
     modal: modal,
     soon: soon

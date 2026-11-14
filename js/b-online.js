@@ -82,17 +82,39 @@
   }
 
   /* ---------- 프로필 동기화 (닉네임·캐릭터) ---------- */
-  function profileKey() { return (E.getNickname() || "") + "|" + E.getCharacter(); }
+  function profileKey() { return (E.getNickname() || "") + "|" + E.getCharacter() + "|" + (E.getMajor() || ""); }
+  var noMajorCol = false;                                               // 서버에 major 칸이 아직 없으면(SQL 적용 전) 빼고 저장
   function syncProfile(force) {
     var nick = E.getNickname();
     if (!nick || !E.hasCharacter()) return Promise.resolve(null);       // 프로필 설정 전에는 서버에 만들지 않음
     return ensureAuth().then(function (s) {
       var k = s.user_id + "|" + profileKey();
       if (!force && E.get("local", "eyeq.b.profile_synced") === k) return s;
-      return request("/rest/v1/profiles?on_conflict=id", {
-        method: "POST", token: s.access_token, prefer: "resolution=merge-duplicates,return=minimal",
-        body: { id: s.user_id, nickname: nick, avatar: E.getCharacter(), updated_at: new Date().toISOString() }
-      }).then(function () { E.set("local", "eyeq.b.profile_synced", k); return s; });
+      function put(withMajor) {
+        var body = { id: s.user_id, nickname: nick, avatar: E.getCharacter(), updated_at: new Date().toISOString() };
+        if (withMajor) body.major = E.getMajor();
+        return request("/rest/v1/profiles?on_conflict=id", {
+          method: "POST", token: s.access_token, prefer: "resolution=merge-duplicates,return=minimal", body: body
+        });
+      }
+      var withMajor = !!E.getMajor() && !noMajorCol;
+      return put(withMajor).catch(function (e) {
+        if (withMajor && e.status === 400 && e.data && (e.data.code === "PGRST204" || /major/.test(e.data.message || ""))) {
+          noMajorCol = true;                                            // 칸 없음 → 닉네임·캐릭터만 저장 (게임은 그대로 진행)
+          return put(false).then(function () { return "partial"; });
+        }
+        throw e;
+      }).then(function (r) { if (r !== "partial") E.set("local", "eyeq.b.profile_synced", k); return s; });
+    });
+  }
+
+  /* ---------- 피드백 보내기 (자기 것만 추가 가능 · 읽기·수정·삭제 불가 — 서버 RLS) ---------- */
+  function sendFeedback(type, content, page) {
+    return ensureAuth().then(function (s) {
+      return request("/rest/v1/feedback", {
+        method: "POST", token: s.access_token, prefer: "return=minimal",
+        body: { feedback_type: type, content: content, page: page }
+      });
     });
   }
 
@@ -143,6 +165,7 @@
     session: getSession,
     ensureAuth: ensureAuth,
     syncProfile: syncProfile,
+    sendFeedback: sendFeedback,
     refreshRace: refreshRace,
     request: request,
     rpc: rpc

@@ -119,7 +119,7 @@
   if (cta) {
     cta.addEventListener("click", function () {
       var ch = chosen();
-      if (E.getNickname() || !openNick) { start(ch); return; }
+      if ((E.getNickname() && E.getMajor()) || !openNick) { start(ch); return; }   // 닉네임 + 전공 여부가 있으면 바로 시작 (전공 여부가 없던 기존 사용자는 한 번만 물어봄)
       openNick(ch);
     });
   }
@@ -127,22 +127,27 @@
     var form = nickEl.querySelector("[data-nick-form]"), input = nickEl.querySelector("[data-nick-input]");
     var count = nickEl.querySelector("[data-nick-count]"), hint = nickEl.querySelector("[data-nick-hint]");
     var go = nickEl.querySelector("[data-nick-start]"), pending = null;
+    var majors = nickEl.querySelectorAll("[data-major-input]");
     var HINT = hint.textContent;
+    function major() { for (var i = 0; i < majors.length; i++) if (majors[i].checked) return majors[i].value; return null; }
     function sync() {
       count.textContent = input.value.length + " / " + E.NAME_MAX;
-      go.disabled = !input.value.trim();
+      go.disabled = !input.value.trim() || !major();                 // 닉네임 + 전공 여부 둘 다 필요
       hint.parentNode.classList.remove("is-error");
       hint.textContent = HINT;
     }
     openNick = function (ch) {
       pending = ch;
       nickEl.querySelector("[data-nick-char]").setAttribute("src", E.charImg(ch));
-      input.value = "";
+      input.value = E.getNickname() || "";                            // 기존 사용자: 닉네임 그대로 두고 전공 여부만 고르면 됨
+      var mj = E.getMajor();
+      for (var i = 0; i < majors.length; i++) majors[i].checked = majors[i].value === mj;
       sync();
       nick.open();
       input.focus();
     };
     input.addEventListener("input", sync);
+    for (var mi = 0; mi < majors.length; mi++) majors[mi].addEventListener("change", sync);
     input.addEventListener("keydown", function (e) {
       if (e.key === "Enter" && !input.value.trim()) {   // 빈 값 Enter → 안내
         e.preventDefault();
@@ -152,7 +157,9 @@
     });
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      if (!major()) { majors[0].focus(); return; }
       if (!E.setNickname(input.value)) { input.focus(); return; }
+      E.setMajor(major());
       start(pending || chosen());
     });
   }
