@@ -127,6 +127,7 @@
               <p class="b-prof__err" data-name-err role="alert" hidden>닉네임을 입력해 주세요.</p>
             </form>
             <p class="b-prof__chip"><svg class="b-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8l4.5 4 4-6.5 4 6.5 4.5-4-1.8 10H5.3z" fill="#ffd25a"/><rect x="5.3" y="18.6" width="13.4" height="1.9" rx=".9" fill="#ffb547"/></svg><span data-title-text>관찰 새싹</span></p>
+            <button class="b-prof__skin" type="button" data-skin-manage><svg class="b-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 3.5L4 6l-1.5 5 3 1V20.5h13V12l3-1L20 6l-5-2.5a3 3 0 0 1-6 0z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>스킨 관리</button>
           </div>
           <span class="b-prof__divider" aria-hidden="true"></span>
           <div class="b-prof__level">
@@ -136,18 +137,6 @@
             </div>
             <span class="b-prof__bar" role="progressbar" aria-label="다음 레벨까지 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-lv-bar><span class="b-prof__fill" data-lv-fill></span></span>
             <p class="b-prof__left" data-lv-left></p>
-          </div>
-        </section>
-
-        <!-- 포인트 · 스킨 (상점 연동) -->
-        <section class="b-mycard b-myskin" aria-label="포인트와 스킨">
-          <div class="b-myskin__stat"><span class="b-myskin__label">보유 포인트</span><b class="b-myskin__val"><i aria-hidden="true">✦</i><span data-points-n>0</span><small>P</small></b></div>
-          <span class="b-myskin__div" aria-hidden="true"></span>
-          <div class="b-myskin__stat"><span class="b-myskin__label">보유 스킨</span><b class="b-myskin__val"><span data-my-owned>3</span><small>/ <span data-my-skintotal>6</span></small></b></div>
-          <div class="b-myskin__acts">
-            <button class="b-myskin__help" type="button" data-tutorial-open>튜토리얼 다시 보기</button>
-            <a class="b-myskin__link" href="shop.html">상점 가기</a>
-            <button class="b-myskin__btn" type="button" data-skin-manage>내 스킨 관리 <span aria-hidden="true">→</span></button>
           </div>
         </section>
 
@@ -166,7 +155,14 @@
             <!-- 디자인 영역별 기록 (DESIGN SKILLS): 누적 정답률 · 최고 콤보 -->
             <section class="b-mycard b-best">
               <header class="b-mycard__head"><h2 class="b-mycard__title"><svg class="b-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.5l8.5 4.5-8.5 4.5L3.5 8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.5 12l8.5 4.5 8.5-4.5M3.5 16l8.5 4.5 8.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>디자인 영역별 기록</h2><p class="b-mycard__meta">누적 정답률 · 최고 콤보</p></header>
-              <ul class="b-mylist" data-best></ul>
+              <div class="b-skill">
+                <figure class="b-radar" data-radar aria-label="디자인 영역별 누적 정답률 레이더 차트"></figure>
+                <div class="b-skill__sum">
+                  <dl class="b-skill__kpi" data-skill-kpi></dl>
+                  <ul class="b-skill__list" data-best></ul>
+                  <button class="b-skill__open" type="button" data-skill-open>날마다 성장 그래프 자세히 보기<svg class="b-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9.5 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                </div>
+              </div>
             </section>
           </div>
           <div class="b-my__col">
@@ -207,6 +203,22 @@
       <ul class="b-mylist b-mylist--all" data-history></ul>
       <div class="b-modal__actions">
         <button class="b-modal__btn b-modal__btn--confirm" type="button" data-modal-close data-modal-confirm>닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 디자인 영역 자세히 보기 (PC 팝업 · 모바일 전체 화면) -->
+  <div class="b-modal b-modal--area" data-modal="area" aria-hidden="true">
+    <button class="b-modal__dim" type="button" tabindex="-1" aria-label="닫기" data-modal-close data-modal-dim></button>
+    <div class="b-modal__dialog b-area" role="dialog" aria-modal="true" aria-labelledby="b-area-title" tabindex="-1">
+      <div class="b-area__bar">
+        <button class="b-area__back" type="button" data-modal-close data-area-back><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14.5 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>뒤로</button>
+        <button class="b-area__x" type="button" data-modal-close aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="b-area__body" data-area-body></div>
+      <div class="b-modal__actions b-area__acts">
+        <button class="b-modal__btn" type="button" data-modal-close>닫기</button>
+        <button class="b-modal__btn b-modal__btn--confirm" type="button" data-area-play>이 영역 플레이하기</button>
       </div>
     </div>
   </div>
