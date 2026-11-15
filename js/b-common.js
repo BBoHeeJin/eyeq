@@ -35,6 +35,7 @@
     auth: "eyeq.b.auth",             // 익명 로그인 세션 (b-online.js)
     owned: "eyeq.b.owned",           // 보유 스킨 id 목록 (서버 지갑의 표시용 사본 · 서버가 기준)
     points: "eyeq.b.points",         // 보유 포인트 (서버 지갑의 표시용 사본)
+    growth: "eyeq.b.growth",         // 영역별 '처음 10문제' 기준값 {영역: {c, t, at, pid, upto}} — 기록 200판 정리 뒤에도 성장 비교 유지 (추가 전용)
     totals: "eyeq.b.totals"          // 개인 누적 통계 {plays, correct, total, solveMs, quick} (기록 200판 정리와 무관하게 계속 누적)
   };
   /* LEVEL RACE 레벨 규칙 (확정 · LV.10): 누적 XP 기준 · 모든 사용자 동일

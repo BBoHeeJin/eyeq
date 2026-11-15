@@ -143,3 +143,55 @@
     :root { --c: clamp(0.64px, min(calc(var(--vw, 100vw) / 390), calc((100svh - var(--m-header-h)) / var(--ph))), 1.1px); }
   }
 }
+
+/* =========================================================
+   공통 레이아웃 시스템 (기준: STAGE SELECT · 1920 디자인 px)
+   - 숫자만 적고(단위 없음), 쓰는 곳에서 화면 단위(--uh 헤더 / --k 콘텐츠 / --c 모바일)를 곱함
+     예) padding-top: calc(var(--L-page-top) * var(--k));
+   - 페이지마다 따로 margin 을 반복하지 않고 이 값을 gap·padding 으로만 사용
+   - 예외: 게임 플레이(문제 화면)·결과 화면은 자체 캔버스 배치 (머리 간격 16/12 만 같은 규칙)
+   ========================================================= */
+:root {
+  /* 헤더 */
+  --L-header-h: 112;        /* Header Height (모바일 64px 고정: --m-header-h) */
+  --L-page-x: 88;           /* Page Horizontal Padding — 로고 시작선 = 콘텐츠 시작선 · 좌우 동일 */
+  --L-nav-start: 64;        /* 로고 → 첫 메뉴 */
+  --L-nav-gap: 14;          /* Navigation Gap — 메뉴 캡슐 사이 */
+  --L-nav-icon-gap: 10;     /* 메뉴 아이콘 ↔ 글자 */
+  --L-hud-gap: 12;          /* Header HUD Gap — Quick Play · 포인트 · 레벨 · 프로필 사이 */
+
+  /* 페이지 머리 (eyebrow → title → desc → content) */
+  --L-page-top: 24;         /* Page Top Spacing — 헤더 아래 → eyebrow */
+  --L-eyebrow-title: 16;    /* Eyebrow to Title Gap */
+  --L-title-desc: 12;       /* Title to Description Gap */
+  --L-desc-content: 36;     /* Description to Content Gap */
+  --L-section-gap: 28;      /* Section Gap — 카드·묶음 사이 */
+  --L-page-bottom: 72;      /* 마지막 콘텐츠 아래 */
+  --L-card-pad-y: 28;       /* Card Padding (세로) */
+  --L-card-pad-x: 32;       /* Card Padding (가로) */
+  --L-radius: 28;           /* Border Radius — 큰 카드 */
+
+  /* 자간 (역할별) */
+  --ls-eyebrow: 0.14em;     /* 영문 소제목 STAGE SELECT · MY PAGE … (0.12–0.16) */
+  --ls-label: 0.08em;       /* 작은 영문 라벨 STAGE 01 · MENU · 태그 */
+  --ls-num: 0.02em;         /* 숫자 01/02 · STEP 번호 · 문제 번호 (0–0.02) */
+  --ls-title: -0.02em;      /* 한글 제목 */
+  --ls-desc: 0;             /* 설명 문장 (기본 · 읽기 편하게) */
+  --ls-btn: 0;              /* 버튼 */
+}
+/* 모바일·태블릿 (<1024) — 같은 이름, 모바일 값 */
+@media (max-width: 1023px) {
+  :root {
+    --L-page-x: 20;
+    --L-page-top: 21;
+    --L-eyebrow-title: 12;
+    --L-title-desc: 8;
+    --L-desc-content: 32;   /* 모바일은 설명 숨김 → 제목 → 콘텐츠 */
+    --L-section-gap: 16;
+    --L-page-bottom: 24;
+    --L-card-pad-y: 18;
+    --L-card-pad-x: 18;
+    --L-radius: 20;
+    --ls-title: -0.03em;
+  }
+}

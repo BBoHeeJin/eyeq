@@ -346,9 +346,9 @@
    순위 계산 · TOP 5 · 표시 데이터는 그대로
    ========================================================= */
 @media (min-width: 1024px) {
-  .b-page-rank .b-rank__in { gap: calc(24 * var(--k)); }
+  .b-page-rank .b-canvas { --L-section-gap: 24; }    /* 랭킹은 정보가 많아 섹션 간격만 24 (설명 → 콘텐츠 36 은 공통값 그대로) */
   .b-page-rank .b-rk__head { gap: 0; }
-  .b-page-rank .b-rk__title { gap: calc(18 * var(--k)); margin: 0 0 calc(12 * var(--k)); }
+  .b-page-rank .b-rk__title { gap: calc(18 * var(--k)); margin: 0 0 calc(var(--L-title-desc) * var(--k)); }
   .b-page-rank .b-rk__title span { font-size: calc(56 * var(--k)); line-height: calc(66 * var(--k)); }   /* 영문 대문자 56 ≈ 한글 52 와 같은 시각 크기 */
   .b-page-rank .b-rk__laurel { width: calc(28 * var(--k)); height: calc(56 * var(--k)); }
   .b-page-rank .b-rk__desc { font-size: calc(19 * var(--k)); line-height: calc(28 * var(--k)); color: var(--color-menu-text); }

@@ -95,38 +95,239 @@
     tm.setAttribute("aria-label", Math.floor(sec / 60) + "분 " + (sec % 60) + "초");
   }
 
-  /* ---------- 디자인 영역별 기록 (DESIGN SKILLS): 누적 정답률(첫 시도 기준) · 최고 콤보 ----------
-     스테이지 판 = 그 영역 3문제 · QUICK PLAY = 문제별 영역(res 기록이 있는 판만) */
+  /* ---------- 디자인 영역별 기록 (DESIGN SKILLS) ----------
+     왼쪽 오각형 레이더(5개 영역 누적 정답률) + 오른쪽 목록(정답률 · 최고 콤보 · 자세히 보기) — 둘 다 같은 데이터(area)
+     정답률 = 첫 시도 정답 기준 (스테이지 판 = 그 영역 문제 · QUICK PLAY = 문제별 영역, res 기록이 있는 판만)
+     성장 = 처음 10문제 정답률 vs 최근 10문제 정답률 (%p) · 문제 순서 = 플레이 시각 → 판 안의 문제 번호 (실제 순서)
+     기록이 없는 영역은 0% + '기록 없음' (임의 값 없음) */
   function go(id) {
     if (id === "quick") { E.startQuick(); return; }                 // QUICK PLAY 기록 → 새 QUICK PLAY
     E.set("session", E.KEY.stage, id); window.location.href = "stage.html";
   }
   var QP = { id: "quick", no: '<svg class="b-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg>', name: "QUICK PLAY" };   // 번호 자리 = 번개 아이콘
-  var best = E.bestByStage(H), area = {};
-  ST.list.forEach(function (s) { area[s.id] = { c: 0, t: 0 }; });
-  H.forEach(function (r) {
-    if (r.mode !== "quick" && area[r.stage]) { area[r.stage].c += r.correct || 0; area[r.stage].t += r.total || 0; }
-    else if (r.mode === "quick" && Array.isArray(r.res) && Array.isArray(r.stages)) {
-      r.res.forEach(function (ok, i) { var a = area[r.stages[i]]; if (a) { a.t += 1; if (ok) a.c += 1; } });
+  var GROW_N = 10;                                                  // 비교 구간: 처음 10문제 · 최근 10문제
+  var area = {};
+  ST.list.forEach(function (s) { area[s.id] = { c: 0, t: 0, combo: 0, sp: 0, units: [], series: [], days: [] }; });
+  function dayKey(t) { var d = new Date(t); return d.getFullYear() + "-" + two(d.getMonth() + 1) + "-" + two(d.getDate()); }   // sp = 스테이지 판 수 (최고 콤보는 한 영역만 푼 스테이지 판 기준)
+  H.slice().reverse().forEach(function (r) {                          // 오래된 → 최근
+    var touched = {}, dayAdd = {};
+    function unit(id, c, t, i) {
+      var a = area[id]; a.units.push({ c: c, t: t, at: r.at, pid: r.id, i: i }); touched[id] = 1;
+      var x = dayAdd[id] || (dayAdd[id] = { c: 0, t: 0 }); x.c += c; x.t += t;
     }
+    if (r.mode !== "quick" && area[r.stage]) {
+      var a = area[r.stage], c = r.correct || 0, t = r.total || 0;
+      a.c += c; a.t += t; a.sp += 1; a.combo = Math.max(a.combo, r.maxCombo || 0);
+      var ok = Array.isArray(r.res) && r.res.length === t && r.res.filter(Boolean).length === c;   // 문제별 기록이 합계와 맞을 때만 문제 단위
+      if (ok) r.res.forEach(function (x, i) { unit(r.stage, x ? 1 : 0, 1, i); });
+      else if (t) unit(r.stage, c, t, 0);                           // 예전 기록: 한 판 묶음 (판 안 순서를 만들지 않음)
+    } else if (r.mode === "quick" && Array.isArray(r.res) && Array.isArray(r.stages)) {
+      r.res.forEach(function (x, i) { var a = area[r.stages[i]]; if (!a) return; a.t += 1; if (x) a.c += 1; unit(r.stages[i], x ? 1 : 0, 1, i); });
+    }
+    Object.keys(touched).forEach(function (id) { var a = area[id]; a.series.push({ at: r.at, c: a.c, t: a.t }); });
+    /* 날마다: 그날 푼 문제(dc/dt) + 그날 끝난 시점의 누적(c/t) — 이 기기 시간대 기준 날짜 */
+    var dk = dayKey(r.at);
+    Object.keys(dayAdd).forEach(function (id) {
+      var a = area[id], D = a.days[a.days.length - 1];
+      if (!D || D.key !== dk) { D = { key: dk, at: r.at, dc: 0, dt: 0, c: 0, t: 0 }; a.days.push(D); }
+      D.dc += dayAdd[id].c; D.dt += dayAdd[id].t; D.c = a.c; D.t = a.t;
+    });
   });
+
+  /* 성장 계산 — 처음 10문제 기준값은 한 번 정해지면 eyeq.b.growth 에 보관 (기록 200판 정리 후에도 같은 기준) */
+  var GS = E.getJSON("local", E.KEY.growth); if (!GS || typeof GS !== "object") GS = {};
+  var gsDirty = false;
+  function take(U, fromEnd) {                                       // 앞(또는 뒤)에서 10문제 이상이 될 때까지
+    var c = 0, t = 0, n = 0;
+    for (var k = 0; k < U.length && t < GROW_N; k++) { var u = U[fromEnd ? U.length - 1 - k : k]; c += u.c; t += u.t; n++; }
+    return { c: c, t: t, n: n };
+  }
+  function growthOf(id) {
+    var a = area[id], U = a.units, base = GS[id], first, rest;
+    if (base && base.t >= GROW_N) {
+      first = base;
+      rest = U.filter(function (u) { return u.at > base.at || (u.pid === base.pid && u.i >= base.upto); });
+    } else {
+      first = take(U, false);
+      rest = U.slice(first.n);
+      if (first.t >= GROW_N) {
+        var lu = U[first.n - 1];
+        var upto = 0; for (var q = 0; q < first.n; q++) if (U[q].pid === lu.pid) upto = Math.max(upto, U[q].i + 1);
+        GS[id] = { c: first.c, t: first.t, at: lu.at, pid: lu.pid, upto: upto, saved: Date.now() }; gsDirty = true;
+      }
+    }
+    var last = take(rest, true);
+    if (first.t < GROW_N || last.t < GROW_N) return { ok: false, need: Math.max(GROW_N, first.t) + GROW_N };   // 처음 구간 + 최근 10문제
+    var a0 = pct(first.c, first.t), a1 = pct(last.c, last.t);
+    return { ok: true, a0: a0, a1: a1, d: a1 - a0, n0: first.t, n1: last.t };
+  }
+  var GR = {};
+  ST.list.forEach(function (s) { GR[s.id] = growthOf(s.id); });
+  if (gsDirty) E.setJSON("local", E.KEY.growth, GS);
+
+  /* 레이더 차트 (SVG 도형 + HTML 글자 → 작은 화면에서도 글자 크기 유지) */
+  var radar = $("[data-radar]");
+  var RX = 150, RY = 140, RR = 118, NA = ST.list.length, VW = 300, VH = 262;   // 차트 좌표계 300×262
+  function pt(i, v) { var ang = -Math.PI / 2 + i * 2 * Math.PI / NA; return [RX + Math.cos(ang) * RR * v, RY + Math.sin(ang) * RR * v]; }
+  function poly(v) { return ST.list.map(function (s, i) { return pt(i, typeof v === "function" ? v(s, i) : v).map(function (n) { return n.toFixed(1); }).join(","); }).join(" "); }
+  var rate = function (id) { var a = area[id]; return a.t ? a.c / a.t : 0; };
+  var anyData = ST.list.some(function (s) { return area[s.id].t > 0; });
+  if (radar) {
+    var svg = '<svg class="b-radar__svg" viewBox="0 0 300 262" aria-hidden="true" focusable="false">' +
+      '<defs><radialGradient id="b-radar-fill" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#8f7bff" stop-opacity="0.18"/><stop offset="100%" stop-color="#7c5cff" stop-opacity="0.5"/></radialGradient>' +
+      '<linearGradient id="b-radar-line" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c3b2ff"/><stop offset="100%" stop-color="#7c8cff"/></linearGradient>' +
+      '<radialGradient id="b-radar-bg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#3b2f9e" stop-opacity="0.35"/><stop offset="100%" stop-color="#1a1d5c" stop-opacity="0"/></radialGradient></defs>' +
+      '<polygon points="' + poly(1) + '" fill="url(#b-radar-bg)"/>';
+    [0.2, 0.4, 0.6, 0.8, 1].forEach(function (v) { svg += '<polygon class="b-radar__grid' + (v === 1 ? " is-out" : "") + '" points="' + poly(v) + '"/>'; });
+    ST.list.forEach(function (s, i) { var e = pt(i, 1); svg += '<line class="b-radar__axis" x1="' + RX + '" y1="' + RY + '" x2="' + e[0].toFixed(1) + '" y2="' + e[1].toFixed(1) + '"/>'; });
+    svg += '<polygon class="b-radar__area" points="' + poly(function (s) { return rate(s.id); }) + '" fill="url(#b-radar-fill)" stroke="url(#b-radar-line)"/>';
+    ST.list.forEach(function (s, i) { var p = pt(i, rate(s.id)); svg += '<circle class="b-radar__dot' + (area[s.id].t ? "" : " is-none") + '" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="5"/>'; });
+    svg += "</svg>";
+    /* 글자·눌러 보기: 꼭짓점 바깥 이름표 (HTML, 위치는 % → 차트와 같이 커지고 작아짐) */
+    var labels = ST.list.map(function (s, i) {
+      var a = area[s.id], q = pt(i, 1.12), d = pt(i, rate(s.id)), side = q[0] < RX - 10 ? " is-l" : q[0] > RX + 10 ? " is-r" : "";
+      var tip = s.name + " · " + s.nameKo + " — " + (a.t ? "누적 정답률 " + pct(a.c, a.t) + "% · 맞힌 문제 " + a.c + " · 푼 문제 " + a.t : "기록 없음 (0%)");
+      return '<button class="b-radar__lbl' + side + (q[1] > RY ? " is-b" : "") + (a.t ? "" : " is-none") + '" type="button" data-area="' + s.id + '" style="left:' + (q[0] / (VW / 100)).toFixed(2) + "%;top:" + (q[1] / (VH / 100)).toFixed(2) + '%" aria-label="' + tip + ' — 자세히 보기">' +
+        '<span class="b-radar__name">' + s.name + '</span><span class="b-radar__val">' + (a.t ? pct(a.c, a.t) + "%" : "0% · 기록 없음") + "</span></button>";
+    }).join("");
+    /* 꼭짓점 위 투명 터치 영역 (마우스 올리거나 눌렀을 때 툴팁) */
+    var hits = ST.list.map(function (s, i) { var d = pt(i, rate(s.id)); return '<span class="b-radar__hit" data-hit="' + s.id + '" style="left:' + (d[0] / (VW / 100)).toFixed(2) + "%;top:" + (d[1] / (VH / 100)).toFixed(2) + '%" aria-hidden="true"></span>'; }).join("");
+    radar.innerHTML = '<div class="b-radar__in">' + svg + hits + labels + '<div class="b-radar__tip" role="status" aria-live="polite" hidden data-radar-tip></div>' +
+      (anyData ? "" : '<p class="b-radar__empty">아직 기록이 없어요<span>플레이하면 그래프가 채워져요</span></p>') + "</div>";
+    var tipEl = radar.querySelector("[data-radar-tip]"), tipFor = null;
+    function showTip(id) {
+      var s = ST.get(id), a = area[id], i = ST.list.indexOf(s), d = pt(i, rate(id));
+      tipEl.innerHTML = "<b>" + s.name + ' <small>' + s.nameKo + "</small></b>" +
+        (a.t ? '<span class="b-radar__tipv">' + pct(a.c, a.t) + "<small>%</small></span><span>맞힌 문제 <i>" + fmtN(a.c) + "</i> · 푼 문제 <i>" + fmtN(a.t) + "</i></span>"
+             : '<span class="b-radar__tipv">0<small>%</small></span><span>아직 기록이 없어요</span>');
+      tipEl.style.left = (d[0] / (VW / 100)) + "%"; tipEl.style.top = (d[1] / (VH / 100)) + "%";
+      tipEl.classList.toggle("is-below", d[1] < RY);                  // 위쪽 꼭짓점은 아래로 표시
+      tipEl.hidden = false; tipFor = id;
+      Array.prototype.forEach.call(radar.querySelectorAll("[data-area]"), function (b) { b.classList.toggle("is-on", b.getAttribute("data-area") === id); });
+    }
+    function hideTip() { tipEl.hidden = true; tipFor = null; Array.prototype.forEach.call(radar.querySelectorAll("[data-area]"), function (b) { b.classList.remove("is-on"); }); }
+    radar.addEventListener("pointerover", function (e) { var h = e.target.closest("[data-hit],[data-area]"); if (h && e.pointerType === "mouse") showTip(h.getAttribute("data-hit") || h.getAttribute("data-area")); });
+    radar.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") hideTip(); });
+    radar.addEventListener("focusin", function (e) { var h = e.target.closest("[data-area]"); if (h) showTip(h.getAttribute("data-area")); });
+    radar.addEventListener("focusout", function () { setTimeout(function () { if (!radar.contains(document.activeElement)) hideTip(); }, 0); });
+    radar.addEventListener("click", function (e) {
+      var h = e.target.closest("[data-hit]"), l = e.target.closest("[data-area]");
+      if (h) { var id = h.getAttribute("data-hit"); if (tipFor === id) hideTip(); else showTip(id); return; }   // 터치: 꼭짓점 누르면 툴팁
+      if (l) openArea(l.getAttribute("data-area"), l);                // 이름표 누르면 자세히 보기
+    });
+    document.addEventListener("click", function (e) { if (tipFor && !radar.contains(e.target)) hideTip(); });
+  }
+
+  /* 최고 콤보: 이 영역 스테이지 판의 최고 연속 정답 (QUICK PLAY 콤보는 여러 영역이 섞여 제외 · 스테이지 판이 없으면 —) */
+  function comboTxt(a) { return a.sp ? "×" + a.combo : "—"; }
+
+  /* 오른쪽: 한눈 요약 (평균 · 강점 · 보완) + 영역 5줄 간단 목록 + 자세히 보기 — 레이더와 같은 값 */
+  var withData = ST.list.filter(function (s) { return area[s.id].t > 0; });
+  var sumC = 0, sumT = 0; withData.forEach(function (s) { sumC += area[s.id].c; sumT += area[s.id].t; });
+  var byRate = withData.slice().sort(function (x, y) { return rate(y.id) - rate(x.id) || area[y.id].t - area[x.id].t; });
+  var strong = byRate[0], weak = byRate.length > 1 ? byRate[byRate.length - 1] : null;
+  if (weak && strong && rate(weak.id) === rate(strong.id)) weak = null;   // 모두 같으면 보완 영역 없음
+  var noData = ST.list.filter(function (s) { return !area[s.id].t; });
+  var kpi = $("[data-skill-kpi]");
+  if (kpi) kpi.innerHTML =
+    '<div class="b-skill__k"><dt>전체 정답률</dt><dd>' + (sumT ? pct(sumC, sumT) + "<small>%</small>" : "—") + "</dd></div>" +
+    '<div class="b-skill__k"><dt>강점</dt><dd class="is-name">' + (strong ? strong.name : "—") + "</dd></div>" +
+    '<div class="b-skill__k"><dt>' + (weak ? "보완 영역" : noData.length ? "아직 안 푼 영역" : "보완 영역") + '</dt><dd class="is-name">' + (weak ? weak.name : noData.length ? noData[0].name + (noData.length > 1 ? " 외 " + (noData.length - 1) : "") : "—") + "</dd></div>";
   var bestList = $("[data-best]");
   ST.list.forEach(function (s) {
-    var b = best[s.id], a = area[s.id];
+    var a = area[s.id];
     var li = document.createElement("li");
     li.innerHTML =
-      '<button class="b-mylist__row" type="button">' +
-      '<span class="b-mylist__no">' + s.no + '</span>' +
-      '<span class="b-mylist__name">' + s.name + '</span>' +
-      (a.t ? '<span class="b-mylist__meter" aria-hidden="true"><i style="--p:' + (a.c / a.t).toFixed(3) + '"></i></span>' +
-             '<span class="b-mylist__rate">' + pct(a.c, a.t) + '<small>%</small></span>' +
-             '<span class="b-mylist__combo">' + FLAME + '×' + (b ? b.maxCombo || 0 : 0) + '</span>'
-           : '<span class="b-mylist__none">기록 없음</span>') +
-      CHEV + '</button>';
-    li.firstChild.setAttribute("aria-label", s.no + " " + s.name + (a.t ? " 누적 정답률 " + pct(a.c, a.t) + "% (" + a.c + " / " + a.t + "문제) · 최고 콤보 " + (b ? b.maxCombo || 0 : 0) : " 기록 없음") + " — 스테이지로 이동");
-    li.firstChild.addEventListener("click", function () { go(s.id); });
+      '<button class="b-skill__row' + (a.t ? "" : " is-none") + '" type="button" data-area-open="' + s.id + '">' +
+      '<span class="b-skill__no">' + s.no + '</span><span class="b-skill__name">' + s.name + "</span>" +
+      '<span class="b-skill__bar" aria-hidden="true"><i style="--p:' + (a.t ? (a.c / a.t).toFixed(3) : 0) + '"></i></span>' +
+      '<span class="b-skill__rate">' + (a.t ? pct(a.c, a.t) + "<small>%</small>" : "기록 없음") + "</span>" +
+      '<span class="b-skill__combo">' + (a.t ? FLAME + comboTxt(a) : "") + "</span></button>";
+    li.firstChild.setAttribute("aria-label", s.no + " " + s.name + (a.t ? " 누적 정답률 " + pct(a.c, a.t) + "% (" + a.c + " / " + a.t + "문제) · 최고 콤보 " + (a.sp ? a.combo : "스테이지 기록 없음") : " 기록 없음 (0%)") + " — 날마다 성장 그래프 보기");
+    li.firstChild.addEventListener("click", function () { openArea(s.id, li.firstChild); });
     bestList.appendChild(li);
   });
+  var skillOpen = $("[data-skill-open]");
+  if (skillOpen) skillOpen.addEventListener("click", function () { openArea((strong || ST.list[0]).id, skillOpen); });
+
+  /* ---------- 영역 자세히 보기 (PC 팝업 · 모바일 전체 화면 + 뒤로 가기) — 위쪽 탭으로 영역 바꾸기 ---------- */
+  var amEl = $('[data-modal="area"]'), am = E.modal(amEl), amBody = amEl && amEl.querySelector("[data-area-body]"), amPlay = amEl && amEl.querySelector("[data-area-play]"), amFor = null;
+  if (amPlay) amPlay.addEventListener("click", function () { if (amFor) go(amFor); });
+  var DAYS_MAX = 14;                                                  // 그래프: 플레이한 날 최근 14일
+  function md(key) { var p = key.split("-"); return Number(p[1]) + "." + Number(p[2]); }
+  function dailyChart(a, s) {                                         // 막대 = 그날 정답률 · 선 = 그날까지 누적 정답률 (실제 기록만)
+    var D = a.days.slice(-DAYS_MAX), n = D.length;
+    if (!n) return '<p class="b-area__chartnone">아직 이 영역의 기록이 없어요. 플레이한 날마다 여기에 막대가 하나씩 생겨요.</p>';
+    var narrow = window.matchMedia("(max-width: 767px)").matches;
+    var W = narrow ? 340 : 640, Hh = narrow ? 210 : 220, L = 40, R = 10, T = 22, B = 30;
+    var pw = W - L - R, ph = Hh - T - B, slot = pw / n, bw = Math.min(narrow ? 22 : 34, slot * 0.56);
+    var x = function (i) { return L + slot * (i + 0.5); }, y = function (v) { return T + ph * (1 - v); };
+    var every = n > (narrow ? 7 : 10) ? 2 : 1, showV = n <= (narrow ? 7 : 12);
+    var out = [0, 0.5, 1].map(function (v) { return '<line class="b-area__gl" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/><text class="b-area__gt" x="' + (L - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v * 100 + "%</text>"; }).join("");
+    D.forEach(function (d, i) {
+      var v = d.dt ? d.dc / d.dt : 0, top = y(v);
+      out += '<rect class="b-area__col" x="' + (x(i) - bw / 2).toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + Math.max(0, y(0) - top).toFixed(1) + '" rx="4"/>';
+      if (showV) out += '<text class="b-area__bv" x="' + x(i).toFixed(1) + '" y="' + (top - 6).toFixed(1) + '" text-anchor="middle">' + Math.round(v * 100) + "</text>";
+      if (i % every === (n - 1) % every) out += '<text class="b-area__gt" x="' + x(i).toFixed(1) + '" y="' + (Hh - 8) + '" text-anchor="middle">' + md(d.key) + "</text>";
+    });
+    var path = D.map(function (d, i) { return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(d.c / d.t).toFixed(1); }).join(" ");
+    if (n > 1) out += '<path class="b-area__line" d="' + path + '"/>';
+    out += D.map(function (d, i) { return '<circle class="b-area__dot" cx="' + x(i).toFixed(1) + '" cy="' + y(d.c / d.t).toFixed(1) + '" r="4"/>'; }).join("");
+    var label = D.map(function (d) { return md(d.key) + " 그날 " + pct(d.dc, d.dt) + "% · 누적 " + pct(d.c, d.t) + "%"; }).join(", ");
+    /* 최근 두 날 비교 (누적 정답률 변화) */
+    var cmp = "";
+    if (n > 1) {
+      var p0 = pct(D[n - 2].c, D[n - 2].t), p1 = pct(D[n - 1].c, D[n - 1].t), dd = p1 - p0;
+      cmp = '<p class="b-area__daycmp">' + md(D[n - 1].key) + " 누적 정답률 <b>" + p1 + "%</b> · 이전 플레이한 날(" + md(D[n - 2].key) + ")보다 <b class=\"" + (dd > 0 ? "is-up" : dd < 0 ? "is-down" : "") + "\">" + (dd > 0 ? "+" : dd < 0 ? "−" : "±") + Math.abs(dd) + "%p</b></p>";
+    } else cmp = '<p class="b-area__daycmp">다른 날에도 플레이하면 날마다 얼마나 늘었는지 비교해 드려요.</p>';
+    return '<div class="b-area__legend" aria-hidden="true"><span class="is-bar">그날 정답률</span><span class="is-line">그날까지 누적 정답률</span>' + (a.days.length > DAYS_MAX ? "<span>최근 " + DAYS_MAX + "일</span>" : "") + "</div>" +
+      '<svg class="b-area__svg" viewBox="0 0 ' + W + " " + Hh + '" role="img" aria-label="' + s.name + " 날마다 정답률: " + label + '">' + out + "</svg>" + cmp;
+  }
+  function renderArea(id) {
+    var s = ST.get(id), a = area[id], g = GR[id];
+    amFor = id;
+    var tile = function (label, val) { return '<div class="b-area__tile"><dt>' + label + "</dt><dd>" + val + "</dd></div>"; };
+    var tabs = '<div class="b-area__tabs" role="tablist" aria-label="디자인 영역">' + ST.list.map(function (x) {
+      var on = x.id === id;
+      return '<button class="b-area__tab' + (on ? " is-on" : "") + '" type="button" role="tab" aria-selected="' + on + '" tabindex="' + (on ? 0 : -1) + '" data-area-tab="' + x.id + '">' + x.name + "</button>";
+    }).join("") + "</div>";
+    var grow;
+    if (!a.t) grow = "";
+    else if (!g.ok) grow = '<div class="b-area__grow is-wait"><p class="b-area__growmsg">조금 더 플레이하면 성장 기록을 확인할 수 있어요!</p>' +
+      '<p class="b-area__growsub">지금 <b>' + fmtN(a.t) + "문제</b> · 처음 10문제와 최근 10문제 비교까지 <b>" + Math.max(0, g.need - a.t) + "문제</b> 남았어요</p>" +
+      '<span class="b-area__need" aria-hidden="true"><i style="--p:' + Math.min(1, a.t / g.need).toFixed(3) + '"></i></span></div>';
+    else {
+      var cls = g.d > 0 ? "is-up" : g.d < 0 ? "is-down" : "is-flat";
+      grow = '<div class="b-area__grow is-row ' + cls + '">' +
+        '<p class="b-area__growsub">처음 ' + g.n0 + "문제 <b>" + g.a0 + '%</b> <span aria-hidden="true">→</span> 최근 ' + g.n1 + "문제 <b>" + g.a1 + "%</b></p>" +
+        '<p class="b-area__delta">' + (g.d > 0 ? "+" : g.d < 0 ? "−" : "±") + Math.abs(g.d) + "%p " + (g.d > 0 ? "성장" : g.d < 0 ? "변화" : "유지") + "</p></div>";
+    }
+    amBody.innerHTML = tabs +
+      '<h2 class="b-area__title" id="b-area-title" tabindex="-1">' + s.name + ' <span><i class="b-area__sl">/ </i>' + s.nameKo + " 감각 성장 기록</span></h2>" +
+      '<dl class="b-area__tiles">' +
+        tile("현재 정답률", a.t ? pct(a.c, a.t) + "<small>%</small>" : "0<small>%</small>") +
+        tile("푼 문제", fmtN(a.t) + "<small>개</small>") +
+        tile("맞힌 문제", fmtN(a.c) + "<small>개</small>") +
+        tile("최고 콤보", a.sp ? '<small class="b-stats__x">×</small>' + a.combo : "—") +
+      "</dl>" +
+      '<section class="b-area__chart"><h3 class="b-area__h">날마다 성장 그래프</h3>' + dailyChart(a, s) + "</section>" + grow +
+      '<p class="b-area__note">이 기기(브라우저)에 저장된 플레이 기록 기준 · 첫 시도 정답 기준 · 플레이한 날만 표시</p>';
+  }
+  if (amBody) {
+    amBody.addEventListener("click", function (e) { var t = e.target.closest("[data-area-tab]"); if (t) { renderArea(t.getAttribute("data-area-tab")); var n = amBody.querySelector(".b-area__tab.is-on"); if (n) n.focus(); } });
+    amBody.addEventListener("keydown", function (e) {
+      var t = e.target.closest("[data-area-tab]"); if (!t || (e.key !== "ArrowRight" && e.key !== "ArrowLeft")) return;
+      e.preventDefault();
+      var i = ST.list.indexOf(ST.get(t.getAttribute("data-area-tab"))), k = (i + (e.key === "ArrowRight" ? 1 : ST.list.length - 1)) % ST.list.length;
+      renderArea(ST.list[k].id); amBody.querySelector(".b-area__tab.is-on").focus();
+    });
+  }
+  function openArea(id) {
+    if (!am || !amBody) return;
+    renderArea(id);
+    am.open();
+    var t = amEl.querySelector(window.matchMedia("(max-width: 1023px)").matches ? "[data-area-back]" : ".b-area__tab.is-on"); if (t) t.focus();
+  }
 
   /* ---------- 업적 (판정·저장은 b-achieve.js · 여기서는 같은 결과를 그림) ---------- */
   var fresh = E.achieve.check(false), saved = E.achieve.saved(), got = 0, BADGES = E.achieve.list;

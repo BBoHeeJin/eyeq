@@ -13,7 +13,7 @@
 
 .b-game > * { position: absolute; }
 /* 헤더 정렬선 → 캔버스 좌표 (캔버스는 화면 가운데 배치) */
-.b-game { --gl: calc(88 * var(--uh) - (var(--vw, 100vw) - 1920 * var(--k)) / 2); --gr: calc(104 * var(--uh) - (var(--vw, 100vw) - 1920 * var(--k)) / 2); }
+.b-game { --gl: calc(var(--L-page-x) * var(--uh) - (var(--vw, 100vw) - 1920 * var(--k)) / 2); --gr: var(--gl); }   /* 헤더 좌우 여백과 같은 끝선 */
 
 /* ---------- Timer (5초 스피드 게임) — PC 왼쪽(로고 정렬선, 기존 레벨 카드 자리) · 컴팩트 라운드 카드 ----------
    카드 = 답안 카드와 같은 배경·테두리 · 게이지 = 진행 바와 같은 블루 그라데이션 · 2초 이하만 레드(오답 색)
@@ -119,6 +119,7 @@
   font-weight: 600;
   font-size: calc(14 * var(--k));
   line-height: normal;
+  letter-spacing: var(--ls-num);           /* 단계 번호 */
   color: var(--color-progress-off);
 }
 .b-plabel[data-label="2"] { --cx: 212; }
@@ -671,7 +672,7 @@
   font-family: var(--font-en);
   font-weight: 700;
   font-size: calc(14 * var(--k));
-  letter-spacing: 0.16em;
+  letter-spacing: var(--ls-eyebrow);
   color: #8ea6ff;
   white-space: nowrap;
 }
@@ -691,7 +692,7 @@
   transition: opacity 200ms ease-out;
 }
 .b-ready.is-out { opacity: 0; }
-.b-ready__mode { font-family: var(--font-en); font-weight: 800; font-size: max(13px, calc(20 * var(--k))); letter-spacing: 0.3em; color: #8ea6ff; }
+.b-ready__mode { font-family: var(--font-en); font-weight: 800; font-size: max(13px, calc(20 * var(--k))); letter-spacing: var(--ls-eyebrow); color: #8ea6ff; }
 .b-ready__word {
   font-family: var(--font-en);
   font-weight: 900;
@@ -713,5 +714,5 @@
   .b-progress.is-5 .b-pnode[data-node="5"], .b-progress.is-5 .b-plabel[data-label="5"] { --cx: 125; }
   .b-progress.is-5 .b-pnode__ring { width: calc(34 * var(--k)); height: calc(34 * var(--k)); }
   .b-progress.is-5 .b-plabel { font-size: calc(10 * var(--k)); }
-  .b-gtitle__mode { margin-bottom: 0; font-size: max(10px, calc(10 * var(--k))); line-height: 1.1; letter-spacing: 0.12em; }
+  .b-gtitle__mode { margin-bottom: 0; font-size: max(10px, calc(10 * var(--k))); line-height: 1.1; }
 }

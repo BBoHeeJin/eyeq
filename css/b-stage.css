@@ -9,29 +9,29 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(24 * var(--k) + var(--ex) * 0.35);
+  top: calc(var(--L-page-top) * var(--k));    /* 헤더 → eyebrow: 모든 화면 같은 값 (남는 세로 높이는 아래 카드 사이로) */
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 .b-stage__eyebrow {
-  margin: 0 0 calc(16 * var(--k));
+  margin: 0 0 calc(var(--L-eyebrow-title) * var(--k));
+  padding-left: var(--ls-eyebrow);        /* 자간 끝 여백 보정 (가운데 정렬) */
   font-family: var(--font-en);
   font-weight: 600;
   font-size: calc(15 * var(--k));
   line-height: normal;
-  letter-spacing: 0.42em;                 /* 6.3 / 15 */
+  letter-spacing: var(--ls-eyebrow);
   color: var(--color-eyebrow);
-  margin-right: -0.42em;                  /* 자간 끝 여백 보정 (가운데 정렬) */
 }
 .b-stage__title {
-  margin: 0 0 calc(12 * var(--k));
+  margin: 0 0 calc(var(--L-title-desc) * var(--k));
   font-family: var(--font-kr);
   font-weight: 700;
   font-size: calc(52 * var(--k));
   line-height: calc(66 * var(--k));
-  letter-spacing: -0.02em;                /* -1.04 / 52 */
+  letter-spacing: var(--ls-title);
   color: var(--color-white);
   text-shadow: 0 calc(4 * var(--k)) calc(16 * var(--k)) rgba(5, 5, 31, 0.5);
   white-space: nowrap;
@@ -151,8 +151,8 @@
    ========================================================= */
 .b-mcard {
   position: absolute;
-  left: calc(239 * var(--k));
-  top: calc(200 * var(--k) + var(--ex) * 0.6);
+  left: calc(236.5 * var(--k));              /* 가운데 (1920 − 1447) / 2 */
+  top: calc(200 * var(--k));                  /* 설명 → 카드 36 고정 */
   width: calc(1447 * var(--k));
   height: calc(360 * var(--k));
   overflow: hidden;
@@ -232,7 +232,7 @@
   font-weight: 600;
   font-size: calc(16 * var(--k));
   line-height: normal;
-  letter-spacing: 0.32em;                  /* 5.12 / 16 */
+  letter-spacing: var(--ls-label);         /* STAGE 01 — 작은 영문 라벨 */
   color: var(--color-stage-no);
 }
 .b-mcard__name {
@@ -328,10 +328,10 @@
    ========================================================= */
 .b-slist {
   position: absolute;
-  left: calc(88 * var(--k));                 /* 헤더·다른 페이지 콘텐츠와 같은 좌우 끝선 (88 / 104) — 이전 95 / 95 */
-  top: calc(600 * var(--k) + var(--ex) * 0.85);
+  left: calc(var(--L-page-x) * var(--k));    /* 헤더·다른 페이지 콘텐츠와 같은 좌우 끝선 (좌우 88 동일) */
+  top: calc(600 * var(--k) + var(--ex) * 0.3);   /* 화면이 길면 큰 카드 ↔ 목록 사이가 조금 넓어짐 */
   display: flex;
-  gap: calc(19.5 * var(--k));                /* 카드 5 × 330 + 간격 4 × 19.5 = 1,728 = 1920 − 88 − 104 */
+  gap: calc(23.5 * var(--k));                /* 카드 5 × 330 + 간격 4 × 23.5 = 1,744 = 1920 − 88 × 2 */
 }
 .b-scard {
   --bw: 1;
@@ -367,7 +367,7 @@
   font-weight: 600;
   font-size: calc(16 * var(--k));
   line-height: normal;
-  letter-spacing: 0.16em;                  /* 2.56 / 16 */
+  letter-spacing: var(--ls-num);           /* 카드 번호 01–05 */
   color: var(--color-card-no);
 }
 .b-scard .b-ico { --is: 1; left: calc((110 - var(--bw)) * var(--k)); top: calc((46 - var(--bw)) * var(--k)); }
@@ -418,20 +418,18 @@
    Compact (<1024) — Mobile 352:8430 (390×733 캔버스, 헤더 아래 기준)
    ========================================================= */
 @media (max-width: 1023px) {
-  .b-stage__head { top: calc(21 * var(--k)); }
+  .b-stage__head { top: calc(var(--L-page-top) * var(--k)); }
   .b-stage__eyebrow {
-    margin-bottom: calc(12 * var(--k));
+    margin-bottom: calc(var(--L-eyebrow-title) * var(--k));
     font-size: max(10px, calc(11 * var(--k)));
     line-height: calc(14 * var(--k));         /* 모든 페이지 같은 눈썹 줄 높이 */
-    letter-spacing: 0.4em;                 /* 4.4 / 11 */
-    margin-right: -0.4em;
     color: var(--color-text-sub);
   }
   .b-stage__title {
-    margin-bottom: calc(7 * var(--k));
+    margin-bottom: calc(var(--L-title-desc) * var(--k));
     font-size: calc(28 * var(--k));
     line-height: calc(38 * var(--k));
-    letter-spacing: -0.03em;
+    letter-spacing: var(--ls-title);
     text-shadow: 0 calc(3 * var(--k)) calc(10 * var(--k)) rgba(8, 5, 31, 0.5);
   }
   .b-stage__accent {
@@ -479,7 +477,7 @@
   .b-mcard__divider { left: calc(164.5 * var(--k)); top: calc(20.5 * var(--k)); height: calc(128 * var(--k)); }
   .b-mcard__info { left: calc(178.5 * var(--k)); top: calc(16.5 * var(--k)); width: calc(156 * var(--k)); height: calc(140 * var(--k)); display: block; }
   .b-mcard__info > * { position: absolute; left: 0; margin: 0; }
-  .b-mcard__no { top: 0; font-size: calc(10 * var(--k)); letter-spacing: 0.32em; }
+  .b-mcard__no { top: 0; font-size: calc(10 * var(--k)); letter-spacing: var(--ls-label); }
   .b-mcard__name { top: calc(16 * var(--k)); font-size: calc(20 * var(--k)); letter-spacing: -0.01em; }
   .b-mcard__desc { top: calc(46 * var(--k)); font-size: calc(12 * var(--k)); line-height: calc(17 * var(--k)); }
   .b-mcard__count { display: none; }
@@ -556,3 +554,6 @@
   .b-scard.is-selected .b-scard__go-default { display: none; }
   .b-scard.is-selected .b-scard__go-selected { display: block; }
 }
+
+/* PC: 페이지 머리는 헤더 바로 아래에서 시작 (세로로 남는 높이를 위에 두지 않음 — 다른 페이지와 같은 시작 위치) */
+@media (min-width: 1024px) { .b-page-stage .b-view { align-items: flex-start; } }

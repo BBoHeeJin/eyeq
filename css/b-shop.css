@@ -141,7 +141,6 @@
 /* ---------- PC ---------- */
 @media (min-width: 1024px) {
   .b-page-shop .b-shop__title span { font-size: calc(56 * var(--k)); line-height: calc(66 * var(--k)); }   /* RANKING 과 같은 크기 */
-  .b-page-shop .b-my__in { gap: calc(24 * var(--k)); }
 }
 
 /* ---------- 태블릿·모바일 (마이페이지 모바일과 같은 글자 크기) ---------- */
