@@ -53,18 +53,10 @@
     if (own) return '<button class="' + cls + ' is-apply" type="button" data-apply="' + s.id + '">' + applyText + "</button>";
     return '<button class="' + cls + '" type="button" data-buy="' + s.id + '"' + (!trade || pts < S.priceOf(s.id) ? " disabled" : "") + ">구매하기</button>";
   }
-  function goalOf(s) {
-    if (E.ownedSkins().indexOf(s.id) > -1) return "";
-    var pts = E.getPoints() || 0, price = S.priceOf(s.id), lack = Math.max(0, price - pts), p = price ? Math.min(1, pts / price) : 1;
-    return '<div class="b-goal' + (lack ? "" : " is-done") + '">' +
-      '<div class="b-goal__top"><span>' + (lack ? esc(s.name) + "까지" : "포인트가 충분해요") + "</span><b>" + (lack ? n(lack) + "P 남음" : "지금 구매할 수 있어요!") + "</b></div>" +
-      '<span class="b-goal__track" role="progressbar" aria-label="' + esc(s.name) + ' 구매까지 모은 포인트" aria-valuemin="0" aria-valuemax="' + price + '" aria-valuenow="' + Math.min(pts, price) + '"><span class="b-goal__fill" style="--p:' + p.toFixed(3) + '"></span></span>' +
-      '<span class="b-goal__num">' + n(Math.min(pts, price)) + " / " + n(price) + "P</span></div>";
-  }
   function renderStage() {
     var s = E.skin(sel); if (!s) return;
     var on = s.id === E.getCharacter();
-    var tag = tagOf(s), chip = chipOf(s), btn = btnOf(s, "b-stagebox__btn", "이 캐릭터 적용하기"), goal = goalOf(s);
+    var tag = tagOf(s), chip = chipOf(s), btn = btnOf(s, "b-stagebox__btn", "이 캐릭터 적용하기");   // 남은 포인트 게이지는 제거 (사용자 요청)
     var moods = s.mood ? '<div class="b-moods" role="group" aria-label="표정 미리보기">' +
       [["", "기본"], ["happy", "맞혔을 때"], ["sad", "틀렸을 때"]].map(function (m) {
         return '<button class="b-mood' + (m[0] === mood ? " is-on" : "") + '" type="button" aria-pressed="' + (m[0] === mood) + '" data-mood="' + m[0] + '">' +
@@ -86,7 +78,6 @@
         '<p class="b-stagebox__desc">' + esc(s.desc) + "</p>" +
         moods +
         '<div class="b-stagebox__buy">' + chip + btn + "</div>" +
-        goal +
       "</div>";
   }
 

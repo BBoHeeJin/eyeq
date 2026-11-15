@@ -33,16 +33,7 @@
   d.body.appendChild(fab);
   d.documentElement.classList.add("has-fb", "fb-" + PAGE);
 
-  /* 모바일 메뉴에도 같은 항목 (화면이 좁아 버튼을 숨기는 페이지에서도 열 수 있게) */
-  var panel = d.querySelector(".b-menu__panel");
-  if (panel) {
-    var mi = d.createElement("button");
-    mi.type = "button";
-    mi.className = "b-menu__item b-menu__item--fb";
-    mi.setAttribute("data-fb-open", "");
-    mi.innerHTML = '<span class="b-menu__bar" aria-hidden="true"></span>' + BUBBLE + "<span>피드백 보내기</span>";
-    panel.appendChild(mi);
-  }
+  /* 메뉴·모바일에서 여는 곳: 헤더 프로필 메뉴의 '의견 보내기' (data-fb-open) */
 
   /* ---------- 팝업 ---------- */
   var root = d.createElement("div");
@@ -172,20 +163,7 @@
     });
   });
 
-  /* ---------- 결과 화면 안내 (3판 이상 완료 · 이 브라우저에서 아직 안 보냈을 때만 · 자동으로 열지 않음) ---------- */
-  if (PAGE === "result" && !E.get("local", SENT_KEY) && E.getTotals && (E.getTotals().plays || 0) >= 3) {
-    var host = d.querySelector(".b-clear");
-    if (host) {
-      var n = d.createElement("button");
-      n.type = "button";
-      n.className = "b-fb-nudge";
-      n.setAttribute("data-fb-nudge", "");
-      n.setAttribute("aria-haspopup", "dialog");
-      n.innerHTML = '<span aria-hidden="true">💬</span> EYEQ를 플레이해 보니 어떠셨나요? <b>의견 남기기 →</b>';
-      n.addEventListener("click", open);
-      host.appendChild(n);
-    }
-  }
+  /* 결과 화면 '의견 남기기' 안내 문구는 제거 (사용자 요청) — 피드백은 헤더 메뉴·오른쪽 아래 버튼으로 계속 열 수 있음 */
 
   E.feedback = { open: open, close: close };
 })(window);

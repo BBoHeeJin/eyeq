@@ -233,7 +233,13 @@
     if (!panel || panel.hidden) return;
     panel.classList.remove("is-open");
     panel.hidden = true;
-    if (panelBtn) { panelBtn.setAttribute("aria-expanded", "false"); if (focusBtn) panelBtn.focus(); }
+    if (panelBtn) {
+      panelBtn.setAttribute("aria-expanded", "false");
+      if (focusBtn) {                                                 // 프로필 메뉴 안 '알림'에서 열었으면(메뉴는 닫힘) 프로필 버튼으로 포커스 복귀
+        var back = panelBtn.offsetParent !== null ? panelBtn : d.querySelector("[data-prof-toggle]");
+        if (back) back.focus();
+      }
+    }
     d.removeEventListener("click", onDoc);
   }
 
