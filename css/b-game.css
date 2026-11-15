@@ -150,7 +150,7 @@
   margin: 0;
   position: absolute;                       /* 제목 ↔ 설명 = 배지 ↔ 제목 간격 (사용자 요청) */
   left: 0; right: 0;
-  top: calc(var(--desc-y, 79) * var(--k));
+  top: calc(var(--desc-y, 87) * var(--k));   /* 사이트 공통 규칙: 제목 → 설명 12 (1920 기준) */
   font-family: var(--font-kr);
   font-weight: 400;
   font-size: max(12px, calc(19 * var(--k)));   /* 작은 노트북(1024)에서도 12px 이상 */
@@ -466,7 +466,7 @@
 
   .b-gtitle { top: calc(12 * var(--k)); }
   .b-gtitle__h { font-size: calc(28 * var(--k)); letter-spacing: -0.02em; text-shadow: none; }
-  .b-gtitle__desc { --desc-y: 45; margin: 0; font-size: max(12px, calc(14 * var(--k))); }
+  .b-gtitle__desc { --desc-y: 48; margin: 0;   /* 모바일 제목 → 설명 8 */ font-size: max(12px, calc(14 * var(--k))); }
 
   .b-fb { --fs: 0.36; top: calc(0 * var(--k)); clip-path: inset(-100vh -100vw calc(250 * var(--f) - 92 * var(--k)) -100vw); }   /* 제목 자리 · 타이머 줄 위에서 잘라냄 */
 
@@ -651,7 +651,7 @@
 
 @media (max-width: 1023px) {
   .b-ans__copy.is-ui { --u: var(--k); top: calc(50% + 4 * var(--k)); }
-  .b-insight { top: calc(150 * var(--k)); font-size: max(11px, calc(12.5 * var(--k))); line-height: calc(18 * var(--k)); }
+  .b-insight { display: none; }           /* 모바일·태블릿: 정답 설명 한 줄 숨김 (PC 그대로) */
 }
 
 /* =========================================================

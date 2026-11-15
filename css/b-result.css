@@ -31,7 +31,7 @@
 }
 .b-clear__desc {
   left: 0; right: 0;
-  top: calc(112 * var(--k) + var(--ex) * 0.2);
+  top: calc(115 * var(--k) + var(--ex) * 0.2);   /* 사이트 공통 규칙: 제목 → 설명 12 (1920 기준) */
   margin: 0;
   text-align: center;
   font-family: var(--font-kr);
@@ -44,7 +44,7 @@
 /* 정답 수별 보조 메시지 */
 .b-clear__msg {
   left: 0; right: 0;
-  top: calc(154 * var(--k) + var(--ex) * 0.22);
+  top: calc(157 * var(--k) + var(--ex) * 0.22);   /* 설명과 함께 이동 (설명 → 메시지 간격 유지) */
   margin: 0;
   text-align: center;
   font-family: var(--font-kr);
@@ -240,8 +240,8 @@
   .b-clear__title { top: calc((var(--ry) + 7) * var(--k)); font-size: calc(46 * var(--k)); line-height: calc(50 * var(--k)); }
   .b-clear__title span { display: block; }
   .b-clear__stage::after { content: none; }
-  .b-clear__desc { top: calc((var(--ry) + 119) * var(--k)); font-size: max(12px, calc(15 * var(--k))); }
-  .b-clear__msg { top: calc((var(--ry) + 145) * var(--k)); font-size: max(11px, calc(13 * var(--k))); }
+  .b-clear__desc { top: calc((var(--ry) + 115) * var(--k));   /* 모바일 제목 → 설명 8 */ font-size: max(12px, calc(15 * var(--k))); }
+  .b-clear__msg { top: calc((var(--ry) + 141) * var(--k)); font-size: max(11px, calc(13 * var(--k))); }
 
   .b-clear__cube {
     display: block;

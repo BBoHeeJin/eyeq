@@ -1131,3 +1131,192 @@ em { font-style: normal; }
   .b-sk__btn--ghost { flex-basis: 100px; }
 }
 @media (prefers-reduced-motion: reduce) { .b-modal--skin.is-open .b-modal__dim, .b-modal--skin.is-open .b-sk, .b-sk__fig.is-pop img { animation: none; } }
+
+/* =========================================================
+   튜토리얼 팝업 (최초 1회 · 다시 보기) — 단계별로 보여주는 방식
+   팝업 크기 고정 (PC 760×640 · 모바일 화면 폭×640) → 모든 단계·시작 화면 같은 크기, 내용만 전환
+   게임 화면 미리보기는 실제 게임 카드와 같은 색·모양 (--gradient-answer · 선택/정답 블루)
+   ========================================================= */
+.b-modal--tut { z-index: 78; padding: 16px; }
+.b-modal--tut .b-modal__dim { cursor: default; }   /* 바깥을 눌러도 닫히지 않음 (실수로 건너뛰기 방지) */
+.b-modal__dialog.b-tut {
+  /* 글 간격 규칙 (PC) — 같은 단계 안에서는 아래 5단계만 사용
+     ① 라벨 → 제목 16 · ② 제목 → 설명 12 (①② = 사이트 모든 페이지 제목과 같은 규칙) · ③ 문단·블록 사이 16 · ④ 목록 항목 사이 8 · ⑤ 영역 사이(머리·본문·버튼) 20 */
+  --tg-label: 16px; --tg-text: 12px; --tg-block: 16px; --tg-list: 8px; --tg-section: 20px;
+  position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 0;
+  box-sizing: border-box; flex: none;
+  width: 760px; max-width: 100%;
+  height: 680px; max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px);
+  padding: 24px 32px;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1.5px solid rgba(142, 130, 255, 0.6);
+  background: linear-gradient(180deg, rgba(36, 34, 112, 0.98) 0%, rgba(24, 25, 80, 0.98) 100%);
+  box-shadow: 0 16px 48px rgba(3, 4, 26, 0.55), 0 0 40px rgba(100, 104, 244, 0.3);
+  color: var(--color-white);
+}
+.b-modal--tut.is-open .b-modal__dim { animation: b-fb-in 220ms ease-out both; }
+.b-modal--tut.is-open .b-tut { animation: b-tut-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes b-tut-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
+
+/* 상단: 로고 · 제목 · 진행 상태 · 건너뛰기 */
+.b-tut__head { display: flex; align-items: center; gap: 12px; flex: none; height: 40px; padding-bottom: 14px; margin-bottom: var(--tg-section); border-bottom: 1px solid rgba(142, 140, 255, 0.22); }
+.b-tut__logo { width: 76px; height: auto; }
+.b-tut__name { padding-left: 12px; border-left: 1px solid rgba(255, 255, 255, 0.18); font-family: var(--font-kr); font-weight: 600; font-size: 15px; color: var(--color-menu-text); white-space: nowrap; }
+.b-tut__prog { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; }
+.b-tut__prog.is-start { visibility: hidden; }   /* 시작 화면: 진행 표시 자리만 유지 */
+.b-tut__bars { display: inline-flex; gap: 4px; }
+.b-tut__bars i { display: block; width: 22px; height: 6px; border-radius: 999px; background: rgba(142, 140, 255, 0.25); transition: background-color 250ms ease-out; }
+.b-tut__bars i.is-on { background: var(--gradient-button-primary); box-shadow: 0 0 8px rgba(100, 104, 244, 0.6); }
+.b-tut__num { font-family: var(--font-en); font-weight: 600; font-size: 14px; color: var(--color-menu-text); font-variant-numeric: tabular-nums; }
+.b-tut__num b { font-weight: 800; color: var(--color-white); }
+.b-tut__skip { flex: none; height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(142, 166, 255, 0.4); background: rgba(35, 40, 96, 0.45); font-family: var(--font-kr); font-weight: 600; font-size: 14px; color: var(--color-menu-text); cursor: pointer; }
+.b-tut__skip[hidden] { display: none; }
+@media (hover: hover) { .b-tut__skip:hover { color: var(--color-white); border-color: rgba(169, 165, 255, 0.7); } }
+
+/* 본문: 남는 높이를 모두 채움 · 단계마다 내용만 전환 */
+.b-tut__body { display: flex; flex-direction: column; gap: var(--tg-block); flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.b-tut__body.is-in > * { animation: b-tut-fade 260ms ease-out both; }
+@keyframes b-tut-fade { from { opacity: 0; transform: translateY(6px); } }
+.b-tut__title { margin: 0; font-family: var(--font-kr); font-weight: 700; font-size: 24px; line-height: 1.35; letter-spacing: -0.02em; color: var(--color-white); word-break: keep-all; outline: none; }
+.b-tut__sub { margin: var(--tg-text) 0 0; font-family: var(--font-kr); font-size: 15px; line-height: 1.5; color: var(--color-menu-text); word-break: keep-all; }
+
+/* 시작 화면: 캐릭터 | 제목 · 진행 순서 · 안내 (팝업을 꽉 채움) */
+.b-tut__intro { display: grid; grid-template-columns: 250px minmax(0, 1fr); align-items: center; gap: 28px; flex: 1 1 auto; padding: 0 4px; }
+.b-tut__hero { position: relative; display: flex; align-items: center; justify-content: center; align-self: stretch; border-radius: 24px; background: radial-gradient(120% 90% at 50% 100%, rgba(79, 139, 255, 0.32) 0%, rgba(79, 139, 255, 0) 62%), rgba(12, 14, 52, 0.45); border: 1px solid rgba(255, 255, 255, 0.07); }
+.b-tut__hero img { width: 210px; height: 210px; object-fit: contain; filter: drop-shadow(0 12px 20px rgba(3, 4, 26, 0.5)); }
+.b-tut__introtext .b-tut__title { font-size: 34px; }
+.b-tut__introtext .b-tut__sub { font-size: 17px; }
+.b-tut__plan { display: flex; flex-direction: column; gap: var(--tg-list); margin: var(--tg-block) 0 0; padding: 0; list-style: none; counter-reset: none; }
+.b-tut__plan li { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: center; column-gap: 12px; row-gap: 2px; height: 68px; align-content: center; padding: 0 16px; border-radius: 16px; border: 1px solid rgba(88, 103, 216, 0.4); background: var(--gradient-answer); }
+.b-tut__plan span { grid-row: 1 / 3; display: flex; align-items: center; justify-content: center; flex: none; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.1); font-family: var(--font-en); font-weight: 700; font-size: 12px; color: var(--color-white); }
+.b-tut__plan b { font-family: var(--font-kr); font-weight: 700; font-size: 16px; color: var(--color-white); }
+.b-tut__plan small { font-family: var(--font-kr); font-size: 13px; color: var(--color-menu-text); }
+.b-tut__note { display: flex; align-items: flex-start; gap: 8px; margin: var(--tg-block) 0 0; font-family: var(--font-kr); font-size: 14px; line-height: 1.5; color: var(--color-menu-text); word-break: keep-all; }
+
+/* 단계 안내 */
+.b-tut__guide { flex: none; }
+.b-tut__steptag { display: inline-block; margin-bottom: var(--tg-label); padding: 3px 10px; border-radius: 999px; background: rgba(124, 110, 255, 0.28); font-family: var(--font-en); font-weight: 800; font-size: 12px; letter-spacing: 0.1em; color: #c7b8ff; }
+
+/* 게임 화면 미리보기 (남는 높이를 채움) */
+.b-tutm { position: relative; display: flex; flex-direction: column; gap: 14px; flex: 1 1 auto; min-height: 0; padding: 16px; border-radius: 20px; border: 1px solid rgba(88, 103, 216, 0.35); background: radial-gradient(80% 60% at 50% 0%, rgba(47, 85, 255, 0.18), rgba(47, 85, 255, 0)), #0b0d33; }
+.b-tutm__bar { display: grid; grid-template-columns: 150px minmax(0, 1fr) 70px; align-items: center; gap: 12px; flex: none; }
+.b-tutm__timer { position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: center; column-gap: 6px; row-gap: 6px; padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(88, 103, 216, 0.45); background: var(--gradient-answer); }
+.b-tutm__timer svg { width: 16px; height: 16px; color: #8ea6ff; }
+.b-tutm__timer b { font-family: var(--font-en); font-weight: 800; font-size: 16px; color: var(--color-white); font-variant-numeric: tabular-nums; }
+.b-tutm__timer i { grid-column: 1 / -1; display: block; height: 4px; border-radius: 999px; background: rgba(142, 166, 255, 0.2); overflow: hidden; }
+.b-tutm__timer em { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #2f55ff, #6c8cff); }
+.b-tutm__q { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.b-tutm__q b { font-family: var(--font-kr); font-weight: 800; font-size: 20px; line-height: 1.2; color: var(--color-white); }
+.b-tutm__q em { font-style: normal; color: #5b7dff; }
+.b-tutm__q small { font-family: var(--font-kr); font-size: 12px; color: var(--color-menu-text); }
+.b-tutm__dots { position: relative; display: flex; justify-content: space-between; align-items: center; }
+.b-tutm__dots::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; height: 1.5px; background: rgba(142, 166, 255, 0.3); }
+.b-tutm__dots i { position: relative; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid rgba(142, 166, 255, 0.6); background: #0b0d33; }
+.b-tutm__dots i.is-on { border-color: #5b7dff; box-shadow: 0 0 0 3px rgba(91, 125, 255, 0.3); background: #5b7dff; }
+.is-mark { outline: 2px dashed rgba(255, 210, 90, 0.75); outline-offset: 4px; border-radius: 12px; }
+.b-tutm__num { position: absolute; top: -10px; right: -10px; display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #ffd25a; font-family: var(--font-en); font-weight: 800; font-size: 12px; color: #1d1b4b; }
+/* 결과 화면 머리 (GREAT! · +XP · +P · 캐릭터 · 해설) */
+.b-tutm__fb { display: flex; align-items: center; justify-content: center; gap: 10px; flex: none; height: 54px; }
+.b-tutm__great { font-family: var(--font-en); font-weight: 900; font-style: italic; font-size: 34px; line-height: 1; padding-right: 0.06em; background: linear-gradient(180deg, #ffffff 30%, #c9d2ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 10px rgba(100, 104, 244, 0.6)); }
+.b-tutm__xp, .b-tutm__pt { padding: 4px 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.3); font-family: var(--font-en); font-weight: 800; font-size: 13px; color: var(--color-white); }
+.b-tutm__xp { background: linear-gradient(90deg, #5c7dff 0%, #2f55ff 100%); }
+.b-tutm__pt { border-color: rgba(255, 210, 90, 0.55); background: rgba(255, 210, 90, 0.16); color: #ffe39a; }
+.b-tutm__eye { width: 54px; height: 54px; object-fit: contain; }
+.b-tutm__insight { flex: none; margin: -6px 0 0; text-align: center; font-family: var(--font-kr); font-size: 13px; color: var(--color-menu-text); }
+/* A/B/C 카드 (실제 게임 카드와 같은 색·테두리·배지) */
+.b-tutm__cards { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; flex: 1 1 auto; min-height: 0; }
+.b-tutm__card { position: relative; display: flex; align-items: center; min-height: 0; padding: 44px 14px 16px 18px; border-radius: 16px; border: 1.5px solid rgba(88, 103, 216, 0.35); background: var(--gradient-answer); box-shadow: 0 8px 16px rgba(3, 4, 26, 0.45); transition: transform 300ms ease-out, opacity 300ms ease-out; }
+.b-tutm__key { position: absolute; top: 12px; left: 12px; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.1); font-family: var(--font-en); font-weight: 700; font-size: 13px; color: var(--color-white); }
+.b-tutm__check { position: absolute; top: 12px; right: 12px; display: none; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--color-answer-correct); color: #fff; }
+.b-tutm__check svg { width: 15px; height: 15px; }
+.b-tutm__copy { display: flex; flex-direction: column; gap: 10px; white-space: nowrap; }
+.b-tutm__kr { font-family: var(--font-kr); font-weight: 700; font-size: 17px; line-height: 1.45; letter-spacing: -0.02em; color: var(--color-white); }
+.b-tutm__card[data-k="A"] .b-tutm__kr { letter-spacing: 0.14em; }   /* 정답 카드만 자간이 넓음 (실제 문제와 같은 방식) */
+.b-tutm__en { font-family: var(--font-en); font-weight: 600; font-size: 8px; line-height: 1.6; letter-spacing: 0.18em; color: var(--color-copy-en); }
+.b-tutm__card.is-selected { border-color: var(--color-answer-selected); background: var(--gradient-answer-selected); box-shadow: 0 0 18px rgba(47, 91, 255, 0.7), inset 0 0 18px rgba(76, 107, 255, 0.4); transform: translateY(-6px); }
+.b-tutm__card.is-correct { border-color: var(--color-answer-correct); background: var(--gradient-answer-correct); box-shadow: 0 0 22px rgba(47, 91, 255, 0.85), inset 0 0 20px rgba(92, 125, 255, 0.5); }
+.b-tutm__card.is-selected .b-tutm__key, .b-tutm__card.is-correct .b-tutm__key { border-color: transparent; background: var(--color-answer-selected); }
+.b-tutm__card.is-correct .b-tutm__check { display: flex; }
+.b-tutm__card.is-dim { opacity: 0.4; }
+/* 누르는 손 (STEP 02) */
+.b-tutm__hand { position: absolute; left: calc(33.333% / 2 + 10px); bottom: 10px; width: 34px; height: 34px; pointer-events: none; animation: b-tut-tap 1.6s ease-in-out infinite; filter: drop-shadow(0 4px 6px rgba(3, 4, 26, 0.6)); }
+.b-tutm__hand svg { width: 100%; height: 100%; }
+@keyframes b-tut-tap { 0%, 100% { transform: translate(14px, 14px); } 40% { transform: translate(0, 0) scale(0.9); } 55% { transform: translate(0, 0) scale(1); } }
+
+/* 단계 아래 요약 2칸 */
+.b-tut__tips { display: grid; grid-template-columns: 1fr 1fr; gap: var(--tg-list); flex: none; margin: 0; padding: 0; list-style: none; }
+.b-tut__tips li { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; border: 1px solid rgba(142, 140, 255, 0.25); background: rgba(14, 15, 56, 0.55); }
+.b-tut__tipic { display: flex; align-items: center; justify-content: center; flex: none; width: 28px; height: 28px; border-radius: 50%; background: rgba(124, 110, 255, 0.3); font-family: var(--font-en); font-weight: 800; font-size: 13px; color: var(--color-white); }
+.b-tutm--s1 ~ .b-tut__tips .b-tut__tipic { background: #ffd25a; color: #1d1b4b; }
+.b-tut__tips b { display: block; font-family: var(--font-kr); font-weight: 700; font-size: 14px; color: var(--color-white); }
+.b-tut__tips small { display: block; margin-top: 1px; font-family: var(--font-kr); font-size: 12px; color: var(--color-menu-text); }
+
+/* 하단 버튼 (항상 같은 자리) */
+.b-tut__foot { display: flex; gap: 10px; flex: none; padding-top: var(--tg-section); }
+.b-tut__btn { display: flex; align-items: center; justify-content: center; flex: 1 1 0; height: 54px; border-radius: 999px; font-family: var(--font-kr); font-weight: 700; font-size: 16px; color: var(--color-white); cursor: pointer; transition: opacity 150ms ease-out, transform 150ms ease-out; }
+.b-tut__btn:active { transform: translateY(1px); }
+.b-tut__btn--ghost { flex: 0 0 140px; border: 1px solid rgba(142, 166, 255, 0.5); background: rgba(35, 40, 96, 0.45); }
+.b-tut__btn--main { border: 1px solid var(--color-border-button); background: var(--gradient-button-primary); box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.25); }
+
+/* 메뉴(☰) 항목 */
+.b-menu__item--help { width: 100%; border: 0; background: none; text-align: left; cursor: pointer; font-family: var(--font-kr); font-size: 18px; }
+.b-menu__item--help svg { flex: none; width: 20px; height: 20px; }
+
+/* 모바일: 폭은 화면에 맞추고 높이 640 고정 (더 낮은 화면은 본문만 스크롤) */
+@media (max-width: 767px) {
+  .b-modal--tut { padding: 12px; }
+  .b-modal__dialog.b-tut { --tg-label: 12px; --tg-text: 8px; --tg-block: 12px; --tg-list: 6px; --tg-section: 16px;   /* 글 간격 규칙 (모바일) */
+    width: 100%; height: 640px; max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); padding: 16px; border-radius: 24px; }
+  .b-tut__head { height: 34px; gap: 8px; padding-bottom: 10px; }
+  .b-tut__logo { width: 58px; }
+  .b-tut__name { display: none; }
+  .b-tut__bars i { width: 16px; }
+  .b-tut__num { font-size: 13px; }
+  .b-tut__skip { height: 32px; padding: 0 12px; font-size: 13px; }
+  .b-tut__title { font-size: 20px; }
+  .b-tut__sub { font-size: 13px; }
+  .b-tut__intro { grid-template-columns: 1fr; grid-template-rows: 170px auto; gap: var(--tg-block); padding: 0; }
+  .b-tut__hero img { width: 150px; height: 150px; }
+  .b-tut__introtext { text-align: center; }
+  .b-tut__introtext .b-tut__title { font-size: 26px; }
+  .b-tut__introtext .b-tut__sub { font-size: 14px; }
+  .b-tut__plan { text-align: left; }
+  .b-tut__plan li { height: 50px; padding: 0 12px; border-radius: 14px; row-gap: 0; }
+  .b-tut__plan small { font-size: 11px; }
+  .b-tut__plan span { width: 26px; height: 26px; font-size: 11px; }
+  .b-tut__plan b { font-size: 14px; }
+  .b-tut__note { font-size: 12px; text-align: left; }
+  .b-tutm { gap: 10px; padding: 10px; border-radius: 16px; }
+  .b-tutm__bar { grid-template-columns: 1fr; gap: 8px; }
+  .b-tutm__dots { display: none; }
+  .b-tutm__timer { padding: 6px 10px; border-radius: 10px; }
+  .b-tutm__timer b { font-size: 13px; }
+  .b-tutm__q b { font-size: 16px; }
+  .b-tutm__q small { font-size: 11px; }
+  .b-tutm__fb { height: 44px; gap: 6px; }
+  .b-tutm__great { font-size: 26px; }
+  .b-tutm__xp, .b-tutm__pt { padding: 3px 8px; font-size: 11px; }
+  .b-tutm__eye { width: 42px; height: 42px; }
+  .b-tutm__insight { font-size: 11px; margin-top: -4px; }
+  .b-tutm__cards { gap: 6px; }
+  .b-tutm__card { padding: 32px 6px 10px 8px; border-radius: 12px; }
+  .b-tutm__key, .b-tutm__check { top: 7px; width: 20px; height: 20px; font-size: 10px; }
+  .b-tutm__key { left: 7px; }
+  .b-tutm__check { right: 7px; }
+  .b-tutm__check svg { width: 12px; height: 12px; }
+  .b-tutm__copy { gap: 6px; }
+  .b-tutm__kr { font-size: 11.5px; }
+  .b-tutm__en { font-size: 6px; }
+  .b-tutm__card[data-k="A"] .b-tutm__kr { letter-spacing: 0.1em; }
+  .b-tutm__hand { width: 28px; height: 28px; }
+  .b-tut__tips li { gap: 8px; padding: 8px 10px; border-radius: 12px; }
+  .b-tut__tipic { width: 24px; height: 24px; font-size: 11px; }
+  .b-tut__tips b { font-size: 12px; }
+  .b-tut__tips small { font-size: 11px; }
+  .b-tut__btn { height: 50px; font-size: 15px; }
+  .b-tut__btn--ghost { flex-basis: 100px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b-modal--tut.is-open .b-modal__dim, .b-modal--tut.is-open .b-tut, .b-tut__body.is-in > *, .b-tutm__hand { animation: none; }
+}
