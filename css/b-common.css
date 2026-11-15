@@ -519,16 +519,19 @@ em { font-style: normal; }
    각 요소: top = Figma Y × 단위 + --ex × 비율(--ey) — 비율은 페이지 CSS에서 지정 */
 .b-canvas {
   --ex: clamp(0px, 100vh - var(--header-h) - 968 * var(--k), 200 * var(--k));
+  /* 페이지 머리 위 추가 여백: 남는 세로 높이의 절반 (HOME 이 세로 가운데 정렬되며 생기는 위 여백과 같은 값)
+     → 16:10 화면(1440×900 · 1680×1050 등)에서 HOME 과 다른 페이지의 제목 시작 높이가 같아짐 · 1920×1080 은 0 */
+  --top-x: calc(clamp(0px, 100vh - var(--header-h) - 968 * var(--k), 200 * var(--k)) * 0.5);
   position: relative;
   flex: none;
   width: calc(1920 * var(--k));
   height: calc(968 * var(--k) + var(--ex));
 }
 @supports (height: 100svh) {
-  .b-canvas { --ex: clamp(0px, 100svh - var(--header-h) - 968 * var(--k), 200 * var(--k)); }
+  .b-canvas { --ex: clamp(0px, 100svh - var(--header-h) - 968 * var(--k), 200 * var(--k)); --top-x: calc(clamp(0px, 100svh - var(--header-h) - 968 * var(--k), 200 * var(--k)) * 0.5); }
 }
 @media (max-width: 1023px) {
-  .b-canvas { --ex: 0px; width: calc(390 * var(--k)); height: calc(var(--ph) * var(--k)); }   /* 모든 페이지 같은 기준 높이 */
+  .b-canvas { --top-x: 0px; --ex: 0px; width: calc(390 * var(--k)); height: calc(var(--ph) * var(--k)); }   /* 모든 페이지 같은 기준 높이 */
 }
 
 /* =========================================================

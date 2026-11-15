@@ -458,7 +458,7 @@
   .b-page-my .b-my__in, .b-page-rank .b-rank__in {
     position: static;
     margin: 0 var(--gr) 0 var(--gl);
-    padding: calc(var(--L-page-top) * var(--k)) 0 calc(var(--L-page-bottom) * var(--k));     /* 헤더 → 머리 24 (STAGE SELECT 기준) · 아래 72 */
+    padding: calc(var(--L-page-top) * var(--k) + var(--top-x, 0px)) 0 calc(var(--L-page-bottom) * var(--k));     /* 헤더 → 머리 24 (STAGE SELECT 기준) · 아래 72 */
     gap: calc(var(--L-section-gap) * var(--k));
   }
   .b-page-my .b-my__head, .b-page-rank .b-rk__head { margin-bottom: calc((var(--L-desc-content) - var(--L-section-gap)) * var(--k)); }   /* 설명 → 첫 콘텐츠 36 (= 섹션 간격 28 + 8) */
