@@ -236,4 +236,9 @@
   w.addEventListener("storage", function (e) { if (e.key === E.KEY.points || e.key === E.KEY.owned || e.key === E.KEY.character) { E.renderHeader(); emit(); } });
   E.renderPoints();
   refresh();
+  /* 처음 방문·닉네임 설정 직후처럼 익명 로그인이 늦게 끝나면, 연결된 뒤 한 번 더 지갑을 불러 헤더 포인트를 채움 */
+  var walletAfterLogin = false;
+  w.addEventListener("eyeq:online", function (e) {
+    if (e.detail === "online" && !walletAfterLogin && (state.available !== false)) { walletAfterLogin = true; refresh(); }
+  });
 })(window, document);

@@ -274,3 +274,8 @@
   .b-th.is-soon .b-th__ring { width: calc(48 * var(--k)); height: calc(48 * var(--k)); min-width: 36px; min-height: 36px; margin: 0; border-radius: 50%; border: calc(2 * var(--k)) dashed rgba(142, 140, 255, 0.45); background: transparent; font-size: calc(22 * var(--k)); }
   .b-th.is-soon .b-th__name { font-size: calc(17 * var(--k)); letter-spacing: 0.04em; }
 }
+
+/* 가격 칩 · 구매하기 · 이 캐릭터 적용하기: 세로 크기 같게 (모든 화면) */
+.b-stagebox__buy { align-items: stretch; }
+.b-stagebox__buy > .b-chip, .b-stagebox__buy > .b-stagebox__btn { box-sizing: border-box; height: calc(52 * var(--k)); min-height: 44px; }
+@media (max-width: 1023px) { .b-stagebox__buy > .b-chip, .b-stagebox__buy > .b-stagebox__btn { height: 44px; } }

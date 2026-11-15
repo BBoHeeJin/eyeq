@@ -324,6 +324,7 @@
       if (res.correct && res.insight) m.insight = res.insight;
       if (res.timeout) st.selected = null;
       settle(!!res.correct, !!res.timeout, res.xp || 0, res.streak || 0);
+      if (res.correct && E.skins) E.skins.refresh();                 // 정답 포인트는 서버가 지급 → 헤더 포인트 즉시 갱신 (판정·지급 방식은 그대로)
     }, function (err) {
       busy = false;
       st.judging = null;

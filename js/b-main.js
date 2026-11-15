@@ -196,9 +196,18 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!major()) { majors[0].focus(); return; }
-      if (!E.setNickname(input.value)) { input.focus(); return; }
+      var firstTime = !E.getNickname();                                  // 닉네임이 처음 정해지는 순간인지 (기존 사용자의 전공 여부 추가 입력은 제외)
+      if (!E.setNickname(input.value)) { input.focus(); return; }        // 저장 실패 → 튜토리얼도 시작도 하지 않음
       E.setMajor(major());
-      start(pending || chosen());
+      var ch = pending || chosen();
+      /* 신규 사용자: 닉네임 저장 직후 튜토리얼 팝업 1회 → 끝나거나 건너뛰면 기존 시작 흐름 그대로 */
+      if (firstTime && E.tutorial && E.tutorial.shouldShow()) {
+        nick.close();
+        save(ch);
+        E.tutorial.open({ onDone: function () { start(ch); } });
+        return;
+      }
+      start(ch);
     });
   }
 })();

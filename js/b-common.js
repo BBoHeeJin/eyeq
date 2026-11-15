@@ -98,9 +98,15 @@
   function hasCharacter() { return usable(get("local", KEY.character)); }
   /* 포인트 (서버 값의 표시용 사본 · null = 아직 모름) */
   function getPoints() { var v = get("local", KEY.points); return v === null || v === "" || isNaN(+v) ? null : +v; }
+  var lastPts = null;
   function renderPoints() {
     var p = getPoints();
-    Array.prototype.forEach.call(d.querySelectorAll("[data-points-n]"), function (el) { el.textContent = (p === null ? 0 : p).toLocaleString("ko-KR"); });
+    /* 실제 지갑 값만 표시 — 아직 모르면 숫자 대신 '–' (임의 숫자 표시 안 함) */
+    Array.prototype.forEach.call(d.querySelectorAll("[data-points-n]"), function (el) { el.textContent = p === null ? "–" : p.toLocaleString("ko-KR"); });
+    if (p !== null && lastPts !== null && p !== lastPts) {                // 포인트가 바뀌면 헤더 포인트 칸만 짧게 강조
+      Array.prototype.forEach.call(d.querySelectorAll(".b-pts"), function (el) { el.classList.remove("is-bump"); void el.offsetWidth; el.classList.add("is-bump"); });
+    }
+    if (p !== null) lastPts = p;
     Array.prototype.forEach.call(d.querySelectorAll("[data-points]"), function (el) {
       el.setAttribute("aria-label", "보유 포인트 " + (p === null ? "확인 중" : p.toLocaleString("ko-KR") + "P") + " · 스킨 상점으로 이동");
     });
@@ -232,7 +238,25 @@
   /* ---------- 헤더(+ 게임 화면 레벨 카드): 선택 캐릭터 · LV · XP ---------- */
   function renderHeader() {
     Array.prototype.forEach.call(d.querySelectorAll("[data-charinfo]"), renderCharInfo);
+    renderHud();
     renderPoints();
+  }
+  /* 게임 HUD 헤더: 닉네임 전 = 사용자 정보 숨김(is-guest) · 후 = 장착 캐릭터 · 닉네임 · 레벨 · XP (기존 계산 그대로) */
+  function renderHud() {
+    var head = d.querySelector("[data-header]");
+    if (!head) return;
+    var name = getNickname();
+    head.classList.toggle("is-guest", !name);
+    var ch = getCharacter(), L = levelInfo(getXp());
+    var lv = "LV." + two(L.level), xp = L.max ? "XP MAX" : "XP " + L.xp + " / " + L.need;
+    var all = function (sel, f) { Array.prototype.forEach.call(head.querySelectorAll(sel), f); };
+    all("[data-hud-avatar]", function (img) { if (img.getAttribute("src") !== charImg(ch)) img.setAttribute("src", charImg(ch)); });
+    all("[data-hud-lv]", function (el) { el.textContent = lv; });
+    all("[data-hud-xp]", function (el) { el.textContent = xp; });
+    all("[data-hud-name]", function (el) { el.textContent = name || ""; });
+    all("[data-hud-fill]", function (el) { el.style.setProperty("--p", L.max ? 1 : L.need ? L.xp / L.need : 0); });
+    var lvLink = head.querySelector(".b-lv");
+    if (lvLink) lvLink.setAttribute("aria-label", lv + " · " + xp + " · 마이페이지로 이동");
   }
   function renderCharInfo(info) {
     var ch = getCharacter();
@@ -319,6 +343,44 @@
     });
   }
 
+  /* ---------- 프로필 메뉴 (헤더 오른쪽 장착 캐릭터) ----------
+     항목은 기존 기능만: 마이페이지 · 알림 · 튜토리얼 다시 보기 · 의견 보내기 (해당 기능이 없는 페이지에서는 숨김)
+     닫기: 다시 누르기 · 바깥 누르기 · ESC · 항목 선택 */
+  function initProfileMenu() {
+    var btn = d.querySelector("[data-prof-toggle]"), pm = d.querySelector("[data-prof-menu]");
+    if (!btn || !pm) return;
+    var page = (w.location.pathname.split("/").pop() || "index.html").replace(".html", "") || "index";
+    function isOpen() { return !pm.hidden; }
+    function open() {
+      var tut = pm.querySelector("[data-prof-tut]"), fb = pm.querySelector("[data-prof-fb]");
+      if (tut) tut.hidden = !w.EYEQ.tutorial || page === "game";      // 문제 풀이 중에는 튜토리얼 열지 않음
+      if (fb) fb.hidden = !w.EYEQ.feedback;
+      var menuOpen = d.querySelector("[data-menu].is-open");
+      if (menuOpen) { var t = d.querySelector("[data-menu-toggle]"); if (t) t.click(); }
+      renderHeader();
+      pm.hidden = false;
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("aria-label", "프로필 메뉴 닫기");
+      w.requestAnimationFrame(function () { pm.classList.add("is-open"); });
+      setTimeout(function () { d.addEventListener("click", onDoc); }, 0);
+    }
+    function close(focusBtn) {
+      if (!isOpen()) return;
+      pm.classList.remove("is-open");
+      pm.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-label", "프로필 메뉴 열기");
+      d.removeEventListener("click", onDoc);
+      if (focusBtn) btn.focus();
+    }
+    function onDoc(e) { if (!pm.contains(e.target) && !btn.contains(e.target)) close(false); }
+    btn.addEventListener("click", function () { if (isOpen()) close(false); else open(); });
+    pm.addEventListener("click", function (e) { if (e.target.closest("a, button")) close(false); });   // 항목을 고르면 닫고 기존 기능 실행
+    d.addEventListener("keydown", function (e) { if (e.key === "Escape" && isOpen()) close(true); });
+    w.addEventListener("pageshow", function () { close(false); });
+    w.EYEQ.profileMenu = { open: open, close: close };
+  }
+
   /* ---------- 모바일 메뉴 (337:7072) ---------- */
   function initMenu() {
     var html = d.documentElement;
@@ -333,13 +395,17 @@
       html.classList.toggle("is-menu-open", open);
     }
     toggle.addEventListener("click", function () {
-      setMenu(toggle.getAttribute("aria-expanded") !== "true");
+      var open = toggle.getAttribute("aria-expanded") !== "true";
+      if (open && w.EYEQ.profileMenu) w.EYEQ.profileMenu.close();               // 프로필 메뉴와 동시에 열리지 않게
+      setMenu(open);
     });
+    /* 메뉴 항목을 누르면 메뉴 닫기 (Quick Play 는 기존 동작에서 닫힘) */
+    menu.addEventListener("click", function (e) { var a = e.target.closest("a[href]"); if (a && !a.hasAttribute("data-quick")) setMenu(false); });
     menu.querySelector("[data-menu-close]").addEventListener("click", function () { setMenu(false); });
     d.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && menu.classList.contains("is-open")) { setMenu(false); toggle.focus(); }
     });
-    var mq = w.matchMedia("(min-width: 1366px)");   // 1366 이상은 메뉴 없음 (1024–1365는 QUICK PLAY 때문에 메뉴 사용)
+    var mq = w.matchMedia("(min-width: 1024px)");   // PC(1024 이상)는 헤더에 모든 메뉴 표시 → 메뉴 없음
     var onChange = function () { if (mq.matches) setMenu(false); };
     if (mq.addEventListener) mq.addEventListener("change", onChange); else mq.addListener(onChange);
     w.addEventListener("pageshow", function () { setMenu(false); });
@@ -408,6 +474,7 @@
   bindComingSoon();
   bindQuick();
   initMenu();
+  initProfileMenu();
   renderHeader();
   // 뒤로 가기(bfcache) 복귀 시 헤더 XP·캐릭터 갱신
   w.addEventListener("pageshow", function (e) { if (e.persisted) renderHeader(); });
