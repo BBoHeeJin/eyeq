@@ -51,52 +51,41 @@
   </div>
 
   <!-- ===== Header — Character Selected (313:3575 / Mobile 349:7179) ===== -->
-  <header class="b-header b-header--selected" data-header>
+  <header class="b-header" data-header>
+    <!-- 모바일·태블릿: 햄버거 메뉴 (Home · Play · Quick Play · Ranking · Shop) -->
+    <button class="b-hd-menu" type="button" aria-label="메뉴 열기" aria-controls="b-menu" aria-expanded="false" data-menu-toggle><svg class="b-hd-menu__open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="b-hd-menu__close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <a class="b-header__logo" href="index.html" aria-label="EYEQ 홈">
       <img class="b-header__logo-img b-header__logo-img--pc" src="assets/b/logo-eyeq.svg" alt="EYEQ" />
       <img class="b-header__logo-img b-header__logo-img--mo" src="assets/b/logo-eyeq-mobile.svg" alt="EYEQ" />
     </a>
+
+    <!-- PC 내비게이션: 아이콘 + 글자 · 현재 메뉴는 퍼플 캡슐 -->
     <nav class="b-nav" aria-label="주요 메뉴">
-      <a class="b-nav__item" href="index.html">
-        <span class="b-nav__label" data-text="Home">Home</span><span class="b-nav__bar" aria-hidden="true"></span>
-      </a>
-      <a class="b-nav__item" href="stage.html">
-        <span class="b-nav__label" data-text="Game">Game</span><span class="b-nav__bar" aria-hidden="true"></span>
-      </a>
-      
-      <a class="b-nav__item" href="ranking.html">
-        <span class="b-nav__label" data-text="Ranking">Ranking</span><span class="b-nav__bar" aria-hidden="true"></span>
-      </a>
-      <a class="b-nav__item" href="shop.html">
-        <span class="b-nav__label" data-text="Shop">Shop</span><span class="b-nav__bar" aria-hidden="true"></span>
-      </a>
+      <a class="b-nav__item" href="index.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.6 9.2v10.3h4.3v-5.8h4.2v5.8h4.3V9.2"/></svg><span>Home</span></a>
+      <a class="b-nav__item" href="stage.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.2 7.5h9.6a4.6 4.6 0 0 1 4.5 5.6l-.8 3.6a2.3 2.3 0 0 1-3.9 1.1l-2.2-2.3H9.6l-2.2 2.3a2.3 2.3 0 0 1-3.9-1.1l-.8-3.6a4.6 4.6 0 0 1 4.5-5.6z"/><path d="M7.6 10.6v3.4M5.9 12.3h3.4M15.6 11.2h.01M17.6 13.4h.01"/></svg><span>Play</span></a>
+      <a class="b-nav__item" href="ranking.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5.2a4 4 0 0 1-8 0z"/><path d="M8 6H5.2a3 3 0 0 0 2.9 3.9M16 6h2.8a3 3 0 0 1-2.9 3.9"/><path d="M12 13.2v3.6M9 20h6M10 16.8h4V20h-4z"/></svg><span>Ranking</span></a>
+      <a class="b-nav__item" href="shop.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.2 8.2h13.6l-1.1 11a1.6 1.6 0 0 1-1.6 1.4H7.9a1.6 1.6 0 0 1-1.6-1.4z"/><path d="M9 10.5V7.2a3 3 0 0 1 6 0v3.3"/></svg><span>Shop</span></a>
     </nav>
+
+    <!-- 오른쪽 HUD: Quick Play(PC) · 보유 포인트 · 레벨·XP(PC) · 프로필 — 닉네임 전(is-guest)에는 사용자 정보 숨김 -->
     <div class="b-header__actions">
-      <!-- QUICK PLAY: 5개 분야 랜덤 5문제 (PC 헤더 · 좁은 화면은 모바일 메뉴) -->
       <a class="b-qp" href="game.html" data-quick><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
-      <div class="b-charinfo" data-charinfo role="img" aria-label="선택한 캐릭터">
-        <span class="b-charinfo__profile"><img data-char-img src="assets/b/char-eye.webp" alt="" /></span>
-        <span class="b-charinfo__level">
-          <span class="b-charinfo__lv" data-lv-text>LV. 01</span>
-          <span class="b-charinfo__xp" data-xp-text>XP 0 / 100</span>
-          <span class="b-charinfo__bar"><span class="b-charinfo__fill"></span></span>
-        </span>
-        <span class="b-charinfo__divider" aria-hidden="true"></span>
+      <a class="b-pts" href="shop.html" data-points data-user aria-label="보유 포인트 · 스킨 상점으로 이동"><svg class="b-coin" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffd25a"/><circle cx="12" cy="12" r="7.2" fill="none" stroke="#c98a12" stroke-width="1.3" opacity=".55"/><path d="M12 6.8l1.25 3.95 3.95 1.25-3.95 1.25L12 17.2l-1.25-3.95L6.8 12l3.95-1.25z" fill="#8a5a00"/></svg><span class="b-pts__n" data-points-n>–</span></a>
+      <a class="b-lv" href="mypage.html" data-user aria-label="레벨 · 마이페이지로 이동"><span class="b-lv__t" data-hud-lv>LV.–</span><span class="b-lv__bar" aria-hidden="true"><span class="b-lv__fill" data-hud-fill></span></span></a>
+      <button class="b-hprof" type="button" data-prof-toggle data-user aria-haspopup="true" aria-expanded="false" aria-controls="b-prof-menu" aria-label="프로필 메뉴 열기"><span class="b-hprof__ring"><img data-hud-avatar src="assets/b/char-eye.webp" alt="" /></span><svg class="b-hprof__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg><span class="b-hprof__dot" data-noti-dot hidden></span></button>
+      <a class="b-hprof b-hprof--guest" href="mypage.html" data-guest aria-label="마이페이지"><span class="b-hprof__ring"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg></span></a>
+    </div>
+
+    <!-- 프로필 메뉴: 장착 캐릭터 · 닉네임 · 레벨 · XP + 기존 기능(마이페이지 · 알림 · 튜토리얼 다시 보기 · 의견 보내기) -->
+    <div class="b-profmenu" id="b-prof-menu" data-prof-menu hidden>
+      <div class="b-profmenu__user">
+        <span class="b-profmenu__ring"><img data-hud-avatar src="assets/b/char-eye.webp" alt="" /></span>
+        <span class="b-profmenu__info"><b class="b-profmenu__name" data-hud-name></b><span class="b-profmenu__lv"><span data-hud-lv>LV.–</span><span data-hud-xp></span></span><span class="b-lv__bar" aria-hidden="true"><span class="b-lv__fill" data-hud-fill></span></span></span>
       </div>
-      <a class="b-pts" href="shop.html" data-points aria-label="보유 포인트 · 스킨 상점으로 이동"><span class="b-pts__ic" aria-hidden="true">✦</span><span class="b-pts__n" data-points-n>0</span><span class="b-pts__u">P</span></a>
-      <button class="b-header__icon-btn b-header__icon-btn--bell" type="button" aria-label="알림" aria-haspopup="dialog" aria-expanded="false" aria-controls="b-noti" data-noti-btn>
-        <img class="b-icon--pc" src="assets/b/icon-bell.svg" alt="" />
-        <img class="b-icon--mo" src="assets/b/icon-bell-mobile.svg" alt="" />
-        <span class="b-bell__dot" data-noti-dot hidden></span>
-      </button>
-      <a class="b-header__icon-btn b-header__icon-btn--profile is-active" href="mypage.html" aria-label="마이페이지" aria-current="page">
-        <img src="assets/b/icon-profile.svg" alt="" />
-      </a>
-      <button class="b-header__icon-btn b-header__menu-btn" type="button" aria-label="메뉴 열기"
-              aria-controls="b-menu" aria-expanded="false" data-menu-toggle>
-        <img class="b-header__menu-icon b-header__menu-icon--open" src="assets/b/icon-menu.svg" alt="" />
-        <img class="b-header__menu-icon b-header__menu-icon--close" src="assets/b/icon-close.svg" alt="" />
-      </button>
+      <a class="b-profmenu__item" href="mypage.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg><span>마이페이지</span></a>
+      <button class="b-profmenu__item" type="button" data-noti-btn aria-haspopup="dialog" aria-expanded="false" aria-controls="b-noti"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 16.5V11a5.8 5.8 0 0 1 11.6 0v5.5l1.6 1.8H4.6z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span>알림</span><span class="b-profmenu__dot" data-noti-dot hidden></span></button>
+      <button class="b-profmenu__item" type="button" data-tutorial-open data-prof-tut><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-1 .8-1 1.5v.4M12 16.6h.01"/></svg><span>튜토리얼 다시 보기</span></button>
+      <button class="b-profmenu__item" type="button" data-fb-open data-prof-fb><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H11l-4.5 3.5v-3.5h0a2 2 0 0 1-2-2z"/></svg><span>의견 보내기</span></button>
     </div>
   </header>
 
@@ -105,12 +94,11 @@
     <div class="b-menu__scrim" data-menu-close></div>
     <nav class="b-menu__panel" aria-label="모바일 메뉴">
       <p class="b-menu__label">MENU</p>
-      <a class="b-menu__item" href="index.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Home</span></a>
-      <a class="b-menu__item" href="stage.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Game</span></a>
-      <a class="b-menu__item" href="ranking.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Ranking</span></a>
-      <a class="b-menu__item b-menu__item--shop" href="shop.html"><span class="b-menu__bar" aria-hidden="true"></span><span>Shop</span><span class="b-menu__pts" data-points><span aria-hidden="true">✦</span> <span data-points-n>0</span> P</span></a>
-      <a class="b-menu__item b-menu__item--quick" href="game.html" data-quick><span class="b-menu__bar" aria-hidden="true"></span><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
-      <a class="b-menu__item is-active" href="mypage.html" aria-current="page"><span class="b-menu__bar" aria-hidden="true"></span><span>My Page</span></a>
+      <a class="b-menu__item" href="index.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.6 9.2v10.3h4.3v-5.8h4.2v5.8h4.3V9.2"/></svg><span>Home</span></a>
+      <a class="b-menu__item" href="stage.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.2 7.5h9.6a4.6 4.6 0 0 1 4.5 5.6l-.8 3.6a2.3 2.3 0 0 1-3.9 1.1l-2.2-2.3H9.6l-2.2 2.3a2.3 2.3 0 0 1-3.9-1.1l-.8-3.6a4.6 4.6 0 0 1 4.5-5.6z"/><path d="M7.6 10.6v3.4M5.9 12.3h3.4M15.6 11.2h.01M17.6 13.4h.01"/></svg><span>Play</span></a>
+      <a class="b-menu__item b-menu__item--quick" href="game.html" data-quick><svg class="b-qp__ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5L5 13.4h5.6l-1 8.1 8.4-11.2h-5.7z" fill="currentColor"/></svg><span>Quick Play</span></a>
+      <a class="b-menu__item" href="ranking.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5.2a4 4 0 0 1-8 0z"/><path d="M8 6H5.2a3 3 0 0 0 2.9 3.9M16 6h2.8a3 3 0 0 1-2.9 3.9"/><path d="M12 13.2v3.6M9 20h6M10 16.8h4V20h-4z"/></svg><span>Ranking</span></a>
+      <a class="b-menu__item" href="shop.html"><svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.2 8.2h13.6l-1.1 11a1.6 1.6 0 0 1-1.6 1.4H7.9a1.6 1.6 0 0 1-1.6-1.4z"/><path d="M9 10.5V7.2a3 3 0 0 1 6 0v3.3"/></svg><span>Shop</span></a>
     </nav>
   </div>
 
