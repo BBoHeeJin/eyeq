@@ -164,7 +164,7 @@
   --L-page-top: 24;         /* Page Top Spacing — 헤더 아래 → eyebrow */
   --L-eyebrow-title: 16;    /* Eyebrow to Title Gap */
   --L-title-desc: 12;       /* Title to Description Gap */
-  --L-desc-content: 36;     /* Description to Content Gap */
+  --L-desc-content: 56;     /* Description to Content Gap (36 → 56: 제목 아래 여백 넓힘) */
   --L-section-gap: 28;      /* Section Gap — 카드·묶음 사이 */
   --L-page-bottom: 72;      /* 마지막 콘텐츠 아래 */
   --L-card-pad-y: 28;       /* Card Padding (세로) */

@@ -152,7 +152,7 @@
 .b-mcard {
   position: absolute;
   left: calc(236.5 * var(--k));              /* 가운데 (1920 − 1447) / 2 */
-  top: calc(200 * var(--k) + var(--top-x, 0px));   /* 설명 → 카드 36 고정 (머리와 함께 이동) */
+  top: calc((164 + var(--L-desc-content)) * var(--k) + var(--top-x, 0px));   /* 설명(끝 164) → 카드 = 공통 '설명 → 콘텐츠' 값 (머리와 함께 이동) */
   width: calc(1447 * var(--k));
   height: calc(360 * var(--k));
   overflow: hidden;
@@ -329,7 +329,7 @@
 .b-slist {
   position: absolute;
   left: calc(var(--L-page-x) * var(--k));    /* 헤더·다른 페이지 콘텐츠와 같은 좌우 끝선 (좌우 88 동일) */
-  top: calc(600 * var(--k) + var(--top-x, 0px) + var(--ex) * 0.3);   /* 화면이 길면 큰 카드 ↔ 목록 사이가 조금 넓어짐 */
+  top: calc((564 + var(--L-desc-content)) * var(--k) + var(--top-x, 0px) + var(--ex) * 0.3);   /* 화면이 길면 큰 카드 ↔ 목록 사이가 조금 넓어짐 */
   display: flex;
   gap: calc(23.5 * var(--k));                /* 카드 5 × 330 + 간격 4 × 23.5 = 1,744 = 1920 − 88 × 2 */
 }
