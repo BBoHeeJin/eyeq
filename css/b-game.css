@@ -716,3 +716,116 @@
   .b-progress.is-5 .b-plabel { font-size: calc(10 * var(--k)); }
   .b-gtitle__mode { margin-bottom: 0; font-size: max(10px, calc(10 * var(--k))); line-height: 1.1; }
 }
+
+/* =========================================================
+   게임 시작 로딩 화면 (새 판 시작 시 · b-game.js createLoader)
+   다크 네이비 배경 · 블루/퍼플 진행 바 · 선택 캐릭터가 바 위에 올라 진행률을 따라 이동(가볍게 통통)
+   진행률 --p (0~1) = 실제 준비 단계 기준 · 완료 시 .is-done(점프 반응) → .is-out(사라짐)
+   ========================================================= */
+.b-load {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 46%, rgba(100, 104, 244, 0.22) 0%, rgba(100, 104, 244, 0) 70%),
+    linear-gradient(180deg, #121552 0%, #0c0f3a 55%, #080a28 100%);
+  color: var(--color-white, #fff);
+  transition: opacity 280ms ease-out;
+}
+.b-load.is-out { opacity: 0; pointer-events: none; }
+.b-load__box { width: min(440px, 100%); padding-top: 52px; display: flex; flex-direction: column; align-items: center; text-align: center; }   /* 위 52 = 바 위 캐릭터 자리 */
+.b-load__msg {
+  margin: 20px 0 0;                                 /* 바 아래 */
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #ffffff;
+}
+.b-load__track {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(142, 166, 255, 0.18);
+}
+.b-load__fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: calc(var(--p, 0) * 100%);
+  border-radius: inherit;
+  background: linear-gradient(90deg, #4f54e3 0%, #6468f4 45%, #a68bff 100%);
+  box-shadow: 0 0 14px rgba(120, 110, 255, 0.55);
+  transition: box-shadow 300ms ease-out;
+}
+.b-load__rider {
+  position: absolute;
+  bottom: 100%;
+  left: clamp(24px, calc(var(--p, 0) * 100%), calc(100% - 24px));   /* 바 양끝 밖으로 나가지 않게 */
+  width: 48px;
+  height: 48px;
+  margin: 0 0 -4px -24px;                           /* 발이 바에 살짝 닿게 */
+}
+.b-load__hop { display: block; width: 100%; height: 100%; transform-origin: 50% 100%; animation: b-load-hop 620ms ease-in-out infinite alternate; }
+.b-load__char {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+  transition: opacity 200ms ease-out;
+}
+.b-load.has-char .b-load__char { opacity: 1; }
+@keyframes b-load-hop {
+  0% { transform: translateY(0) scale(1.04, 0.96); }
+  100% { transform: translateY(-7px) scale(1, 1); }
+}
+.b-load__step {
+  min-height: 1.5em;
+  margin: 6px 0 0;
+  font-family: var(--font-kr);
+  font-size: 12px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  color: rgba(198, 195, 240, 0.75);
+}
+.b-load__slow { margin: 10px 0 0; font-family: var(--font-kr); font-size: 13px; line-height: 1.6; color: #ffd27a; }
+/* 완료 반응: 캐릭터 점프 + 링 + 바 빛남 */
+.b-load.is-done .b-load__hop { animation: b-load-done 400ms cubic-bezier(0.3, 0.7, 0.4, 1) both; }
+.b-load.is-done .b-load__fill { box-shadow: 0 0 24px rgba(166, 139, 255, 0.95); }
+.b-load.is-done .b-load__rider::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 55%;
+  width: 56px; height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  border: 2px solid rgba(166, 139, 255, 0.85);
+  animation: b-load-ring 400ms ease-out both;
+  pointer-events: none;
+}
+@keyframes b-load-done {
+  0% { transform: translateY(0) scale(1, 1); }
+  22% { transform: translateY(2px) scale(1.12, 0.88); }
+  58% { transform: translateY(-18px) scale(0.96, 1.06); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+@keyframes b-load-ring { 0% { opacity: 0.9; transform: scale(0.6); } 100% { opacity: 0; transform: scale(1.6); } }
+@media (max-width: 1023px) {
+  .b-load { padding: 20px; }
+  .b-load__box { width: min(320px, 100%); }
+  .b-load__box { padding-top: 48px; }
+  .b-load__msg { font-size: 16px; margin-top: 18px; }
+  .b-load__track { height: 8px; }
+  .b-load__rider { width: 42px; height: 42px; margin-left: -21px; left: clamp(21px, calc(var(--p, 0) * 100%), calc(100% - 21px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b-load__hop, .b-load.is-done .b-load__hop, .b-load.is-done .b-load__rider::after { animation: none; }
+  .b-load { transition: none; }
+}
