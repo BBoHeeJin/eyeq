@@ -1,0 +1,768 @@
+/* =========================================================
+   EYEQ B안 — MOBILE DESIGN SYSTEM (모바일·태블릿 전용 레이어)
+   ---------------------------------------------------------
+   · 모든 규칙은 @media (max-width: 1023px) 안에만 있습니다 → PC(≥1024) 화면에는 영향 없음
+   · 모든 페이지에서 가장 마지막에 불러옵니다 (페이지 CSS 다음)
+   · 게임 로직·데이터·JS 동작은 그대로, "화면 표현"만 모바일에 맞게 다시 배치합니다
+
+   설계 원칙
+   1) 단위: 모바일은 화면 '너비' 기준 단위(--c)만 씁니다.
+      이전에는 화면 높이에 맞추려고 전체를 축소(최소 0.64배)해서 작은 폰에서 글자·버튼이 작아졌습니다.
+      → 높이가 부족하면 축소 대신 자연스러운 세로 스크롤 (게임 화면은 압축 규칙으로 최대한 한 화면)
+   2) 레이아웃: 페이지 골격(여백·간격·버튼·타이틀)은 px 토큰, 일러스트·카드 내부 그림만 단위(--k)로 비율 유지
+   3) 타이포: PC 크기를 비율로 줄이지 않고 모바일 위계로 따로 정의 (최소 12px)
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   01. TOKENS
+   --------------------------------------------------------- */
+@media (max-width: 1023px) {
+  :root {
+    /* 단위: 폰 = 390 기준 너비 비율 (320 → 0.82 · 390 → 1 · 430 → 1.1) */
+    --c: clamp(0.82px, calc(var(--vw, 100vw) / 390), 1.1px);
+
+    /* Layout */
+    --m-pad: 20px;                                  /* 화면 좌우 최소 여백 (폰 = 실제 여백) */
+    --m-max: 10000px;                               /* 콘텐츠 최대 너비 (폰 = 제한 없음 · 태블릿 = 가운데 열) */
+    /* 콘텐츠 정렬 기준 — 모든 페이지 공통 (마이페이지 카드 기준)
+       --m-k : 카드 안 그림 단위 = 콘텐츠 너비 / 350 (390 폰 = 1)
+       --m-cw: 콘텐츠 너비 · --m-side: 실제 좌우 여백 (항상 대칭) */
+    --m-k: min(calc((var(--vw, 100vw) - 2 * var(--m-pad)) / 350), calc(var(--m-max) / 350));
+    --m-cw: calc(350 * var(--m-k));
+    --m-side: calc((var(--vw, 100vw) - var(--m-cw)) / 2);
+    --m-col: calc(var(--m-cw) + 2 * var(--m-pad));  /* 콘텐츠 + 좌우 여백 (흐름형 컨테이너 최대 너비) */
+    --m-safe-b: max(16px, env(safe-area-inset-bottom, 0px));
+    --m-page-top: 24px;                             /* 헤더 → 페이지 머리 */
+    --m-page-bottom: 32px;                          /* 마지막 콘텐츠 아래 */
+
+    /* Spacing */
+    --m-gap-eyebrow: 8px;                           /* 영문 소제목 → 타이틀 */
+    --m-gap-title-desc: 8px;                        /* 타이틀 → 설명 */
+    --m-gap-head: 24px;                             /* 페이지 머리 → 콘텐츠 */
+    --m-gap-card: 12px;                             /* 카드 사이 */
+    --m-gap-section: 32px;                          /* 섹션 사이 */
+    --m-card-pad: 16px;                             /* 카드 안쪽 */
+    --m-radius-card: 20px;
+    --m-radius-sm: 14px;
+
+    /* Touch */
+    --m-touch: 44px;                                /* 최소 터치 영역 */
+    --m-btn-h: 52px;                                /* 기본 버튼 */
+    --m-btn-h-lg: 56px;                             /* 화면 대표(CTA) 버튼 */
+    --m-btn-gap: 10px;
+
+    /* Popup */
+    --m-pop-gutter: 16px;                           /* 화면 가장자리 ↔ 팝업 */
+    --m-pop-pad-y: 28px;
+    --m-pop-pad-x: 20px;
+    --m-pop-radius: 24px;
+    --m-pop-max-w: 400px;
+
+    /* Typography (px · 모바일 위계) */
+    --m-fs-display: 40px;   --m-lh-display: 1.1;    /* CLEAR! 등 결과 강조 */
+    --m-fs-title: 26px;     --m-lh-title: 1.32;     /* 페이지 메인 타이틀 */
+    --m-fs-eyebrow: 11px;   --m-ls-eyebrow: 0.12em; /* 영문 소제목 (과한 자간 0.14 → 0.12) */
+    --m-fs-section: 18px;   --m-lh-section: 1.35;   /* 섹션 타이틀 */
+    --m-fs-card: 16px;      --m-lh-card: 1.3;       /* 카드 제목 */
+    --m-fs-body: 15px;      --m-lh-body: 1.55;      /* 본문 */
+    --m-fs-sub: 13px;       --m-lh-sub: 1.5;        /* 보조 설명 */
+    --m-fs-caption: 12px;                           /* 최소 글자 (라벨·캡션) */
+    --m-fs-btn: 16px;       --m-fs-btn-lg: 17px;    /* 버튼 */
+    --m-fs-num: 22px;                               /* 게임 수치 (타이머·XP·점수) */
+    --m-ls-num: 0.01em;
+  }
+}
+/* 아주 좁은 폰 (320–359) */
+@media (max-width: 359px) {
+  :root {
+    --m-pad: 16px;
+    --m-fs-title: 23px;
+    --m-fs-display: 36px;
+    --m-fs-body: 14px;
+    --m-btn-h-lg: 52px;
+  }
+}
+/* 태블릿 (768–1023): 모바일 구조를 화면 가운데 넓은 열로 — PC 구조와 섞지 않음 */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --c: clamp(1.1px, calc(var(--vw, 100vw) / 640), 1.25px);   /* 768 → 1.2 · 1023 → 1.25 */
+    --m-pad: 32px;
+    --m-max: 560px;
+    --m-fs-title: 30px;
+  }
+}
+
+/* ---------------------------------------------------------
+   02. 공통 — 헤더 (모든 페이지 동일 · 64px 고정)
+   [로고] ············ [포인트][프로필][☰]
+   --------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .b-header { padding: 0 max(8px, calc(var(--m-side) - 12px)) 0 var(--m-side); }   /* 로고 = 콘텐츠 왼쪽 선 · 메뉴 아이콘 = 오른쪽 선 (44 터치 영역 안 아이콘 기준) */
+  .b-header__logo { order: 1; }
+  .b-header__actions { order: 2; gap: 6px; }
+  .b-hd-menu { order: 3; margin: 0 0 0 2px; width: var(--m-touch); height: var(--m-touch); }
+  .b-pts { height: 36px; }
+  .b-hprof { width: var(--m-touch); height: var(--m-touch); }
+
+  /* 메뉴: 오른쪽(햄버거 쪽)에서 열림 */
+  .b-menu__panel {
+    left: auto; right: 0;
+    width: min(300px, 86vw);
+    padding: 20px 16px calc(20px + var(--m-safe-b));
+    border-left: 1px solid var(--color-border-menu); border-right: 0;
+    border-radius: 24px 0 0 24px;
+    transform: translateX(100%);
+    transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .b-menu.is-open .b-menu__panel { transform: translateX(0); }
+  .b-menu__label { margin: 0 0 8px 8px; font-size: var(--m-fs-caption); letter-spacing: var(--m-ls-eyebrow); }
+  .b-menu__item { flex: 0 0 var(--m-btn-h); height: var(--m-btn-h); gap: 12px; font-size: 17px; }
+  .b-menu__item:active { background: rgba(255, 255, 255, 0.08); }
+  .b-menu__item--quick { margin: 6px 0; }
+  /* 메뉴 열림: 헤더 높이·위치가 흔들리지 않도록 스크롤바 자리까지 고정 */
+  .is-menu-open .b-header { padding-right: calc(max(8px, calc(var(--m-side) - 12px)) + var(--sbw, 0px)); }
+}
+@media (min-width: 1024px) { .b-menu__item--my { display: none; } }
+
+/* ---------------------------------------------------------
+   03. 공통 — 버튼 · 터치 상태
+   기본 / 눌림(:active) / 선택 / 정답 / 오답 / 비활성 을 hover 없이도 구분
+   --------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .b-gbtn { height: var(--m-btn-h); border-radius: calc(var(--m-btn-h) / 2); font-size: var(--m-fs-btn); }
+  .b-back { width: var(--m-btn-h); height: var(--m-btn-h); }
+  .b-back img { width: 20px; height: 20px; }
+  .b-gbtn:disabled { cursor: default; }
+  .b-gbtn:not(:disabled):active, .b-back:active, .b-cta:active, .b-modal__btn:active { transform: scale(0.97); }
+  .b-gbtn, .b-back, .b-cta, .b-modal__btn, .b-menu__item, .b-scard, .b-ans {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;                    /* 더블탭 확대 지연 없이 바로 반응 */
+  }
+}
+
+/* ---------------------------------------------------------
+   04. 공통 — 팝업 (모든 모달 같은 규칙)
+   화면 좌우 16 · 최대 400 · 내용이 길면 팝업 안에서 스크롤 · 버튼 52
+   --------------------------------------------------------- */
+@media (max-width: 1023px) {
+  :where(.b-modal:not(.b-modal--area)) {
+    padding: max(var(--m-pop-gutter), env(safe-area-inset-top, 0px)) var(--m-pop-gutter) max(var(--m-pop-gutter), env(safe-area-inset-bottom, 0px));
+    overscroll-behavior: contain;
+  }
+  :where(.b-modal:not(.b-modal--area)) .b-modal__dialog {
+    width: min(100%, var(--m-pop-max-w));
+    max-height: calc(100vh - 2 * var(--m-pop-gutter));
+    max-height: calc(100dvh - 2 * var(--m-pop-gutter) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    padding: var(--m-pop-pad-y) var(--m-pop-pad-x) var(--m-pop-pad-x);
+    border-radius: var(--m-pop-radius);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+  .b-modal__title { font-size: 20px; line-height: 1.35; }
+  .b-modal__body { font-size: 14px; line-height: 1.6; }
+  .b-modal__actions { gap: var(--m-btn-gap); }
+  .b-modal__btn { min-height: var(--m-btn-h); height: var(--m-btn-h); border-radius: calc(var(--m-btn-h) / 2); font-size: var(--m-fs-btn); }
+  .b-modal__btn--confirm:active { filter: brightness(1.1); }
+  /* 닫기(×) 버튼: 44 터치 영역 */
+  .b-nick__close, .b-sk__close, .b-fb__close, .b-ach__close, .b-modal [data-modal-close]:not(.b-modal__dim):not(.b-modal__btn) { min-width: var(--m-touch); min-height: var(--m-touch); }
+}
+
+/* ---------------------------------------------------------
+   05. 페이지 공통 — 흐름형(flow) 레이아웃 컨테이너
+   Figma 캔버스(절대 좌표 · 높이 고정)를 모바일에서는 위→아래 흐름으로 바꿈
+   --------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .b-page-stage .b-view,
+  .b-page-game .b-view,
+  .b-page-result .b-view { align-items: flex-start; }
+  .b-stage.b-canvas,
+  .b-game.b-canvas,
+  .b-clear.b-canvas {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--m-col);
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
+/* =========================================================
+   06. HOME — 캐릭터 선택
+   타이틀 → 설명 → 선택 캐릭터(크게) → 이름·설명 → 전환(화살표·점·스와이프) → 시작 버튼
+   캐러셀은 남는 높이에 맞춰 크기가 정해짐 (작은 폰에서도 시작 버튼이 화면 안)
+   ========================================================= */
+@media (max-width: 1023px) {
+  .b-page-home .b-main {
+    box-sizing: border-box;
+    min-height: calc(100vh - var(--m-header-h));
+    min-height: calc(100svh - var(--m-header-h));
+    padding: var(--m-page-top) 0 var(--m-safe-b);
+  }
+  .b-intro { padding: 0 var(--m-pad); }
+  .b-intro__title { font-size: var(--m-fs-title); line-height: var(--m-lh-title); }
+  .b-intro__sub {
+    display: block;
+    margin-top: var(--m-gap-title-desc);
+    font-size: var(--m-fs-sub);
+    line-height: var(--m-lh-sub);
+  }
+  .b-live { height: 28px; margin-top: 12px; font-size: var(--m-fs-caption); }
+
+  /* 캐러셀 전용 단위: 너비 기준, 단 남는 높이(화면 − 헤더 − 머리 · 버튼 영역 300)를 넘지 않게 */
+  .b-carousel {
+    --k: clamp(0.62px, min(var(--c), calc((100vh - var(--m-header-h) - 300px) / 436)), 1.1px);
+    flex: none;
+    margin-top: 12px;
+  }
+  @supports (height: 100svh) {
+    .b-carousel { --k: clamp(0.62px, min(var(--c), calc((100svh - var(--m-header-h) - 300px) / 436)), 1.1px); }
+  }
+  .b-card__name { font-size: max(18px, calc(var(--name) * var(--k))); }
+  .b-card__desc { font-size: max(13px, calc(var(--desc) * var(--k))); }
+  .b-arrow::before { width: max(var(--m-touch), 100%); height: max(var(--m-touch), 100%); }
+
+  .b-cta {
+    width: calc(100% - 2 * var(--m-pad));
+    max-width: calc(var(--m-col) - 2 * var(--m-pad));
+    height: var(--m-btn-h-lg);
+    margin-top: auto;
+    border-radius: calc(var(--m-btn-h-lg) / 2);
+    font-size: var(--m-fs-btn-lg);
+  }
+}
+
+/* ---------------------------------------------------------
+   06-1. 닉네임 설정 팝업 — 키보드가 올라와도 입력창·버튼이 보이도록
+   --------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .b-modal--nick { align-items: center; }
+  .b-nick { width: min(100%, var(--m-pop-max-w)); padding: var(--m-pop-pad-y) var(--m-pop-pad-x) var(--m-pop-pad-x); gap: 8px; }
+  .b-nick__close { top: 8px; right: 8px; }
+  .b-nick input, .b-nick [data-nick-input] { font-size: 16px; }    /* 16px 미만이면 iOS가 화면을 확대함 */
+  .b-nick [data-nick-start] { min-height: var(--m-btn-h); }
+  .b-major__opt span { min-height: var(--m-touch); }
+}
+/* 화면 높이가 낮을 때(키보드가 올라온 상태 포함): 캐릭터 그림을 줄이고 위쪽 정렬 → 입력창·버튼 우선 */
+@media (max-width: 1023px) and (max-height: 560px) {
+  .b-modal--nick { align-items: flex-start; }
+  .b-nick__char, .b-nick [data-nick-char] { width: 64px !important; height: 64px !important; }
+}
+
+/* 튜토리얼(온보딩 3단계 팝업): 세로가 짧으면 그림 영역을 줄여 본문·버튼이 잘리지 않게 */
+@media (max-width: 1023px) and (max-height: 700px) {
+  .b-tut__intro { grid-template-rows: 116px auto; }
+  .b-tut__hero img { width: 104px; height: 104px; }
+  .b-tut__introtext .b-tut__title { font-size: 22px; }
+}
+
+/* =========================================================
+   07. STAGE SELECT
+   머리(소제목·타이틀) → 선택 스테이지 카드 → 스테이지 목록 (자연 스크롤)
+   ========================================================= */
+@media (max-width: 1023px) {
+  .b-stage.b-canvas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--m-page-top) var(--m-pad) calc(var(--m-page-bottom) + var(--m-safe-b));
+  }
+  .b-stage > * { position: relative; left: auto; right: auto; top: auto; }
+  .b-stage__head { width: 100%; margin-bottom: var(--m-gap-head); }
+  .b-stage__eyebrow {
+    margin-bottom: var(--m-gap-eyebrow);
+    font-size: var(--m-fs-eyebrow);
+    line-height: 14px;
+    letter-spacing: var(--m-ls-eyebrow);
+    padding-left: var(--m-ls-eyebrow);
+  }
+  .b-stage__title { margin-bottom: 0; font-size: var(--m-fs-title); line-height: var(--m-lh-title); }
+
+  /* 선택 스테이지 카드: 그림·버튼 배치는 비율 유지 (카드 너비 = 콘텐츠 너비) */
+  .b-mcard { flex: none; width: calc(350 * var(--k)); max-width: 100%; }
+  .b-mcard__no { font-size: max(11px, calc(10 * var(--k))); }
+  .b-mcard__desc { font-size: max(12px, calc(12 * var(--k))); line-height: 1.4; }
+  .b-mcard__bubble-text { font-size: max(10px, calc(10 * var(--k))); }
+  .b-sbtn { height: max(var(--m-touch), calc(40 * var(--k))); font-size: max(13px, calc(13 * var(--k))); }
+
+  /* 스테이지 목록: 이름 · 진행 상태 · 진입 */
+  .b-slist { width: calc(350 * var(--k)); max-width: 100%; margin-top: 28px; gap: var(--m-gap-card); }
+  .b-slist::before {
+    content: "ALL STAGES";
+    display: block;
+    margin: 0 0 2px 4px;
+    font-family: var(--font-en);
+    font-weight: 600;
+    font-size: var(--m-fs-caption);
+    letter-spacing: var(--m-ls-eyebrow);
+    color: var(--color-menu-label);
+  }
+  .b-scard { --cy: 4; width: 100%; height: max(68px, calc(72 * var(--k))); }
+  .b-scard__no { font-size: max(11px, calc(11 * var(--k))); }
+  .b-scard__name { font-size: max(15px, calc(15 * var(--k))); }
+  .b-scard__desc { font-size: var(--m-fs-caption); }
+  .b-scard:active { transform: scale(0.985); }
+  /* 진행 상태 칩 (b-stage.js 가 기록에서 채움 · 기록 없으면 숨김) */
+  .b-scard__state {
+    position: absolute;
+    right: calc(54 * var(--k));
+    top: calc((var(--cy) + 11) * var(--k));
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(142, 166, 255, 0.35);
+    background: rgba(92, 125, 255, 0.14);
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: #c9d3ff;
+    white-space: nowrap;
+  }
+  .b-scard__state:has(> .is-clear) { border-color: rgba(120, 220, 170, 0.5); background: rgba(80, 200, 140, 0.16); color: #9ff0c8; }
+  .b-scard__state:empty { display: none; }
+}
+@media (max-width: 374px) { .b-scard__state-k { display: none; } .b-scard__state { padding: 0 6px; } }
+@media (min-width: 1024px) { .b-scard__state { display: none; } }
+
+/* =========================================================
+   08. GAME PLAY — 모바일 핵심 화면
+   ┌ 타이틀 (피드백이 같은 자리에 겹쳐 나타남 → 화면이 밀리지 않음)
+   ├ 타이머 ┃ 진행 바
+   ├ 답안 카드 A / B / C  ← 남는 높이를 모두 사용 (문제 영역 최우선)
+   └ [←] [다음 문제로]     ← 화면 아래 고정 (스크롤해도 항상 보임)
+   ========================================================= */
+@media (max-width: 1023px) {
+  .b-page-game { --g-title-h: 96px; --g-hud-h: 56px; --g-gap: 12px; --g-card-min: calc(136 * var(--c)); --g-ans-scale: 1; }
+  .b-game.b-canvas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: var(--g-title-h) auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "title title"
+      "timer prog"
+      "ans   ans"
+      "act   act";
+    column-gap: 14px;
+    row-gap: var(--g-gap);
+    min-height: calc(100vh - var(--m-header-h));
+    min-height: calc(100svh - var(--m-header-h));
+    padding: 8px var(--m-pad) 0;
+  }
+  .b-game > * { position: relative; left: auto; right: auto; top: auto; bottom: auto; }
+  .b-game > .b-sr-only { position: absolute; }
+
+  /* 타이틀 영역 (높이 고정 = 피드백과 같은 칸) */
+  .b-gtitle {
+    grid-area: title;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 4px;
+  }
+  .b-gtitle__h { font-size: var(--m-fs-title); line-height: 1.25; white-space: normal; word-break: keep-all; text-wrap: balance; }
+  .b-gtitle__desc {
+    position: static;
+    margin-top: var(--m-gap-title-desc);
+    font-size: var(--m-fs-sub);
+    line-height: var(--m-lh-sub);
+    white-space: normal;
+    word-break: keep-all;
+    text-wrap: balance;
+  }
+  .b-gtitle__mode { position: static; order: -1; margin: 0 0 4px; font-size: 11px; letter-spacing: 0.1em; }
+
+  /* 정답·오답 피드백: 타이틀 칸 안에 겹쳐 표시 · 캐릭터 발은 칸 아래선에서 잘림 */
+  .b-fb {
+    grid-area: title;
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    left: 50%;
+    --fs: 0.44;
+    clip-path: inset(-100vh -100vw 0 -100vw);
+  }
+
+  /* 타이머 · 진행 바 (한 줄) */
+  .b-timer { grid-area: timer; align-self: stretch; width: auto; height: var(--g-hud-h); padding: 10px 14px 12px; border-radius: 16px; }
+  .b-timer__time { font-size: var(--m-fs-num); letter-spacing: var(--m-ls-num); }
+  .b-timer__icon { width: 18px; height: 18px; }
+  .b-timer__bar { height: 4px; }
+  .b-progress { grid-area: prog; align-self: center; }
+  .b-plabel { font-size: max(11px, calc(11 * var(--k))); }
+
+  /* 답안 카드: 남는 높이를 3등분 · 카드 안 그림은 가운데 */
+  .b-answers {
+    grid-area: ans;
+    display: flex;
+    flex-direction: column;
+    gap: var(--g-gap);
+    min-height: 0;
+  }
+  .b-ans {
+    --k: calc(var(--c) * var(--g-ans-scale));
+    flex: 1 1 0;
+    width: 100%;
+    height: auto;
+    min-height: var(--g-card-min);
+  }
+  .b-ans__copy:not(.is-ui) { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  .b-ans__copy.is-ui { top: 50%; }
+  .b-ans__badge { width: 28px; height: 28px; font-size: 13px; }
+  .b-ans:active:not(:disabled) { transform: scale(0.985); }
+  .b-answers.is-locked .b-ans:active { transform: none; }
+
+  /* 버튼: 아래 고정 */
+  .b-gactions {
+    grid-area: act;
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    display: flex;
+    gap: var(--m-btn-gap);
+    width: auto;
+    margin: 0 calc(-1 * var(--m-pad));
+    padding: 8px var(--m-pad) var(--m-safe-b);
+    background: linear-gradient(180deg, rgba(10, 13, 48, 0) 0%, rgba(10, 13, 48, 0.92) 40%);
+  }
+  .b-gactions .b-gbtn { flex: 1 1 auto; width: auto; height: var(--m-btn-h); }
+}
+/* 세로가 짧은 폰 (iPhone SE 667 등): 머리 압축 + 카드 안 그림 축소 → 한 화면 우선 */
+@media (max-width: 1023px) and (max-height: 760px) {
+  .b-page-game { --g-title-h: 80px; --g-hud-h: 50px; --g-gap: 10px; --g-card-min: 108px; --g-ans-scale: 0.82; }
+  .b-gtitle__h { font-size: 22px; }
+  .b-gtitle__desc { margin-top: 4px; font-size: var(--m-fs-caption); }
+  .b-fb { --fs: 0.36; }
+  .b-timer { padding: 8px 12px 10px; }
+  .b-timer__time { font-size: 20px; }
+}
+@media (max-width: 1023px) and (max-height: 600px) {
+  .b-page-game { --g-title-h: 72px; --g-card-min: 96px; --g-ans-scale: 0.72; --g-hud-h: 46px; --g-gap: 8px; }
+  .b-gtitle__h { font-size: 20px; }
+}
+
+/* 가로로 눕힌 폰 (세로 ≤ 500): 한 화면 압축 대신 카드 크기를 지키고 세로 스크롤 */
+@media (max-width: 1023px) and (max-height: 500px) and (orientation: landscape) {
+  .b-page-game { --g-card-min: 140px; --g-ans-scale: 0.78; }
+}
+
+/* =========================================================
+   09. STAGE CLEAR (결과 · 레벨업)
+   타이틀 → 메시지 → 캐릭터 일러스트 → 기록 3칸 → 레벨·XP → [다시 도전][다음] (아래 고정)
+   일러스트 요소는 'hero' 칸 기준 좌표로 배치 (칸이 내려가도 함께 이동)
+   ========================================================= */
+@media (max-width: 1023px) {
+  .b-page-result { --my: -139; }
+  .b-clear.b-canvas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto minmax(8px, 1fr) calc(196 * var(--k)) auto auto minmax(16px, 1fr) auto;
+    grid-template-areas: "title" "desc" "msg" "." "hero" "result" "level" "." "btns";
+    min-height: calc(100vh - var(--m-header-h));
+    min-height: calc(100svh - var(--m-header-h));
+    padding: var(--m-page-top) var(--m-pad) 0;
+  }
+  .b-clear > * { position: relative; left: auto; right: auto; top: auto; bottom: auto; }
+  .b-clear__title { grid-area: title; font-size: var(--m-fs-display); line-height: var(--m-lh-display); }
+  .b-clear__desc { grid-area: desc; margin-top: 10px; font-size: var(--m-fs-body); line-height: 1.45; text-align: center; }
+  .b-clear__msg { grid-area: msg; margin-top: 4px; font-size: var(--m-fs-sub); line-height: 1.45; text-align: center; word-break: keep-all; }
+
+  /* 일러스트: hero 칸 안의 절대 배치 */
+  .b-clear__cube, .b-clear__glow, .b-clear__react, .b-clear__xpcard, .b-clear__sp { grid-area: hero; position: absolute; }
+  .b-clear__react { left: calc(50% - 113 * var(--k)); }
+  .b-clear__xpcard { left: calc(50% + 29.56 * var(--k)); }
+  .b-clear__glow { left: calc(50% - 210 * var(--k)); }
+  .b-clear__cube { left: calc(50% + (var(--cx) - 195 - var(--s) / 2) * var(--k)); }
+  .b-clear__sp--3 { left: calc(50% + 35.17 * var(--k)); }
+  .b-clear__sp--4 { left: calc(50% - 134 * var(--k)); }
+  .b-clear__sp--1 { left: calc(50% - 117.81 * var(--k)); }
+  .b-clear__sp--5 { left: calc(50% + 134.75 * var(--k)); }
+  .b-clear__sp--2 { left: calc(50% + 112 * var(--k)); }
+
+  .b-result { grid-area: result; width: 100%; height: auto; min-height: 112px; margin-top: 8px; padding: 14px 0; box-sizing: border-box; }
+  .b-result__label { font-size: var(--m-fs-caption); line-height: 1.4; }
+  .b-result__value { font-size: max(18px, calc(20 * var(--k))); line-height: 1.3; letter-spacing: var(--m-ls-num); }
+  .b-result__icon { width: 30px; height: 30px; }
+  .b-level { grid-area: level; width: 100%; margin-top: var(--m-gap-card); box-sizing: border-box; padding: 14px var(--m-card-pad); }
+  .b-level__lv { font-size: 17px; }
+  .b-level__xp, .b-level__off { font-size: var(--m-fs-caption); }
+
+  .b-clear__btns {
+    grid-area: btns;
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    display: flex;
+    width: auto;
+    margin: 0 calc(-1 * var(--m-pad));
+    padding: 16px var(--m-pad) var(--m-safe-b);
+    gap: var(--m-btn-gap);
+    background: linear-gradient(180deg, rgba(10, 13, 48, 0) 0%, rgba(10, 13, 48, 0.92) 40%);
+  }
+  .b-clear__btns .b-gbtn { height: var(--m-btn-h-lg); border-radius: calc(var(--m-btn-h-lg) / 2); font-size: var(--m-fs-btn); }
+  .b-clear__retry { flex: 0 0 auto; padding: 0 18px; }
+}
+@media (max-width: 1023px) and (max-height: 700px) {
+  .b-clear.b-canvas { grid-template-rows: auto auto auto minmax(4px, 1fr) calc(160 * var(--k)) auto auto minmax(12px, 1fr) auto; }
+  .b-page-result { --my: -150; }
+  .b-clear__react { transform: scale(0.82); transform-origin: 50% 40%; }
+  .b-clear__xpcard { transform: scale(0.82); }
+  .b-clear__cube, .b-clear__sp { opacity: 0.4; }
+}
+
+/* =========================================================
+   10. SHOP · RANKING · MY PAGE — 이미 세로 흐름(스크롤) 구조
+   공통 여백·타이틀·버튼 규칙만 맞춤 (단위는 같은 너비 기준)
+   ========================================================= */
+@media (max-width: 1023px) {
+  .b-page-rank .b-page, .b-page-my .b-page, .b-page-shop .b-page { --k: var(--c); }
+
+  /* 공통 섹션 머리: 제목과 보조 문구가 좁은 화면에서 겹치지 않게 줄바꿈 */
+  .b-page-my .b-mycard__head, .b-page-rank .b-mycard__head { flex-wrap: wrap; height: auto; min-height: 28px; row-gap: 2px; column-gap: 8px; }
+
+  /* ---------- MY PAGE: 중요도 순서 ----------
+     1 프로필·레벨·XP·보유 포인트 → 2 디자인 영역별 성장(레이더) → 3 업적 → 4 플레이 통계 → 5 최근 기록 */
+  .b-page-my .b-my__cols { display: flex; flex-direction: column; gap: var(--m-gap-card); }
+  .b-page-my .b-my__col { display: contents; }
+  .b-page-my .b-best { order: 1; }
+  .b-page-my .b-badges { order: 2; }
+  .b-page-my .b-stats { order: 3; }
+  .b-page-my .b-recent { order: 4; }
+
+  /* 프로필: 닉네임 한 줄(넘치면 …) · 아래 줄에 칭호 + 스킨 관리 */
+  .b-page-my .b-prof__who { grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; row-gap: 8px; align-items: center; }
+  .b-page-my .b-prof__name-row, .b-page-my .b-prof__form { grid-column: 1 / -1; }
+  .b-page-my .b-prof__chip { grid-column: 1; grid-row: 2; }
+  .b-page-my .b-prof__skin { grid-column: 2; grid-row: 2; height: 36px; }
+  .b-page-my .b-prof__name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 20px; }
+  .b-prof__pts {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    min-height: var(--m-touch);
+    margin-top: 12px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    border-radius: var(--m-radius-sm);
+    border: 1px solid rgba(255, 210, 90, 0.28);
+    background: rgba(255, 210, 90, 0.07);
+    font-family: var(--font-kr);
+    font-size: var(--m-fs-sub);
+    color: var(--color-text-sub);
+  }
+  .b-prof__pts .b-coin { width: 20px; height: 20px; flex: none; }
+  .b-prof__pts b { margin-left: auto; font-family: var(--font-en); font-weight: 800; font-size: 17px; color: var(--color-white); font-variant-numeric: tabular-nums; }
+  .b-prof__pts i { font-style: normal; font-family: var(--font-en); font-weight: 700; font-size: 12px; color: #ffd25a; }
+  .b-prof__pts-go { width: 18px; height: 18px; color: #a9b4ff; }
+
+  /* 영역별 성장 상세: 전체 화면 패널 · 버튼 한 줄 */
+  .b-area__acts .b-modal__btn { white-space: nowrap; font-size: 15px; }
+  .b-area__bar { padding-top: 2px; }
+}
+
+/* ---------------------------------------------------------
+   리듀스 모션
+   --------------------------------------------------------- */
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .b-menu__panel { transition: none; }
+  .b-gbtn:active, .b-back:active, .b-cta:active, .b-ans:active, .b-scard:active { transform: none; }
+}
+
+
+/* =========================================================
+   11. 공통 정렬 · 타이포 시스템 (2026-11-16 v2)
+   ---------------------------------------------------------
+   · 콘텐츠 너비 = --m-cw (화면 − 좌우 여백 × 2) · 모든 페이지 같은 왼쪽·오른쪽 선 (헤더 로고 포함)
+   · 카드 안 그림 단위 --k = --m-k (콘텐츠 너비 / 350) → 카드가 넓어지면 안쪽 그림·간격도 같은 비율로
+   · 글자는 화면 비율로 줄이지 않고 역할별 고정 크기 (아래 표)
+       페이지 타이틀 26 Bold · 섹션/카드 제목 18 Bold · 주요 수치 22 Bold (레벨 26)
+       본문 15 Regular·Medium · 보조 13 Regular · 캡션 12 · 영문 라벨 11 Bold
+   · 글꼴: 모바일은 영문·숫자 포함 전체 Noto Sans KR (로고 이미지는 그대로)
+   ========================================================= */
+@media (max-width: 1023px) {
+  /* 게임 문제(답안 카드) 안의 글꼴은 문제 자체이므로 바꾸지 않음 */
+  .b-answers, .b-ans, .b-tut__card, .b-review { --font-en: "Inter", "Noto Sans KR", sans-serif; }
+  :root {
+    --font-en: "Noto Sans KR", sans-serif;
+    --m-fs-section: 18px;   --m-lh-section: 1.35;
+    --m-fs-num: 22px;       --m-fs-num-lg: 26px;
+    --m-fs-label: 11px;
+    --m-fw-label: 700;
+  }
+
+  /* ---------- 페이지 머리 (STAGE · SHOP · MY PAGE · RANKING 동일) ---------- */
+  html:is(.b-page-stage, .b-page-my, .b-page-rank) :is(.b-stage__eyebrow, .b-phead__eyebrow) {
+    margin: 0 0 var(--m-gap-eyebrow);
+    padding-left: var(--m-ls-eyebrow);
+    font-family: var(--font-kr);
+    font-weight: var(--m-fw-label);
+    font-size: var(--m-fs-label);
+    line-height: 14px;
+    letter-spacing: var(--m-ls-eyebrow);
+  }
+  html:is(.b-page-stage, .b-page-my, .b-page-rank) :is(.b-stage__title, .b-my__title.b-phead__title, .b-rk__title) {
+    height: auto;
+    margin: 0;
+    font-family: var(--font-kr);
+    font-weight: 700;
+    font-size: var(--m-fs-title);
+    line-height: var(--m-lh-title);
+    letter-spacing: -0.02em;
+  }
+  html:is(.b-page-my, .b-page-rank) :is(.b-rk__title span, .b-shop__title span) {
+    font-family: var(--font-kr);
+    font-style: normal;
+    font-weight: 700;
+    font-size: var(--m-fs-title);
+    line-height: var(--m-lh-title);
+    letter-spacing: -0.01em;
+  }
+  html.b-page-rank .b-rk__laurel { width: 16px; height: 32px; }
+
+  /* ---------- 흐름형 페이지 컨테이너 (MY PAGE · SHOP · RANKING) ---------- */
+  html:is(.b-page-my, .b-page-rank) .b-page { --k: var(--m-k); }
+  html:is(.b-page-my, .b-page-rank) .b-canvas { width: 100%; }   /* 캔버스 폭을 화면 전체로 (콘텐츠 선은 안쪽 여백으로) */
+  html:is(.b-page-my, .b-page-rank) :is(.b-my__in, .b-rank__in) {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--m-col);
+    margin: 0 auto;
+    padding: var(--m-page-top) var(--m-pad) calc(var(--m-page-bottom) + var(--m-safe-b));
+    gap: var(--m-gap-card);
+  }
+  html.has-fb:is(.b-page-my, .b-page-rank) :is(.b-my__in, .b-rank__in) { padding-bottom: calc(var(--m-page-bottom) + 64px + var(--m-safe-b)); }   /* 피드백 버튼 위로 마지막 카드 */
+  html:is(.b-page-my, .b-page-rank) :is(.b-my__head.b-phead, .b-rk__head.b-phead) { margin: 0 0 calc(var(--m-gap-head) - var(--m-gap-card)); }
+  html:is(.b-page-my, .b-page-rank) .b-my__cols { gap: var(--m-gap-card); }
+
+  /* ---------- 카드 공통 (MY PAGE · RANKING) ---------- */
+  html:is(.b-page-my, .b-page-rank) .b-mycard { padding: var(--m-card-pad); border-radius: var(--m-radius-card); }
+  html:is(.b-page-my, .b-page-rank) .b-mycard__head { min-height: 28px; margin-bottom: 12px; }
+  html:is(.b-page-my, .b-page-rank) .b-mycard__title { gap: 8px; font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-section); line-height: var(--m-lh-section); }
+  html:is(.b-page-my, .b-page-rank) .b-mycard__title .b-ic { width: 20px; height: 20px; }
+  html:is(.b-page-my, .b-page-rank) :is(.b-mycard__meta, .b-mycard__more) { font-size: var(--m-fs-caption); }
+
+  /* =========================================================
+     STAGE SELECT — 대표 카드 · 목록 = 콘텐츠 너비 (마이페이지 카드와 같은 선)
+     ========================================================= */
+  html.b-page-stage .b-stage.b-canvas { --k: var(--m-k); max-width: var(--m-col); }
+  html.b-page-stage .b-stage__head { margin-bottom: var(--m-gap-head); }
+  html.b-page-stage .b-mcard { width: var(--m-cw); max-width: none; height: calc(176 * var(--k)); }
+  /* 카드 안: [말풍선 · 캐릭터] | [STAGE · 이름 · 설명 · 버튼] + 오른쪽 위 아이콘 — 서로 겹치지 않게 */
+  html.b-page-stage .b-mcard__info { top: calc(18 * var(--k)); height: calc(142 * var(--k)); }
+  html.b-page-stage .b-mcard__no { font-family: var(--font-kr); font-weight: var(--m-fw-label); font-size: var(--m-fs-label); letter-spacing: var(--m-ls-eyebrow); line-height: 14px; }
+  html.b-page-stage .b-mcard__name { top: calc(18 * var(--k)); font-weight: 700; font-size: max(18px, calc(20 * var(--k))); line-height: 1.3; letter-spacing: -0.01em; }
+  html.b-page-stage .b-mcard__desc { top: calc(48 * var(--k)); width: calc(96 * var(--k)); font-size: var(--m-fs-caption); line-height: 1.4; word-break: keep-all; }
+  html.b-page-stage .b-mcard__icon .b-ico { --is: 0.46; left: calc(282 * var(--k)); top: calc(50 * var(--k)); }
+  html.b-page-stage .b-sbtn { top: calc(100 * var(--k)); width: calc(152 * var(--k)); height: max(var(--m-touch), calc(42 * var(--k))); font-size: 14px; }
+  html.b-page-stage .b-slist { width: var(--m-cw); max-width: none; margin-top: var(--m-gap-section); gap: var(--m-gap-card); }
+  html.b-page-stage .b-slist::before { margin: 0 0 0 2px; font-family: var(--font-kr); font-weight: var(--m-fw-label); font-size: var(--m-fs-label); }
+  html.b-page-stage .b-scard { height: max(72px, calc(74 * var(--k))); }
+  html.b-page-stage .b-scard__no { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-caption); }
+  html.b-page-stage .b-scard__name { font-family: var(--font-kr); font-weight: 700; font-size: 16px; line-height: 1.3; }
+  html.b-page-stage .b-scard__desc { font-size: var(--m-fs-caption); line-height: 1.4; }
+  html.b-page-stage .b-scard__state { font-family: var(--font-kr); }
+
+  /* =========================================================
+     SKIN SHOP — 상세 카드 = 콘텐츠 너비 · 썸네일 줄은 화면 끝까지 (양옆 자연스럽게 잘림)
+     ========================================================= */
+  html.b-page-shop .b-shop__bar, html.b-page-shop .b-stagebox, html.b-page-shop .b-shop__notice { width: 100%; box-sizing: border-box; }
+  html.b-page-shop .b-shop__main { gap: var(--m-gap-card); }
+  html.b-page-shop .b-shelf {
+    margin: 0 calc(-1 * var(--m-side));
+    padding: 4px var(--m-side) 8px;
+    scroll-padding: 0 var(--m-side);
+    gap: 12px;
+  }
+  html.b-page-shop .b-th { width: 76px; min-width: 76px; }
+  html.b-page-shop .b-th__ring { width: 68px; height: 68px; }
+  html.b-page-shop .b-th__name { font-family: var(--font-kr); font-style: normal; font-weight: 700; font-size: var(--m-fs-caption); }
+  html.b-page-shop .b-th__st { font-size: 11px; }
+  html.b-page-shop .b-stagebox { gap: 16px; padding: var(--m-card-pad); border-radius: var(--m-radius-card); }
+  html.b-page-shop .b-stagebox__fig { height: calc(196 * var(--k)); }
+  html.b-page-shop .b-stagebox__img { width: calc(172 * var(--k)); height: calc(172 * var(--k)); }
+  html.b-page-shop .b-stagebox__name { font-family: var(--font-kr); font-style: normal; font-weight: 700; font-size: 24px; line-height: 1.25; }
+  html.b-page-shop .b-stagebox__alias { margin-top: 4px; font-size: var(--m-fs-body); font-weight: 500; }
+  html.b-page-shop .b-stagebox__desc { margin-top: 8px; font-size: var(--m-fs-sub); line-height: var(--m-lh-sub); word-break: keep-all; }
+  html.b-page-shop .b-moods { gap: 12px; margin-top: 16px; }
+  html.b-page-shop .b-mood__img { width: calc(60 * var(--k)); height: calc(60 * var(--k)); }
+  html.b-page-shop .b-mood__t { font-size: var(--m-fs-caption); }
+  html.b-page-shop .b-stagebox__buy { gap: 10px; margin-top: 18px; }
+  html.b-page-shop .b-stagebox__buy > .b-chip, html.b-page-shop .b-stagebox__buy > .b-stagebox__btn { height: var(--m-btn-h); min-height: var(--m-btn-h); }
+  html.b-page-shop .b-chip--price { font-family: var(--font-kr); font-weight: 700; font-size: 17px; }
+  html.b-page-shop .b-stagebox__btn { font-size: var(--m-fs-btn); }
+  html.b-page-shop .b-shop__pts { display: inline-flex; align-items: baseline; gap: 2px; padding: 8px 16px; font-family: var(--font-kr); font-weight: 700; font-size: 18px; }
+  html.b-page-shop .b-shop__ptslabel { margin-right: 6px; font-size: var(--m-fs-sub); }
+  html.b-page-shop .b-shop__pts i { font-size: var(--m-fs-sub); }
+  html.b-page-shop .b-shop__pts small { font-size: var(--m-fs-caption); }
+  html.b-page-shop .b-shop__notice { font-size: var(--m-fs-sub); line-height: var(--m-lh-sub); }
+  html.b-page-shop .b-tag { font-family: var(--font-kr); font-weight: 700; font-size: 11px; }
+
+  /* =========================================================
+     MY PAGE — 글자 크기를 다른 페이지 위계에 맞춤 · 프로필 정보 고르게 배치
+     ========================================================= */
+  /* 프로필: [아바타 | 닉네임 / 칭호 | 스킨 관리] → 레벨 → XP 바 → 보유 포인트 */
+  html.b-page-my .b-prof { padding: var(--m-card-pad); }
+  html.b-page-my .b-prof__avatar { width: 64px; height: 64px; }
+  html.b-page-my .b-prof__who { margin-left: 12px; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; column-gap: 10px; row-gap: 6px; align-items: center; }
+  html.b-page-my .b-prof__name-row, html.b-page-my .b-prof__form { grid-column: 1; grid-row: 1; min-height: 28px; }
+  html.b-page-my .b-prof__chip { grid-column: 1; grid-row: 2; justify-self: start; height: 30px; min-height: 30px; padding: 0 12px 0 9px; font-size: var(--m-fs-caption); }
+  html.b-page-my .b-prof__chip .b-ic { width: 16px; height: 16px; }
+  html.b-page-my .b-prof__skin { grid-column: 2; grid-row: 1 / 3; align-self: center; height: 40px; min-height: 40px; padding: 0 14px 0 11px; gap: 6px; font-size: 14px; }
+  html.b-page-my .b-prof__skin .b-ic { width: 18px; height: 18px; min-width: 18px; min-height: 18px; }
+  html.b-page-my .b-prof__name { font-size: var(--m-fs-section); line-height: 1.3; }
+  html.b-page-my .b-prof__edit { width: 32px; height: 32px; }
+  html.b-page-my .b-prof__divider { margin: 14px 0; }
+  html.b-page-my .b-prof__lvrow { align-items: baseline; margin-bottom: 8px; }
+  html.b-page-my .b-prof__lv { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-num-lg); letter-spacing: 0; }
+  html.b-page-my .b-prof__lv em { margin-left: 4px; }
+  html.b-page-my .b-prof__xp { margin: 0; font-weight: 500; font-size: var(--m-fs-sub); }
+  html.b-page-my .b-prof__bar { height: 10px; }
+  html.b-page-my .b-prof__left { margin-top: 8px; font-size: var(--m-fs-caption); }
+  html.b-page-my .b-prof__pts { min-height: 48px; font-size: var(--m-fs-sub); }
+  html.b-page-my .b-prof__pts b { font-family: var(--font-kr); font-weight: 700; font-size: 16px; }
+
+  /* 디자인 영역별 기록 (요약 + 레이더) */
+  html.b-page-my .b-skill__k { padding: 6px 12px; }
+  html.b-page-my .b-skill__k dt { font-size: var(--m-fs-caption); }
+  html.b-page-my .b-skill__k dd { font-family: var(--font-kr); font-weight: 700; font-size: 14px; }
+  html.b-page-my .b-skill__row { height: 44px; }
+  html.b-page-my .b-skill__no { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-caption); }
+  html.b-page-my .b-skill__name { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
+  html.b-page-my .b-skill__rate { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
+  html.b-page-my .b-skill__combo { font-family: var(--font-kr); font-size: var(--m-fs-caption); }
+  html.b-page-my .b-skill__open { height: var(--m-btn-h); font-size: var(--m-fs-body); }
+  html.b-page-my :is(.b-radar__name, .b-radar__val) { font-family: var(--font-kr); font-size: var(--m-fs-caption); }
+
+  /* 플레이 통계 */
+  html.b-page-my .b-stats__box { padding: 14px 0; }
+  html.b-page-my .b-stats__label { font-size: var(--m-fs-caption); }
+  html.b-page-my .b-stats__value { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-num); }
+  html.b-page-my .b-stats__value small { font-size: var(--m-fs-caption); font-weight: 500; }
+
+  /* 업적 · 개인 기록 */
+  html.b-page-my .b-badge__name { font-size: var(--m-fs-caption); }
+  html.b-page-my .b-badge__txt { font-family: var(--font-kr); font-weight: 700; }
+  html.b-page-my .b-mytabs__btn { height: 32px; font-size: var(--m-fs-caption); }
+  html.b-page-my .b-mylist__name { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
+  html.b-page-my :is(.b-mylist__date, .b-mylist__xp) { font-size: var(--m-fs-caption); }
+  html.b-page-my .b-mylist__score { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
+  html.b-page-my .b-mylist__no { font-family: var(--font-kr); font-size: var(--m-fs-caption); }
+  html.b-page-my .b-pb__tile dd { font-family: var(--font-kr); font-weight: 700; font-size: 20px; }
+
+  /* =========================================================
+     HOME — 시작 버튼도 같은 콘텐츠 선 (캐러셀은 화면 끝까지)
+     ========================================================= */
+  html.b-page-home .b-cta { width: var(--m-cw); max-width: none; }
+  html.b-page-home .b-intro { padding: 0 var(--m-side); }
+  html.b-page-home .b-main { padding-bottom: calc(16px + var(--m-safe-b)); }
+}
+/* 랭킹 상태 칩: 최소 글자 11 (모바일 캡션 위계) */
+@media (max-width: 1023px) {
+  html.b-page-rank :is(.b-rk__chip, .b-rchip), html.b-page-rank .b-rk__row .b-rrow__combo .b-rchip, html.b-page-rank .b-rk__row .b-rchip { font-size: var(--m-fs-label); }
+}
