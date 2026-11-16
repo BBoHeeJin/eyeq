@@ -323,7 +323,11 @@
 
   /* ---------- QUICK PLAY (헤더 버튼 · 모바일 메뉴) ----------
      프로필(캐릭터·닉네임)이 있으면 바로 시작, 없으면 메인의 캐릭터 선택·닉네임 설정 후 이어서 시작 */
+  var quickStarting = false;                        // 여러 번 눌러도 한 번만 이동 (판 중복 생성 → 서버 제한 대기 방지)
+  w.addEventListener("pageshow", function (e) { if (e.persisted) quickStarting = false; });
   function startQuick() {
+    if (quickStarting) return;
+    quickStarting = true;
     set("session", KEY.stage, "quick");
     remove("session", KEY.run);
     remove("session", KEY.result);

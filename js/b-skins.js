@@ -235,9 +235,10 @@
   /* 다른 탭에서 바뀌면 헤더 갱신 */
   w.addEventListener("storage", function (e) { if (e.key === E.KEY.points || e.key === E.KEY.owned || e.key === E.KEY.character) { E.renderHeader(); emit(); } });
   E.renderPoints();
+  /* 처음 방문·닉네임 설정 직후처럼 익명 로그인이 늦게 끝나면, 연결된 뒤 한 번 더 지갑을 불러 헤더 포인트를 채움
+     (이미 로그인 세션이 있어 첫 요청을 보냈다면 같은 요청을 다시 보내지 않음 — 페이지마다 중복 요청 제거) */
+  var walletAfterLogin = hasSession();
   refresh();
-  /* 처음 방문·닉네임 설정 직후처럼 익명 로그인이 늦게 끝나면, 연결된 뒤 한 번 더 지갑을 불러 헤더 포인트를 채움 */
-  var walletAfterLogin = false;
   w.addEventListener("eyeq:online", function (e) {
     if (e.detail === "online" && !walletAfterLogin && (state.available !== false)) { walletAfterLogin = true; refresh(); }
   });

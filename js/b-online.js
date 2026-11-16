@@ -162,14 +162,22 @@
   }
 
   /* 게임 서버 미리 깨우기: 홈·게임 선택 화면에서 1분에 한 번 가벼운 요청 (계정·기록 생성 없음) */
-  (function warm() {
+  /* + 시작 버튼(PLAY NOW · QUICK PLAY)에 손이 가는 순간 한 번 더(20초에 한 번) → 오래 머문 뒤 눌러도 서버가 깨어 있게 */
+  function warm(gap) {
     if (!enabled) return;
-    var f = (w.location.pathname.split("/").pop() || "index.html");
-    if (!/^(index|stage)\.html$|^$/.test(f)) return;
     var last = Number(E.get("session", "eyeq.b.warm") || 0);
-    if (Date.now() - last < 60000) return;
+    if (Date.now() - last < gap) return;
     E.set("session", "eyeq.b.warm", String(Date.now()));
     try { w.fetch(URL_ + "/functions/v1/eyeq-game", { method: "OPTIONS", mode: "cors", cache: "no-store" }).catch(function () {}); } catch (e) { /* 무시 */ }
+  }
+  (function () {
+    var f = (w.location.pathname.split("/").pop() || "index.html");
+    if (/^(index|stage)\.html$|^$/.test(f)) warm(60000);
+    ["pointerenter", "touchstart", "focusin"].forEach(function (ev) {
+      w.document.addEventListener(ev, function (e) {
+        if (e.target && e.target.closest && e.target.closest("[data-play], [data-quick]")) warm(20000);
+      }, { capture: true, passive: true });
+    });
   })();
 
   E.online = {

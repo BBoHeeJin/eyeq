@@ -41,6 +41,22 @@
     return out + "</span>";
   }
 
+  /* ---------- 진행 상태 (모바일 카드 칩) — 기존 플레이 기록에서 읽기만 함 ----------
+     스테이지 최고 정답 수 기준: 3/3 = CLEAR · 그 외 = BEST n/3 · 기록 없음 = 표시 안 함 */
+  var BEST = {};
+  try {
+    (E.getHistory ? E.getHistory() : []).forEach(function (r) {
+      if (!r || r.mode === "quick" || !r.stage || typeof r.correct !== "number") return;
+      var b = BEST[r.stage];
+      if (!b || r.correct > b.correct) BEST[r.stage] = { correct: r.correct, total: r.total || 3 };
+    });
+  } catch (e) { /* 기록 없음 */ }
+  function stateText(id) {
+    var b = BEST[id];
+    if (!b) return "";
+    return b.correct >= b.total ? '<span class="b-scard__state-in is-clear">CLEAR</span>' : '<span class="b-scard__state-k">BEST </span>' + b.correct + "/" + b.total;
+  }
+
   /* ---------- Stage Cards ---------- */
   var cards = document.querySelectorAll(".b-scard");
   Array.prototype.forEach.call(cards, function (el) {
@@ -53,7 +69,8 @@
     el.innerHTML =
       '<span class="b-scard__no">' + s.no + "</span>" + iconHTML(s.id) +
       '<span class="b-scard__name">' + s.name + "</span>" +
-      '<span class="b-scard__desc">' + s.desc + "</span>" + foot;
+      '<span class="b-scard__desc">' + s.desc + "</span>" + foot +
+      '<span class="b-scard__state" aria-hidden="true">' + stateText(s.id) + "</span>";   /* 모바일 진행 상태 칩 (PC 숨김 · 읽기 전용) */
     el.setAttribute("aria-label", "STAGE " + s.no + " " + s.name + ", " + s.desc + (s.playable ? "" : " (준비 중)"));
     el.addEventListener("click", function () { select(s.id); });
   });
@@ -83,10 +100,15 @@
   }
 
   /* PLAY NOW → 새 게임 시작 (진행 중이던 기록 초기화) */
-  btnPlay.addEventListener("click", function () {
+  /* 여러 번 눌러도 한 번만 시작 (두 번째 이동이 판을 또 만들면 서버 연속 생성 제한에 걸려 시작이 2초 이상 늦어짐) */
+  var starting = false;
+  btnPlay.addEventListener("click", function (e) {
+    if (starting) { e.preventDefault(); return; }
+    starting = true;
     E.remove("session", E.KEY.run);
     E.remove("session", E.KEY.result);
   });
+  window.addEventListener("pageshow", function (e) { if (e.persisted) starting = false; });   // 뒤로 가기로 돌아오면 다시 시작 가능
 
   /* COMING SOON → 팝업 */
   btnSoon.addEventListener("click", function () {

@@ -69,8 +69,128 @@
   function online() { return !!(st.online && !st.online.lost); }
   function offline() { return !online(); }
   var loading = false, busy = false;               // 서버 응답 대기 중 = 카드 잠금
+  var gated = false;                               // 시작 로딩 화면이 떠 있는 동안 = 입력 · 타이머 막기
   var booting = false;                             // 첫 문제(또는 복원 문제) 받기 전 = 카드 숨김
   if (!isNew || !(OL && OL.canPlayOnline())) save();
+
+  /* ---------- 게임 시작 로딩 화면 (새 판만 · 새로고침 복원은 서버 시간이 이미 흐르고 있어 바로 이어서) ----------
+     진행률 = 실제 준비 단계의 완료 비율: 화면 리소스(글꼴 · 이미지 디코딩) · 판 만들기(서버) · 연결 확인(지연 측정)
+     진행 중인 단계 안에서는 다음 경계의 85%까지만 천천히 차오름(멈춘 것처럼 보이지 않게) → 모두 끝나야 100% → 완료 반응 → 닫힘
+     닫히기 전에는 입력 · 타이머 · 문제 발급(serve = 서버 시간 측정 시작) 모두 대기 */
+  var goOnline = isNew && OL && OL.canPlayOnline();
+  var loader = isNew ? createLoader(goOnline) : null;
+  var opened = goOnline ? openSession() : null;    // 판 만들기 요청은 화면 구성보다 먼저 출발 (대기 시간 단축)
+  function openSession() {
+    var mode = QUICK ? "quick" : "stage";
+    return loader.run("session", OL.startGame(mode, STAGE.id).catch(function (err) {
+      if (err && err.status === 429) return new Promise(function (r) { setTimeout(r, 2100); }).then(function () { return OL.startGame(mode, STAGE.id); });
+      throw err;
+    }));
+  }
+  function noop() {}
+  function prepareResources() {
+    var jobs = [];
+    if (document.fonts && document.fonts.load) {
+      ["700 32px Inter", "800 20px Inter", '500 16px "Noto Sans KR"', '700 16px "Noto Sans KR"'].forEach(function (f) {
+        jobs.push(document.fonts.load(f, "EYEQ 가나다 0123456789").catch(noop));
+      });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll(".b-bg img, .b-header img, [data-game] img"), function (img) {
+      if (img.decode && img.getAttribute("src")) jobs.push(img.decode().catch(noop));
+    });
+    return Promise.race([Promise.all(jobs), new Promise(function (r) { setTimeout(r, 4000); })]);   // 느린 글꼴 서버 등으로 무한 대기하지 않게
+  }
+  function createLoader(withServer) {
+    var tasks = withServer
+      ? [{ id: "res", w: 0.2, msg: "화면을 준비하고 있어요" }, { id: "session", w: 0.6, msg: "문제를 준비하고 있어요" }, { id: "ping", w: 0.2, msg: "서버 연결을 확인하고 있어요" }]
+      : [{ id: "res", w: 1, msg: "화면을 준비하고 있어요" }];
+    var byId = {};
+    tasks.forEach(function (t, i) { t.no = i + 1; t.t0 = 0; t.done = false; byId[t.id] = t; });
+    var el = document.createElement("div");
+    el.className = "b-load";
+    el.innerHTML =
+      '<div class="b-load__box">' +
+        '<div class="b-load__track" role="progressbar" aria-label="게임 준비" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">' +
+          '<span class="b-load__fill"></span>' +
+          '<span class="b-load__rider"><span class="b-load__hop"><img class="b-load__char" alt="" /></span></span>' +
+        "</div>" +
+        '<p class="b-load__msg" role="status" aria-live="polite">게임을 준비하고 있어요</p>' +   // 안내 문구 = 바 아래
+        '<p class="b-load__step"></p>' +
+        '<p class="b-load__slow" hidden>연결이 평소보다 느려요. 잠시만 기다려 주세요.<br />계속 응답이 없으면 오프라인 플레이로 시작해요.</p>' +
+      "</div>";
+    document.body.appendChild(el);
+    var msgEl = el.querySelector(".b-load__msg"), stepEl = el.querySelector(".b-load__step"), slowEl = el.querySelector(".b-load__slow");
+    var track = el.querySelector(".b-load__track"), img = el.querySelector(".b-load__char");
+    img.addEventListener("load", function () { el.classList.add("has-char"); });
+    img.src = E.charImg(E.getCharacter());                                   // 헤더 캐릭터와 같은 파일 (추가 다운로드 없음)
+    /* 로딩 중에는 뒤 화면 조작 불가 (키보드 포커스 포함) */
+    var inerted = [];
+    Array.prototype.forEach.call(document.body.children, function (c) {
+      if (c !== el && c.tagName !== "SCRIPT" && !c.inert) { c.inert = true; inerted.push(c); }
+    });
+    gated = true;
+    var shown = 0, lastMsg = "", lastStep = "", done = null, finishP = null, failed = false, raf2 = 0;
+    var slowT = setTimeout(function () { if (!finishP) slowEl.hidden = false; }, 6000);
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function target() {
+      var p = 0, now = Date.now();
+      tasks.forEach(function (t) {
+        if (t.done) p += t.w;
+        else if (t.t0) p += t.w * 0.85 * (1 - Math.exp(-(now - t.t0) / 1600));
+      });
+      return Math.min(1, p);
+    }
+    var lastTs = 0;
+    function frame(ts) {
+      var dt = lastTs ? Math.min(100, ts - lastTs) : 16;
+      lastTs = ts;
+      var tg = target();
+      if (done) shown = Math.min(1, shown + dt / 160);                        // 준비 끝 → 0.16초 안에 100%
+      else if (tg > shown) shown = tg - shown < 0.003 ? tg : shown + (tg - shown) * (1 - Math.exp(-dt / 110));   // 부드럽게 · 뒤로 가지 않음
+      el.style.setProperty("--p", shown.toFixed(4));
+      track.setAttribute("aria-valuenow", String(Math.round(shown * 100)));
+      var cur = null;
+      for (var i = 0; i < tasks.length; i++) if (!tasks[i].done) { cur = tasks[i]; break; }
+      var m = failed ? "오프라인 플레이로 시작해요" : cur ? cur.msg : "거의 다 됐어요";
+      if (m !== lastMsg) { msgEl.textContent = m; lastMsg = m; }
+      var sp = tasks.length > 1 && cur ? cur.no + " / " + tasks.length + " 단계" : "";
+      if (sp !== lastStep) { stepEl.textContent = sp; lastStep = sp; }
+      if (done && shown >= 0.999) { complete(); return; }
+      raf2 = requestAnimationFrame(frame);
+    }
+    function complete() {
+      clearTimeout(slowT);
+      slowEl.hidden = true;
+      el.style.setProperty("--p", "1");
+      track.setAttribute("aria-valuenow", "100");
+      if (!failed) { msgEl.textContent = "준비 완료!"; stepEl.textContent = ""; }
+      el.classList.add("is-done");                                            // 완료 반응 (캐릭터 점프 · 바 빛남)
+      setTimeout(function () {
+        el.classList.add("is-out");
+        inerted.forEach(function (c) { c.inert = false; });
+        gated = false;
+        done();                                                               // 게임 화면이 드러나는 순간부터 다음 단계(카운트다운 · 문제 발급)
+        setTimeout(function () { el.remove(); }, 300);
+      }, reduce ? 120 : 400);
+    }
+    raf2 = requestAnimationFrame(frame);
+    return {
+      run: function (id, promise) {
+        var t = byId[id];
+        if (!t) return promise;
+        t.t0 = Date.now();
+        return promise.then(function (v) { t.done = true; return v; }, function (e) { t.done = true; throw e; });
+      },
+      /* 모든 준비가 끝났을 때 한 번만 (두 번 불러도 같은 약속) */
+      finish: function (fail) {
+        if (finishP) return finishP;
+        failed = !!fail;
+        tasks.forEach(function (t) { t.done = true; });
+        finishP = new Promise(function (res) { done = res; });
+        return finishP;
+      }
+    };
+  }
 
   /* ---------- 요소 ---------- */
   var $ = function (s) { return document.querySelector(s); };
@@ -138,8 +258,8 @@
   function remaining() { return st.deadline ? Math.max(0, st.deadline - Date.now()) : Math.max(0, st.timeLeft); }
   function drawTimer() {
     var ms = remaining();
-    var s = Math.ceil(ms / 100) / 10;                                     // 10.0s → 09.9s → … → 00.0s
-    timerText.textContent = (s < 10 ? "0" : "") + s.toFixed(1) + "s";
+    var s = Math.ceil(ms / 100) / 10;                                     // 10.0s → 9.9s → … → 0.0s (앞자리 0 없음 · 숫자 폭 고정 = tabular-nums)
+    timerText.textContent = s.toFixed(1) + "s";
     timerEl.style.setProperty("--t", (ms / TIME).toFixed(4));
     timerEl.classList.toggle("is-warn", ms <= WARN);
   }
@@ -150,7 +270,7 @@
     drawTimer();
     raf = requestAnimationFrame(tick);
   }
-  function startTimer() { st.timeLeft = TIME; st.deadline = Date.now() + TIME; save(); tick(); }
+  function startTimer() { st.timeLeft = TIME; st.deadline = Date.now() + TIME; save(); tick(); preloadFaces(); }
   function stopTimer() { st.timeLeft = remaining(); st.deadline = null; cancelAnimationFrame(raf); }
   /* 플레이 가능한 상태(판정 전)가 되면 시작 · 이미 진행 중이면 이어서 · 피드백 중이면 멈춘 시간 표시 */
   function syncTimer() {
@@ -254,7 +374,14 @@
     fitTexts();
   }
 
-  ["happy", "sad"].forEach(function (m) { new Image().src = E.charImg(E.getCharacter(), m); });   // 피드백 표정 미리 불러오기 (판정 순간 깜빡임 방지)
+  /* 피드백 표정 미리 불러오기 (판정 순간 깜빡임 방지) — 시작 직후 서버 요청과 대역폭을 다투지 않도록 첫 문제가 보인 뒤 한가할 때 */
+  var facesLoaded = false;
+  function preloadFaces() {
+    if (facesLoaded) return;
+    facesLoaded = true;
+    var go = function () { ["happy", "sad"].forEach(function (m) { new Image().src = E.charImg(E.getCharacter(), m); }); };
+    if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 300);
+  }
   function renderFeedback(animate) {
     var last = st.last || { correct: true, combo: 1, xp: 30 };
     var type = !last.correct ? "wrong" : last.combo >= 3 ? "combo3" : last.combo === 2 ? "combo2" : "correct";
@@ -281,7 +408,7 @@
   /* ---------- 동작 ---------- */
   /* 카드 클릭 = 즉시 판정 (판정 후에는 잠금) */
   function pick(L) {
-    if (st.phase !== "default" || !st.ready || loading || busy) return;
+    if (st.phase !== "default" || !st.ready || loading || busy || gated) return;   // gated = 시작 로딩 화면 표시 중
     if (st.deadline && remaining() <= 0) { timeout(); return; }            // 마감 직후 클릭 = 시간 초과
     stopTimer();
     drawTimer();                                                            // 누른 순간의 시간으로 멈춤
@@ -294,7 +421,7 @@
     stopTimer();
     st.timeLeft = 0;
     st.selected = null;
-    drawTimer();                                                            // 00.0s 로 멈춤
+    drawTimer();                                                            // 0.0s 로 멈춤
     if (online()) judgeOnline(null); else resolve(false, true);
   }
 
@@ -554,23 +681,23 @@
     if (st.ready) syncTimer(); else drawTimer();
     live.textContent = "서버에 연결할 수 없어 오프라인 플레이로 전환했어요. 랭킹에는 반영되지 않아요.";
   }
-  /* 새 온라인 판: 서버가 문제를 만들고(정답은 서버에만) → 왕복 시간 측정 → 첫 문제 발급 */
-  function startOnline(beforeServe) {
+  /* 새 온라인 판: 서버가 문제를 만들고(정답은 서버에만) → 왕복 시간 측정 → (로딩 화면 닫힘) → 첫 문제 발급
+     - opened: 판 만들기 요청 (스크립트 맨 앞에서 이미 출발 · 아래 kickoff)
+     - gate(): 로딩 화면 마무리 + QUICK 카운트다운 → 끝난 뒤에야 serve (서버 시간 측정은 serve 순간부터라 화면이 보이기 전에는 요청하지 않음) */
+  function startOnline(opened, resources, gate) {
     loading = true;
-    var mode = QUICK ? "quick" : "stage";
-    var opened = OL.startGame(mode, STAGE.id).catch(function (err) {
-      if (err && err.status === 429) return new Promise(function (r) { setTimeout(r, 2100); }).then(function () { return OL.startGame(mode, STAGE.id); });
-      throw err;
-    }).then(function (r) {
+    var session = opened.then(function (r) {
       if (!r || !r.session_id || r.n !== N) throw new Error("start");
       st.online = { sid: r.session_id, idx: -1, att: 0, lost: false };
       st.questions = [];
       for (var i = 0; i < N; i++) st.questions.push(null);
       save();
-      return OL.ping(r.session_id).catch(function () { /* 측정 실패 = 보정 없음 */ });   // 지연 측정 1회 (시작 대기 줄이기)
+      return loader.run("ping", OL.ping(r.session_id).catch(function () { /* 측정 실패 = 보정 없음 */ }));   // 지연 측정 1회
     });
-    return Promise.all([opened, beforeServe]).then(fetchQuestion, function () {
-      return Promise.resolve(beforeServe).then(function () { st.online = null; save(); loading = false; booting = false; render(false); if (st.ready) syncTimer(); });
+    return Promise.all([session, resources]).then(function () {
+      return gate(false).then(fetchQuestion);
+    }, function () {
+      return gate(true).then(function () { st.online = null; save(); loading = false; booting = false; render(false); syncTimer(); });
     });
   }
 
@@ -600,15 +727,18 @@
     })();
   }
 
-  var goOnline = isNew && OL && OL.canPlayOnline();
   if (goOnline) loading = booting = true;
   render(false);
-  if (goOnline) {
-    drawTimer();
-    var ready = st.ready ? null : new Promise(function (res) {               // QUICK: 카운트다운과 서버 준비를 동시에
-      countdown(function () { st.ready = true; save(); res(); });
-    });
-    startOnline(ready);
+  /* QUICK PLAY 카운트다운은 로딩 화면이 닫힌 뒤 (처음 한 번) */
+  function readyGate() {
+    return st.ready ? Promise.resolve() : new Promise(function (res) { countdown(function () { st.ready = true; save(); res(); }); });
+  }
+  if (isNew) {
+    drawTimer();                                                            // 처음 제한 시간으로 대기 (로딩 중 타이머 정지)
+    var resources = loader.run("res", prepareResources());
+    var gate = function (fail) { return resources.then(function () { return loader.finish(fail); }).then(readyGate); };
+    if (goOnline) startOnline(opened, resources, gate);
+    else gate(false).then(function () { render(false); syncTimer(); });
   } else if (online()) {
     if (st.phase === "default") booting = true;                             // 서버 남은 시간 확인 전에는 문제 숨김
     render(false);
