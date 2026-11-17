@@ -829,3 +829,71 @@
   .b-load__hop, .b-load.is-done .b-load__hop, .b-load.is-done .b-load__rider::after { animation: none; }
   .b-load { transition: none; }
 }
+
+/* =========================================================
+   가독성 · UX 개선 (문제 유형 → 문제 제목 → 선택지 → 타이머·진행)
+   PC: 위 줄 = 왼쪽 진행 바 · 가운데 문제 유형 배지 · 오른쪽 작은 타이머 / 그 아래 가운데 제목(한 문장) / 선택지
+   설명 문장은 제목 한 문장으로 합침 → 화면에서는 숨기고 스크린리더에만 (판단 기준 원문 유지)
+   ========================================================= */
+.b-game .b-gtitle__desc {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* 제목 (가운데 · 한 문장) — 문제 유형 배지는 없앰 · 위 줄은 QUICK/오프라인 안내가 있을 때만 */
+.b-gtitle { top: calc(124 * var(--k) + var(--ex) * 0.3); display: flex; flex-direction: column; align-items: center; }
+.b-gtitle__top { position: absolute; left: 0; right: 0; bottom: 100%; display: flex; justify-content: center; margin: 0 0 calc(8 * var(--k)); }
+.b-gtitle__top:empty { display: none; }
+.b-gtitle__top .b-gtitle__mode { position: static; margin: 0; font-size: max(10px, calc(13 * var(--k))); }
+
+/* 진행 바 = 왼쪽 위 · 타이머 = 오른쪽 위 (작게 · 제목보다 약하게) — PC 좌표 (모바일은 b-mobile.css 흐름 배치) */
+@media (min-width: 1024px) {
+.b-progress { left: var(--gl); right: auto; top: calc(54 * var(--k) + var(--ex) * 0.3); }
+.b-timer {
+  left: auto;
+  right: var(--gr);
+  top: calc(50 * var(--k) + var(--ex) * 0.3);
+  width: calc(300 * var(--k));
+  height: calc(64 * var(--k));
+  padding: calc(11 * var(--k)) calc(20 * var(--k)) calc(13 * var(--k));
+  border-radius: calc(18 * var(--k));
+  border-color: rgba(88, 103, 216, 0.28);
+  box-shadow: 0 calc(6 * var(--k)) calc(12 * var(--k)) 0 rgba(3, 4, 26, 0.3);
+}
+.b-timer__row { gap: calc(10 * var(--k)); }
+.b-timer__icon { width: calc(22 * var(--k)); height: calc(22 * var(--k)); }
+.b-timer__time { font-size: calc(24 * var(--k)); min-width: 2.6em; transition: color 250ms ease-out; }
+.b-timer__bar { height: calc(6 * var(--k)); border-radius: calc(3 * var(--k)); }
+}
+.b-timer__fill { transition: background 250ms ease-out; }
+.b-timer__read {
+  display: none;
+  font-family: var(--font-kr);
+  font-weight: 500;
+  font-size: max(12px, calc(15 * var(--k)));
+  color: #cfc6ff;
+  white-space: nowrap;
+}
+/* 문제 확인(읽기) 단계: 보라 계열 · 숫자 3 → 2 → 1 · 바 = 남은 읽기 시간 */
+.b-timer.is-read .b-timer__read { display: inline; }
+.b-timer.is-read .b-timer__time { min-width: 0; color: #c3b4ff; }
+.b-timer.is-read .b-timer__icon { color: #a68bff; }
+.b-timer.is-read .b-timer__fill { background: linear-gradient(90deg, #8a6cff 0%, #b79dff 100%); }
+
+/* 선택지: 읽기 단계 = 흐리게 + 클릭 막기 → 풀이 시작 시 또렷하게 (위치 변화 없음) */
+.b-ans__badge { transition: opacity 250ms ease-out, box-shadow 250ms ease-out; }
+.b-ans { transition: transform 200ms ease-out, opacity 200ms ease-out, border-color 250ms ease-out; }
+/* 읽는 3초 = 선택지 · 아래 버튼을 흐리게 (문제 제목만 또렷하게) — 카드 전체를 같은 비율로 흐리게 해서 카드끼리의 차이는 그대로 */
+.b-answers.is-reading .b-ans { cursor: not-allowed; opacity: 0.32; }
+.b-game:has(.b-answers.is-reading) .b-gactions { opacity: 0.32; }   /* 흐리게만 (← 이전 문제는 그대로 누를 수 있음) */
+.b-gactions { transition: opacity 250ms ease-out; }
+.b-answers.is-go .b-ans__badge { animation: b-ans-go 460ms ease-out; }
+@keyframes b-ans-go {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(100, 104, 244, 0); }
+  45% { transform: scale(1.18); box-shadow: 0 0 calc(14 * var(--k)) 0 rgba(120, 130, 255, 0.85); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(100, 104, 244, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .b-answers.is-go .b-ans__badge { animation: none; } }
