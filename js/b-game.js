@@ -31,6 +31,10 @@
   var TIME = 10000;                // 문제당 제한 시간 (ms) — 온라인 판은 서버가 알려 주는 값(limit_ms)을 그대로 사용
   var WARN = 3000;                 // 남은 시간 경고 색 (10초 → 3초 이하 · 5초 → 2초 이하)
   function setLimit(ms) { TIME = ms > 0 ? ms : TIME; WARN = TIME >= 10000 ? 3000 : 2000; }
+  /* 문제 확인(읽기) 단계: 새 문제마다 먼저 3초 동안 문제·보기만 보여 주고(선택 불가) → 끝나면 제한 시간 시작
+     오프라인 = 브라우저가 3초 · 온라인 = 서버가 알려 주는 read_ms (서버가 측정 시작 시각을 그만큼 뒤로 미룸 → 읽는 시간은 기록에서 빠짐)
+     서버에 읽기 단계가 아직 없으면(read_ms 없음) 온라인 판은 기존처럼 바로 시작 (서버 시간과 어긋나지 않게) */
+  var READ = 3000;
 
   /* ---------- 상태 ---------- */
   function fresh() {
@@ -206,6 +210,8 @@
   var live = $("[data-live]");
   var timerEl = $("[data-timer]");
   var timerText = $("[data-timer-text]");
+  var timerRead = $("[data-timer-read]");
+  var titleTop = $(".b-gtitle__top");
   var back = $(".b-back");
   var insight = $("[data-insight]");
   var canvas = $(".b-canvas");
@@ -215,7 +221,7 @@
      모드 줄(QUICK 분야 · 오프라인 표시)은 필요할 때만 생성 → 온라인 스테이지 판은 기존 화면 그대로 */
   var modeEl = null;
   function modeText(m) {
-    var t = QUICK && m ? "QUICK PLAY · " + E.stages.get(m.stage).name.toUpperCase() : QUICK ? "QUICK PLAY" : "";
+    var t = QUICK ? "QUICK PLAY" : "";                                       // 분야는 문제 유형 배지에 표시
     var off = st.online && st.online.lost ? "오프라인 전환 · 일부 랭킹 미반영"      // 온라인 판 도중 연결 끊김
             : offline() && !loading ? "오프라인 플레이 · 랭킹 미반영" : "";
     return t + (off ? (t ? " · " : "") + off : "");
@@ -225,7 +231,7 @@
     if (t && !modeEl) {
       modeEl = document.createElement("p");
       modeEl.className = "b-gtitle__mode";
-      title.insertBefore(modeEl, titleH);
+      titleTop.appendChild(modeEl);                                         // 배지 옆 작은 글씨 (제목 위치 그대로)
     }
     if (modeEl) { modeEl.textContent = t; modeEl.hidden = !t; }
   }
@@ -255,28 +261,64 @@
 
   /* ---------- 타이머 (마감 시각 기준 → 새로고침해도 남은 시간 유지) ---------- */
   var raf = 0;
-  function remaining() { return st.deadline ? Math.max(0, st.deadline - Date.now()) : Math.max(0, st.timeLeft); }
+  /* 마감 시각(deadline) = 읽기 끝 시각(readUntil) + 제한 시간 → 새로고침·뒤로 가기 복귀에도 같은 단계 · 같은 시간 */
+  function remaining() { return st.deadline ? Math.max(0, Math.min(TIME, st.deadline - Date.now())) : Math.max(0, Math.min(TIME, st.timeLeft)); }
+  function readLeft() { return st.phase === "default" && st.deadline && st.readUntil ? Math.max(0, st.readUntil - Date.now()) : 0; }
+  function reading() { return readLeft() > 0; }
+  var wasReading = null;
   function drawTimer() {
-    var ms = remaining();
-    var s = Math.ceil(ms / 100) / 10;                                     // 10.0s → 9.9s → … → 0.0s (앞자리 0 없음 · 숫자 폭 고정 = tabular-nums)
-    timerText.textContent = s.toFixed(1) + "s";
-    timerEl.style.setProperty("--t", (ms / TIME).toFixed(4));
-    timerEl.classList.toggle("is-warn", ms <= WARN);
+    var r = readLeft();
+    if (r > 0) {                                                            // 문제 확인: 3 → 2 → 1 (풀이 시간 차감 없음)
+      timerText.textContent = String(Math.ceil(r / 1000));
+      timerEl.style.setProperty("--t", (r / Math.max(1, st.readMs || READ)).toFixed(4));
+      timerEl.classList.remove("is-warn");
+    } else {
+      var ms = remaining();
+      var s = Math.ceil(ms / 100) / 10;                                   // 10.0s → 9.9s → … → 0.0s (앞자리 0 없음 · 숫자 폭 고정 = tabular-nums)
+      timerText.textContent = s.toFixed(1) + "s";
+      timerEl.style.setProperty("--t", (ms / TIME).toFixed(4));
+      timerEl.classList.toggle("is-warn", ms <= WARN);
+    }
+    setReading(r > 0);
+  }
+  /* 단계 전환 (읽기 ↔ 풀이): 위치 변화 없이 색 · 글자만 부드럽게 바뀜 */
+  function setReading(on) {
+    if (on === wasReading) return;
+    var first = wasReading === null;
+    wasReading = on;
+    timerEl.classList.toggle("is-read", on);
+    answers.classList.toggle("is-reading", on);
+    timerEl.setAttribute("aria-label", on ? "문제 확인 시간" : "남은 시간");
+    applyLock();
+    if (!first && !on && st.phase === "default") {
+      answers.classList.remove("is-go"); void answers.offsetWidth; answers.classList.add("is-go");   // 풀이 시작 신호 (짧게)
+      live.textContent = "문제 풀이를 시작하세요.";
+    } else if (on) live.textContent = "문제를 읽어보세요. " + Math.ceil(readLeft() / 1000) + "초 뒤에 선택할 수 있어요.";
   }
   function tick() {
     cancelAnimationFrame(raf);
     if (!st.deadline || st.phase !== "default") { drawTimer(); return; }
-    if (remaining() <= 0) { timeout(); return; }
+    if (!reading() && remaining() <= 0) { timeout(); return; }
     drawTimer();
     raf = requestAnimationFrame(tick);
   }
-  function startTimer() { st.timeLeft = TIME; st.deadline = Date.now() + TIME; save(); tick(); preloadFaces(); }
-  function stopTimer() { st.timeLeft = remaining(); st.deadline = null; cancelAnimationFrame(raf); }
+  /* 새 문제(오프라인): 읽기 3초 → 제한 시간. 온라인 문제는 applyServed 가 서버 값으로 정함 */
+  function startTimer() {
+    var now = Date.now();
+    st.readMs = READ;
+    st.readUntil = now + READ;
+    st.timeLeft = TIME;
+    st.deadline = st.readUntil + TIME;
+    save(); tick(); preloadFaces();
+  }
+  function stopTimer() { st.timeLeft = remaining(); st.deadline = null; st.readUntil = null; cancelAnimationFrame(raf); }
   /* 플레이 가능한 상태(판정 전)가 되면 시작 · 이미 진행 중이면 이어서 · 피드백 중이면 멈춘 시간 표시 */
   function syncTimer() {
     if (st.phase === "default") { if (st.deadline) tick(); else startTimer(); }
     else { cancelAnimationFrame(raf); drawTimer(); }
   }
+  /* 페이지를 떠날 때 타이머 정리 (뒤로 가기 캐시 복귀 시 pageshow 에서 다시 이어짐) */
+  window.addEventListener("pagehide", function () { cancelAnimationFrame(raf); });
 
   /* ---------- 긴 제목·설명 맞춤: 한 줄을 넘으면 글자 크기만 비례 축소 (모바일 좌우 20 · PC 가운데 영역) ---------- */
   function textWidth(el) {
@@ -293,8 +335,8 @@
   function fitTexts() {
     var compact = mqCompact.matches;
     var k = canvas.getBoundingClientRect().width / (compact ? 390 : 1920);
-    var max = (compact ? 350 : 820) * k;
-    fit(titleH, max); fit(desc, max); fit(insight, max);
+    var max = (compact ? 350 : 1400) * k;                                   // PC: 제목이 가운데 줄 전체 사용 (타이머·진행 바는 위 줄)
+    fit(titleH, max); fit(insight, max);
     if (modeEl && !modeEl.hidden) fit(modeEl, max);                       // 안내 줄이 길면 글자 크기만 축소 (한 줄 유지)
   }
   var fitTimer = 0;
@@ -304,11 +346,19 @@
   function descOf(m) { var T = m && m.tid && Q.template(m.tid); return (T && T.desc) || (m && m.desc) || ""; }
 
   /* ---------- 렌더 ---------- */
+  function isLocked() { return st.phase === "correct" || st.phase === "wrong" || !st.ready || loading || busy || reading(); }
+  /* 잠금만 다시 계산 (카드 내용은 그대로 → 읽기 → 풀이 전환 때 깜빡임 없음) */
+  function applyLock() {
+    var locked = isLocked();
+    answers.classList.toggle("is-locked", locked);
+    Array.prototype.forEach.call(cards, function (el) { if (locked) el.setAttribute("aria-disabled", "true"); else el.removeAttribute("aria-disabled"); });
+  }
   function render(animate) {
     var m = st.questions[st.mission - 1];
     var completed = st.mission === N && st.phase === "correct";
     drawMode(m);
     answers.style.visibility = m && !booting ? "" : "hidden";        // 서버 문제 받기 전: 자리만 유지 (레이아웃 변화 없음)
+    title.style.visibility = m && !booting ? "" : "hidden";
     if (!m) {
       answers.classList.add("is-locked");
       action.disabled = true;
@@ -336,7 +386,8 @@
     em.textContent = t[1];
     titleH.appendChild(em);
     titleH.appendChild(document.createTextNode(t[2]));
-    desc.textContent = T.desc || m.desc;
+    desc.textContent = T.desc || m.desc;                              // 판단 기준 설명 = 스크린리더용 (화면은 제목 한 문장)
+
     var why = T.insight || m.insight || "";
     insight.textContent = why;
     insight.hidden = !(st.phase === "correct" && why);                // 정답일 때만 정답 설명 (모든 스테이지·QUICK PLAY 공통)
@@ -347,7 +398,7 @@
     if (showFb) renderFeedback(animate);
 
     // 답안 카드 상태
-    var locked = showFb || !st.ready || loading || busy;             // 준비 카운트다운 · 서버 응답 대기 중 선택 불가
+    var locked = isLocked();                                          // 준비 카운트다운 · 서버 응답 대기 · 문제 확인(읽기) 중 선택 불가
     answers.classList.toggle("is-locked", locked);
     Array.prototype.forEach.call(cards, function (el, i) {
       var L = el.getAttribute("data-letter");
@@ -408,7 +459,7 @@
   /* ---------- 동작 ---------- */
   /* 카드 클릭 = 즉시 판정 (판정 후에는 잠금) */
   function pick(L) {
-    if (st.phase !== "default" || !st.ready || loading || busy || gated) return;   // gated = 시작 로딩 화면 표시 중
+    if (st.phase !== "default" || !st.ready || loading || busy || gated || reading()) return;   // gated = 시작 로딩 화면 · reading = 문제 확인 3초
     if (st.deadline && remaining() <= 0) { timeout(); return; }            // 마감 직후 클릭 = 시간 초과
     stopTimer();
     drawTimer();                                                            // 누른 순간의 시간으로 멈춤
@@ -455,7 +506,8 @@
     }, function (err) {
       busy = false;
       st.judging = null;
-      if (err && err.data && err.data.message === "stale") return resumeOnline();   // 이미 처리된 제출 → 서버 상태로 맞춤
+      var em = err && err.data && err.data.message;
+      if (em === "stale" || em === "too_early") return resumeOnline();      // 이미 처리된 제출 · 서버 읽기 시간 전 제출 → 서버 상태로 맞춤
       goOffline();
     });
   }
@@ -515,7 +567,7 @@
       return true;
     }
     if (st.mission === st.frontier) {                                       // 풀던 문제 보관 (오프라인 = 타이머 멈춤)
-      st.pending = { phase: st.phase, selected: st.selected, last: st.last, attempt: st.attempt, timeLeft: remaining() };
+      st.pending = { phase: st.phase, selected: st.selected, last: st.last, attempt: st.attempt, timeLeft: remaining(), reread: reading() };
       cancelAnimationFrame(raf);
     }
     showReview(st.mission - 1);
@@ -529,7 +581,8 @@
     st.last = P.last;
     st.attempt = P.attempt;
     st.timeLeft = P.timeLeft;
-    st.deadline = P.phase === "default" ? Date.now() + P.timeLeft : null;  // 오프라인만 해당 (온라인은 판정 후에만 다시 보기)
+    st.deadline = P.phase === "default" && !P.reread ? Date.now() + P.timeLeft : null;  // 오프라인만 해당 (온라인은 판정 후에만 다시 보기) · 읽던 중이면 읽기부터 다시
+    st.readUntil = null;
     st.pending = null;
     save();
     render(false);
@@ -629,8 +682,11 @@
     st.phase = "default";
     setLimit(res.limit_ms || 5000);                                           // 서버 제한 시간 (limit_ms 없는 이전 서버 = 5초)
     st.limit = TIME;
+    var rd = Math.max(0, +res.read_ms || 0), now = Date.now();               // 서버 읽기 단계 남은 시간 (없으면 0 = 바로 풀이)
+    st.readMs = +res.read_total_ms || rd || READ;
+    st.readUntil = rd ? now + rd : null;
     st.timeLeft = res.remaining_ms;
-    st.deadline = Date.now() + res.remaining_ms;
+    st.deadline = now + rd + res.remaining_ms;
     loading = false;
     save();
     render(false);

@@ -82,14 +82,17 @@
   var TEMPLATES = {
     typography: [
       { id: "typo-spacing", type: "FIND", render: "typography", prop: "ls", defaults: TYPO_BASE,
+        title: ["", "글자 간격", "이 다른 하나는?"], cat: "자간 구별",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "세 가지 중 글자 간격이 다른 하나를 선택하세요.",
         insight: "글자 간격이 고르면 문장이 한 덩어리로 편하게 읽혀요.",
         values: function (r) { return pool(r, [0.12, 0.13, 0.14, 0.15, 0.16].map(function (x) { return { base: -0.02, odd: x }; })); } },   // 시안 0.14em
       { id: "typo-weight", type: "FIND", render: "typography", prop: "fw", defaults: TYPO_BASE,
+        title: ["", "글자 굵기", "가 다른 하나는?"], cat: "굵기 구별",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "세 가지 중 글자 굵기가 다른 하나를 선택하세요.",
         insight: "같은 크기라도 굵기가 다르면 정보의 무게가 달라져요.",
         values: function (r) { return pool(r, [{ base: 400, odd: 700 }, { base: 700, odd: 400 }]); } },    // 시안 Regular 2 + Bold 1
       { id: "typo-size", type: "FIND", render: "typography", prop: "fs", defaults: TYPO_BASE,
+        title: ["", "글자 크기", "가 다른 하나는?"], cat: "크기 구별",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "세 가지 중 글자 크기가 다른 하나를 선택하세요.",
         insight: "크기가 조금만 달라도 문단의 통일감이 흐트러져요.",
         values: function (r) {                                                                             // 시안 작은 글자 35.5/40
@@ -102,14 +105,14 @@
     /* ---------- STAGE 02 Spacing — 요소 간격 · 안쪽 여백 · 간격의 일관성 (값 = 모바일 px 기준, PC 는 CSS 배율) ---------- */
     spacing: [
       { id: "sp-gap", type: "FIND", render: "sp-noti", prop: "gap", defaults: {},
-        title: ["간격이 ", "다른 하나", "를 찾아라!"],
+        title: ["아이콘과 텍스트 ", "간격", "이 다른 하나는?"], cat: "간격 비교",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "아이콘과 텍스트 사이의 간격이 다른 하나를 선택하세요.",
         insight: "아이콘과 텍스트의 간격이 같으면 목록이 정돈돼 보여요.",
         copy: [["새로운 알림", "새 메시지가 도착했어요"], ["주문 완료", "배송이 곧 시작돼요"], ["예약 확정", "내일 오후 2시에 만나요"],
                ["새 댓글", "내 글에 댓글이 달렸어요"], ["출석 체크", "오늘도 출석했어요"], ["업데이트", "새 기능을 확인해 보세요"]],
         values: function (r) { return pool(r, [{ base: 24, odd: 48 }, { base: 20, odd: 40 }, { base: 16, odd: 32 }, { base: 48, odd: 24 }]); } },
       { id: "sp-padding", type: "PICK", render: "sp-profile", prop: "pad", defaults: {},
-        title: ["여백이 ", "가장 적절한", " 카드는?"],
+        title: ["안쪽 여백이 ", "가장 균형 잡힌", " 카드는?"], cat: "여백 균형",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "테두리 안쪽 여백이 가장 균형 잡힌 카드를 선택하세요.",
         insight: "여백이 사방으로 고르면 카드 속 정보가 또렷해져요.",
         /* 판정 기준(test)은 그대로: 바깥 크기 고정 카드에서 안쪽 여백이 가장 큰 보기 = 위·아래·좌·우 여백 차이가 가장 작은 보기
@@ -119,7 +122,7 @@
         test: function (p, others) { return p.pad > maxOf(others, function (o) { return o.pad; }); },
         values: function (r) { return pool(r, [{ pass: 40, fails: [20, 28] }, { pass: 36, fails: [16, 24] }, { pass: 32, fails: [12, 20] }]); } },
       { id: "sp-rhythm", type: "PICK", render: "sp-chips", prop: "gaps", defaults: {},
-        title: ["간격이 ", "일정한", " 카드는?"],
+        title: ["세 버튼 간격이 ", "모두 같은", " 카드는?"], cat: "간격 일관성",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "세 버튼 사이의 간격이 동일한 카드를 선택하세요.",
         insight: "일정한 간격은 디자인에 안정감과 통일성을 만들어 줘요.",
         copy: [["전체", "인기", "최신"], ["전체", "추천", "할인"], ["오늘", "이번 주", "이번 달"],
@@ -134,21 +137,21 @@
     /* ---------- STAGE 03 Alignment — 리스트 시작선 · 중앙 정렬 · 정렬선 일치 ---------- */
     alignment: [
       { id: "al-list", type: "FIND", render: "al-list", prop: "shift", defaults: {},
-        title: ["정렬이 ", "어긋난 하나", "를 찾아라!"],
+        title: ["텍스트 ", "시작선", "이 다른 카드는?"], cat: "시작선 비교",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "텍스트의 시작선이 다른 카드를 선택하세요.",
         insight: "시작선이 맞으면 목록을 더 빠르게 읽을 수 있어요.",
         copy: [["디자인 기초", "정렬 가이드", "색상 팔레트"], ["공지사항", "이벤트", "자주 묻는 질문"], ["계정 설정", "알림 설정", "개인정보"],
                ["장바구니", "주문 내역", "찜 목록"], ["타이포그래피", "레이아웃", "아이콘"], ["오늘 할 일", "진행 중", "완료"]],
         values: function (r) { return pool(r, [{ base: 0, odd: 20 }, { base: 0, odd: 16 }, { base: 0, odd: 24 }]); } },   // 두 번째 행 텍스트만 오른쪽으로
       { id: "al-center", type: "PICK", render: "al-popup", prop: "sx", defaults: {},
-        title: ["", "가운데 정렬된", " 카드는?"],
+        title: ["콘텐츠가 ", "정확히 가운데", "인 카드는?"], cat: "중앙 정렬",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "콘텐츠가 정확히 중앙에 배치된 카드를 선택하세요.",
         insight: "정확한 중앙 정렬은 팝업에 안정감을 줘요.",
         copy: [["저장 완료!", "확인"], ["전송 완료!", "확인"], ["업로드 완료!", "닫기"], ["결제 완료!", "확인"], ["등록 완료!", "확인"], ["복사 완료!", "닫기"]],
         test: function (p) { return p.sx === 0; },
         values: function (r) { return pool(r, [{ pass: 0, fails: [-24, 24] }, { pass: 0, fails: [-20, 28] }, { pass: 0, fails: [-28, 20] }]); } },
       { id: "al-edge", type: "PICK", render: "al-product", prop: "off", defaults: {},
-        title: ["정렬선이 ", "일치하는", " 카드는?"],
+        title: ["왼쪽 시작선이 ", "모두 일치하는", " 카드는?"], cat: "정렬선 일치",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "상품 정보의 왼쪽 시작선이 모두 일치하는 카드를 선택하세요.",
         insight: "정렬선이 일치하면 정보가 더욱 깔끔하게 전달돼요.",
         copy: [["미니 백팩", "39,000원", "구매하기"], ["캔버스 토트", "29,000원", "담기"], ["라운드 머그", "12,000원", "구매하기"],
@@ -163,14 +166,14 @@
     /* ---------- STAGE 04 Hierarchy — 강조 정보 · 가격 강조 · 제목과 본문 위계 ---------- */
     hierarchy: [
       { id: "hi-emphasis", type: "FIND", render: "hi-event", prop: "emph", defaults: {},
-        title: ["강조된 정보가 ", "다른 하나", "는?"],
+        title: ["", "다른 정보", "가 가장 크게 강조된 카드는?"], cat: "강조 비교",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "다른 정보가 가장 크게 강조된 카드를 선택하세요.",
         insight: "강조할 정보를 하나로 정해야 메시지가 분명해져요.",
         copy: [["SPECIAL EVENT", "50% OFF", "이번 주말까지"], ["SUMMER SALE", "30% OFF", "7월 31일까지"], ["WEEKLY DEAL", "1+1", "오늘 자정까지"],
                ["NEW MEMBER", "20% OFF", "가입 후 7일간"], ["FLASH SALE", "70% OFF", "3시간 한정"], ["HOLIDAY", "FREE GIFT", "이번 달까지"]],
         values: function (r) { return pool(r, [{ base: "off", odd: "date" }, { base: "date", odd: "off" }]); } },
       { id: "hi-price", type: "PICK", render: "hi-price", prop: "price", defaults: {},
-        title: ["가격이 ", "가장 눈에 띄는", " 카드는?"],
+        title: ["", "가격", "이 가장 크게 강조된 카드는?"], cat: "가격 강조",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "가격이 가장 크게 강조된 카드를 선택하세요.",
         insight: "중요한 정보에 시각적 강조를 주면 시선이 집중돼요.",
         copy: [["데일리 스니커즈", "29,900원", "무료배송"], ["린넨 셔츠", "39,900원", "무료배송"], ["무선 이어폰", "89,000원", "당일 출고"],
@@ -182,7 +185,7 @@
                           { pass: { s: 36, w: 700 }, fails: [{ s: 24, w: 400 }, { s: 28, w: 700 }] }]);
         } },
       { id: "hi-heading", type: "PICK", render: "hi-article", prop: "st", defaults: {},
-        title: ["제목이 ", "가장 명확한", " 카드는?"],
+        title: ["제목이 본문보다 ", "크고 굵은", " 카드는?"], cat: "제목 위계",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "제목이 본문보다 크고 굵게 표현된 카드를 선택하세요.",
         insight: "제목과 본문의 차이가 분명할수록 구조가 잘 읽혀요.",
         /* 제목·본문이 글자 크기에 따라 줄바꿈되는 카드 → 원래 문구와 단어 길이가 다르면 줄 수·높이가 바뀜.
@@ -199,7 +202,7 @@
     /* ---------- STAGE 05 Composition — 배너 구성 · 포스터 균형 · 그리드 ---------- */
     composition: [
       { id: "co-banner", type: "FIND", render: "co-banner", prop: "flip", defaults: {},
-        title: ["구성이 ", "다른 하나", "를 찾아라!"],
+        title: ["이미지·텍스트 ", "좌우 배치", "가 다른 카드는?"], cat: "배치 비교",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "이미지와 텍스트의 좌우 배치가 다른 카드를 선택하세요.",
         insight: "배치 방향이 같으면 여러 화면이 하나로 읽혀요.",
         copy: [["NEW", "봄 시즌 컬렉션", "새 스타일을 만나보세요", "자세히 보기"], ["BEST", "여름 인기 아이템", "지금 가장 많이 찾는 상품", "보러 가기"],
@@ -207,7 +210,7 @@
                ["NEW", "데스크 정리 용품", "깔끔한 책상을 만들어요", "둘러보기"], ["PICK", "이번 주 추천", "에디터가 고른 아이템", "자세히 보기"]],
         values: function (r) { return pool(r, [{ base: 0, odd: 1 }, { base: 1, odd: 0 }]); } },   // 0 = 왼쪽 텍스트 · 1 = 왼쪽 이미지
       { id: "co-poster", type: "PICK", render: "co-poster", prop: "sx", defaults: {},
-        title: ["", "중앙에 배치된", " 카드는?"],
+        title: ["전체 콘텐츠가 ", "중앙", "에 놓인 카드는?"], cat: "중앙 배치",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "전체 콘텐츠가 중앙에 배치된 카드를 선택하세요.",
         insight: "균형 잡힌 배치는 콘텐츠를 편안하게 보여줘요.",
         copy: [["DESIGN WEEK", "11.20 — 11.24"], ["ART FAIR", "03.14 — 03.17"], ["PHOTO DAYS", "05.02 — 05.06"],
@@ -215,7 +218,7 @@
         test: function (p) { return p.sx === 0; },
         values: function (r) { return pool(r, [{ pass: 0, fails: [-35, 35] }, { pass: 0, fails: [-30, 40] }, { pass: 0, fails: [-40, 30] }]); } },
       { id: "co-grid", type: "PICK", render: "co-grid", prop: "g", defaults: {},
-        title: ["그리드가 ", "일정한", " 카드는?"],
+        title: ["이미지 ", "크기·간격", "이 일정한 카드는?"], cat: "그리드 일관성",   // 제목 = 할 일 한 문장 · 판단 기준(desc)과 같은 뜻
         desc: "이미지 크기와 간격이 모두 일정한 카드를 선택하세요.",
         insight: "크기와 간격이 일정한 그리드는 질서를 만들어요.",
         test: function (p) { return p.g.last === 48 && p.g.cg === 8; },
@@ -240,6 +243,7 @@
       var inst = { tid: t.id, stage: null, type: t.type, render: t.render, desc: t.desc, options: g.options, answer: g.answer };
       if (g.reference) inst.reference = g.reference;
       if (t.title) inst.title = t.title;                 // 미션 고유 제목 [앞, 강조, 뒤] (없으면 유형 기본 제목)
+      if (t.cat) inst.cat = t.cat;                       // 문제 유형 배지 (예: 자간 구별)
       if (t.insight) inst.insight = t.insight;           // 정답 후 한 줄 인사이트
       if (ci > -1) inst.copy = t.copy[ci].slice();       // 카드 안 문구 (보기 3개 공통)
       inst.variant = t.id + ":" + ci + ":" + (g.v && typeof g.v._n === "number" ? g.v._n : 0);

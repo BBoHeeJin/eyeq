@@ -69,8 +69,7 @@
     el.innerHTML =
       '<span class="b-scard__no">' + s.no + "</span>" + iconHTML(s.id) +
       '<span class="b-scard__name">' + s.name + "</span>" +
-      '<span class="b-scard__desc">' + s.desc + "</span>" + foot +
-      '<span class="b-scard__state" aria-hidden="true">' + stateText(s.id) + "</span>";   /* 모바일 진행 상태 칩 (PC 숨김 · 읽기 전용) */
+      '<span class="b-scard__desc">' + s.desc + "</span>" + foot;   /* 진행 상태 칩(CLEAR · BEST) 삭제 (사용자 요청) */
     el.setAttribute("aria-label", "STAGE " + s.no + " " + s.name + ", " + s.desc + (s.playable ? "" : " (준비 중)"));
     el.addEventListener("click", function () { select(s.id); });
   });
