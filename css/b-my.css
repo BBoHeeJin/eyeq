@@ -785,3 +785,22 @@
   .b-area__kpi { padding: 16px 18px 14px; border-radius: 18px; }
   .b-area__acts .b-modal__btn { flex: 1 1 auto; min-width: 0; }
 }
+
+
+/* ---------- 프로필 '스킨 관리' = 동그란 아이콘 버튼 (2026-11-19) ----------
+   이름·칭호 오른쪽 끝, 이름 줄 높이에 · 보라 원 + 흰 셔츠 아이콘 */
+.b-page-my .b-prof__who { grid-template-columns: minmax(0, 1fr) auto; }
+.b-page-my .b-prof__skin {
+  grid-column: 2; grid-row: 1; align-self: center; justify-self: end;
+  justify-content: center;
+  width: max(44px, calc(60 * var(--k))); height: max(44px, calc(60 * var(--k))); min-height: 0;
+  padding: 0; gap: 0;
+  border-radius: 50%;
+  border: 0;
+  background: linear-gradient(180deg, #7266f2 0%, #5f54e6 100%);
+  box-shadow: 0 calc(6 * var(--k)) calc(16 * var(--k)) rgba(40, 30, 140, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.b-page-my .b-prof__skin .b-ic { width: 46%; height: 46%; min-width: 20px; min-height: 20px; }
+.b-page-my .b-prof__skin:active { transform: scale(0.95); }
+.b-page-my .b-prof__skin:focus-visible { outline: 2px solid #b9b3ff; outline-offset: 3px; }
+@media (min-width: 1024px) { .b-page-my .b-prof__who { width: max(300px, calc(440 * var(--k))); } }

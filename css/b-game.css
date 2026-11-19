@@ -870,7 +870,7 @@
   font-family: var(--font-en);
   font-weight: 900;
   font-style: italic;
-  font-size: max(24px, calc(56 * var(--k)));
+  font-size: max(24px, calc(62 * var(--k)));
   line-height: 1;
   letter-spacing: -0.01em;
   white-space: nowrap;
@@ -885,12 +885,12 @@
 .b-fb__win-xp {
   display: inline-flex;
   align-items: center;
-  height: max(22px, calc(32 * var(--k)));
-  padding: 0 calc(16 * var(--k));
+  height: max(22px, calc(36 * var(--k)));
+  padding: 0 calc(18 * var(--k));
   border-radius: 999px;
   font-family: var(--font-en);
   font-weight: 800;
-  font-size: max(11px, calc(15 * var(--k)));
+  font-size: max(11px, calc(16 * var(--k)));
   letter-spacing: var(--ls-num, 0.02em);
   white-space: nowrap;
   color: #fff;
@@ -906,7 +906,18 @@
   padding: max(16px, calc(34 * var(--k))) max(16px, calc(31 * var(--k)));
   border-radius: calc(24 * var(--k));
 }
-.b-fb:not([data-type="wrong"]) .b-fb__tags { margin-bottom: max(8px, calc(16 * var(--k))); }
+/* 말풍선 위 배지(GREAT! · XP · 다시 도전 성공)는 왼쪽 그룹과 중복 → 정답 피드백에서는 숨김 · 해설만 */
+.b-fb:not([data-type="wrong"]) .b-fb__tags { display: none; }
+/* 캐릭터 · 가운데 리액션 · 말풍선 = 같은 높이(--fbh)로 맞춰 한 줄에 균형 있게 */
+.b-fb:not([data-type="wrong"]) { --fbh: calc(132 * var(--k)); }
+.b-fb:not([data-type="wrong"]) .b-fb__win { height: var(--fbh); justify-content: center; gap: calc(14 * var(--k)); }
+.b-fb:not([data-type="wrong"]) .b-fb__bubble {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--fbh);
+}
 .b-fb:not([data-type="wrong"]) .b-fb__say { font-size: max(13px, calc(21 * var(--k))); line-height: 1.5; }
 .b-fb.is-in:not([data-type="wrong"]) .b-fb__win { animation: b-fb-pop 320ms cubic-bezier(.2, .9, .3, 1.15) 40ms both; }
 @media (prefers-reduced-motion: reduce) { .b-fb.is-in .b-fb__win { animation: none; } }

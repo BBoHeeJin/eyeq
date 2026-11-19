@@ -597,13 +597,11 @@
    · 글자는 화면 비율로 줄이지 않고 역할별 고정 크기 (아래 표)
        페이지 타이틀 26 Bold · 섹션/카드 제목 18 Bold · 주요 수치 22 Bold (레벨 26)
        본문 15 Regular·Medium · 보조 13 Regular · 캡션 12 · 영문 라벨 11 Bold
-   · 글꼴: 모바일은 영문·숫자 포함 전체 Noto Sans KR (로고 이미지는 그대로)
+   · 글꼴: PC와 동일 — 한글 Noto Sans KR · 영문·숫자 Inter (2026-11-19 통일)
    ========================================================= */
 @media (max-width: 1023px) {
   /* 게임 문제(답안 카드) 안의 글꼴은 문제 자체이므로 바꾸지 않음 */
-  .b-answers, .b-ans, .b-tut__card, .b-review { --font-en: "Inter", "Noto Sans KR", sans-serif; }
   :root {
-    --font-en: "Noto Sans KR", sans-serif;
     --m-fs-section: 18px;   --m-lh-section: 1.35;
     --m-fs-num: 22px;       --m-fs-num-lg: 26px;
     --m-fs-label: 11px;
@@ -614,7 +612,7 @@
   html:is(.b-page-stage, .b-page-my, .b-page-rank) :is(.b-stage__eyebrow, .b-phead__eyebrow) {
     margin: 0 0 var(--m-gap-eyebrow);
     padding-left: var(--m-ls-eyebrow);
-    font-family: var(--font-kr);
+
     font-weight: var(--m-fw-label);
     font-size: var(--m-fs-label);
     line-height: 14px;
@@ -623,15 +621,15 @@
   html:is(.b-page-stage, .b-page-my, .b-page-rank) :is(.b-stage__title, .b-my__title.b-phead__title, .b-rk__title) {
     height: auto;
     margin: 0;
-    font-family: var(--font-kr);
+
     font-weight: 700;
     font-size: var(--m-fs-title);
     line-height: var(--m-lh-title);
     letter-spacing: -0.02em;
   }
   html:is(.b-page-my, .b-page-rank) :is(.b-rk__title span, .b-shop__title span) {
-    font-family: var(--font-kr);
-    font-style: normal;
+
+
     font-weight: 700;
     font-size: var(--m-fs-title);
     line-height: var(--m-lh-title);
@@ -657,7 +655,7 @@
   /* ---------- 카드 공통 (MY PAGE · RANKING) ---------- */
   html:is(.b-page-my, .b-page-rank) .b-mycard { padding: var(--m-card-pad); border-radius: var(--m-radius-card); }
   html:is(.b-page-my, .b-page-rank) .b-mycard__head { min-height: 28px; margin-bottom: 12px; }
-  html:is(.b-page-my, .b-page-rank) .b-mycard__title { gap: 8px; font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-section); line-height: var(--m-lh-section); }
+  html:is(.b-page-my, .b-page-rank) .b-mycard__title { gap: 8px; font-weight: 700; font-size: var(--m-fs-section); line-height: var(--m-lh-section); }
   html:is(.b-page-my, .b-page-rank) .b-mycard__title .b-ic { width: 20px; height: 20px; }
   html:is(.b-page-my, .b-page-rank) :is(.b-mycard__meta, .b-mycard__more) { font-size: var(--m-fs-caption); }
 
@@ -669,18 +667,18 @@
   html.b-page-stage .b-mcard { width: var(--m-cw); max-width: none; height: calc(176 * var(--k)); }
   /* 카드 안: [말풍선 · 캐릭터] | [STAGE · 이름 · 설명 · 버튼] + 오른쪽 위 아이콘 — 서로 겹치지 않게 */
   html.b-page-stage .b-mcard__info { top: calc(18 * var(--k)); height: calc(142 * var(--k)); }
-  html.b-page-stage .b-mcard__no { font-family: var(--font-kr); font-weight: var(--m-fw-label); font-size: var(--m-fs-label); letter-spacing: var(--m-ls-eyebrow); line-height: 14px; }
+  html.b-page-stage .b-mcard__no { font-weight: var(--m-fw-label); font-size: var(--m-fs-label); letter-spacing: var(--m-ls-eyebrow); line-height: 14px; }
   html.b-page-stage .b-mcard__name { top: calc(18 * var(--k)); font-weight: 700; font-size: max(18px, calc(20 * var(--k))); line-height: 1.3; letter-spacing: -0.01em; }
   html.b-page-stage .b-mcard__desc { top: calc(48 * var(--k)); width: calc(96 * var(--k)); font-size: var(--m-fs-caption); line-height: 1.4; word-break: keep-all; }
   html.b-page-stage .b-mcard__icon .b-ico { --is: 0.46; left: calc(282 * var(--k)); top: calc(50 * var(--k)); }
   html.b-page-stage .b-sbtn { top: calc(100 * var(--k)); width: calc(152 * var(--k)); height: max(var(--m-touch), calc(42 * var(--k))); font-size: 14px; }
   html.b-page-stage .b-slist { width: var(--m-cw); max-width: none; margin-top: var(--m-gap-section); gap: var(--m-gap-card); }
-  html.b-page-stage .b-slist::before { margin: 0 0 0 2px; font-family: var(--font-kr); font-weight: var(--m-fw-label); font-size: var(--m-fs-label); }
+  html.b-page-stage .b-slist::before { margin: 0 0 0 2px; font-weight: var(--m-fw-label); font-size: var(--m-fs-label); }
   html.b-page-stage .b-scard { height: max(72px, calc(74 * var(--k))); }
-  html.b-page-stage .b-scard__no { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-caption); }
-  html.b-page-stage .b-scard__name { font-family: var(--font-kr); font-weight: 700; font-size: 16px; line-height: 1.3; }
+  html.b-page-stage .b-scard__no { font-weight: 700; font-size: var(--m-fs-caption); }
+  html.b-page-stage .b-scard__name { font-weight: 700; font-size: 16px; line-height: 1.3; }
   html.b-page-stage .b-scard__desc { font-size: var(--m-fs-caption); line-height: 1.4; }
-  html.b-page-stage .b-scard__state { font-family: var(--font-kr); }
+  html.b-page-stage .b-scard__state { }
 
   /* =========================================================
      SKIN SHOP — 상세 카드 = 콘텐츠 너비 · 썸네일 줄은 화면 끝까지 (양옆 자연스럽게 잘림)
@@ -695,12 +693,13 @@
   }
   html.b-page-shop .b-th { width: 76px; min-width: 76px; }
   html.b-page-shop .b-th__ring { width: 68px; height: 68px; }
-  html.b-page-shop .b-th__name { font-family: var(--font-kr); font-style: normal; font-weight: 700; font-size: var(--m-fs-caption); }
+  html.b-page-shop .b-th__name { font-weight: 700; font-size: var(--m-fs-caption); }
+  html.b-page-shop :is(.b-th__name, .b-th__pc) { font-style: italic; font-weight: 900; }   /* PC와 같은 Inter Black Italic */
   html.b-page-shop .b-th__st { font-size: 11px; }
   html.b-page-shop .b-stagebox { gap: 16px; padding: var(--m-card-pad); border-radius: var(--m-radius-card); }
   html.b-page-shop .b-stagebox__fig { height: calc(196 * var(--k)); }
   html.b-page-shop .b-stagebox__img { width: calc(172 * var(--k)); height: calc(172 * var(--k)); }
-  html.b-page-shop .b-stagebox__name { font-family: var(--font-kr); font-style: normal; font-weight: 700; font-size: 24px; line-height: 1.25; }
+  html.b-page-shop .b-stagebox__name { font-weight: 700; font-size: 24px; line-height: 1.25; }
   html.b-page-shop .b-stagebox__alias { margin-top: 4px; font-size: var(--m-fs-body); font-weight: 500; }
   html.b-page-shop .b-stagebox__desc { margin-top: 8px; font-size: var(--m-fs-sub); line-height: var(--m-lh-sub); word-break: keep-all; }
   html.b-page-shop .b-moods { gap: 12px; margin-top: 16px; }
@@ -708,14 +707,14 @@
   html.b-page-shop .b-mood__t { font-size: var(--m-fs-caption); }
   html.b-page-shop .b-stagebox__buy { gap: 10px; margin-top: 18px; }
   html.b-page-shop .b-stagebox__buy > .b-chip, html.b-page-shop .b-stagebox__buy > .b-stagebox__btn { height: var(--m-btn-h); min-height: var(--m-btn-h); }
-  html.b-page-shop .b-chip--price { font-family: var(--font-kr); font-weight: 700; font-size: 17px; }
+  html.b-page-shop .b-chip--price { font-weight: 700; font-size: 17px; }
   html.b-page-shop .b-stagebox__btn { font-size: var(--m-fs-btn); }
-  html.b-page-shop .b-shop__pts { display: inline-flex; align-items: baseline; gap: 2px; padding: 8px 16px; font-family: var(--font-kr); font-weight: 700; font-size: 18px; }
+  html.b-page-shop .b-shop__pts { display: inline-flex; align-items: baseline; gap: 2px; padding: 8px 16px; font-weight: 700; font-size: 18px; }
   html.b-page-shop .b-shop__ptslabel { margin-right: 6px; font-size: var(--m-fs-sub); }
   html.b-page-shop .b-shop__pts i { font-size: var(--m-fs-sub); }
   html.b-page-shop .b-shop__pts small { font-size: var(--m-fs-caption); }
   html.b-page-shop .b-shop__notice { font-size: var(--m-fs-sub); line-height: var(--m-lh-sub); }
-  html.b-page-shop .b-tag { font-family: var(--font-kr); font-weight: 700; font-size: 11px; }
+  html.b-page-shop .b-tag { font-weight: 700; font-size: 11px; }
 
   /* =========================================================
      MY PAGE — 글자 크기를 다른 페이지 위계에 맞춤 · 프로필 정보 고르게 배치
@@ -733,38 +732,38 @@
   html.b-page-my .b-prof__edit { width: 32px; height: 32px; }
   html.b-page-my .b-prof__divider { margin: 14px 0; }
   html.b-page-my .b-prof__lvrow { align-items: baseline; margin-bottom: 8px; }
-  html.b-page-my .b-prof__lv { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-num-lg); letter-spacing: 0; }
+  html.b-page-my .b-prof__lv { font-weight: 700; font-size: var(--m-fs-num-lg); letter-spacing: 0; }
   html.b-page-my .b-prof__lv em { margin-left: 4px; }
   html.b-page-my .b-prof__xp { margin: 0; font-weight: 500; font-size: var(--m-fs-sub); }
   html.b-page-my .b-prof__bar { height: 10px; }
   html.b-page-my .b-prof__left { margin-top: 8px; font-size: var(--m-fs-caption); }
   html.b-page-my .b-prof__pts { min-height: 48px; font-size: var(--m-fs-sub); }
-  html.b-page-my .b-prof__pts b { font-family: var(--font-kr); font-weight: 700; font-size: 16px; }
+  html.b-page-my .b-prof__pts b { font-weight: 700; font-size: 16px; }
 
   /* 디자인 영역별 기록 (요약 + 레이더) */
   html.b-page-my .b-skill__row { height: 44px; }
-  html.b-page-my .b-skill__no { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-caption); }
-  html.b-page-my .b-skill__name { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
-  html.b-page-my .b-skill__rate { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
-  html.b-page-my .b-skill__combo { font-family: var(--font-kr); font-size: var(--m-fs-caption); }
+  html.b-page-my .b-skill__no { font-weight: 700; font-size: var(--m-fs-caption); }
+  html.b-page-my .b-skill__name { font-weight: 700; font-size: var(--m-fs-body); }
+  html.b-page-my .b-skill__rate { font-weight: 700; font-size: var(--m-fs-body); }
+  html.b-page-my .b-skill__combo { font-size: var(--m-fs-caption); }
   html.b-page-my .b-skill__open { height: var(--m-btn-h); font-size: var(--m-fs-body); }
-  html.b-page-my :is(.b-radar__name, .b-radar__val) { font-family: var(--font-kr); font-size: var(--m-fs-caption); }
+  html.b-page-my :is(.b-radar__name, .b-radar__val) { font-size: var(--m-fs-caption); }
 
   /* 플레이 통계 */
   html.b-page-my .b-stats__box { padding: 14px 0; }
   html.b-page-my .b-stats__label { font-size: var(--m-fs-caption); }
-  html.b-page-my .b-stats__value { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-num); }
+  html.b-page-my .b-stats__value { font-weight: 700; font-size: var(--m-fs-num); }
   html.b-page-my .b-stats__value small { font-size: var(--m-fs-caption); font-weight: 500; }
 
   /* 업적 · 개인 기록 */
   html.b-page-my .b-badge__name { font-size: var(--m-fs-caption); }
-  html.b-page-my .b-badge__txt { font-family: var(--font-kr); font-weight: 700; }
+  html.b-page-my .b-badge__txt { font-weight: 700; }
   html.b-page-my .b-mytabs__btn { height: 32px; font-size: var(--m-fs-caption); }
-  html.b-page-my .b-mylist__name { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
+  html.b-page-my .b-mylist__name { font-weight: 700; font-size: var(--m-fs-body); }
   html.b-page-my :is(.b-mylist__date, .b-mylist__xp) { font-size: var(--m-fs-caption); }
-  html.b-page-my .b-mylist__score { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
-  html.b-page-my .b-mylist__no { font-family: var(--font-kr); font-size: var(--m-fs-caption); }
-  html.b-page-my .b-pb__tile dd { font-family: var(--font-kr); font-weight: 700; font-size: min(34px, 22cqi); }   /* 핵심 수치 크게 · 타일 폭에 맞춰 줄어듦 */
+  html.b-page-my .b-mylist__score { font-weight: 700; font-size: var(--m-fs-body); }
+  html.b-page-my .b-mylist__no { font-size: var(--m-fs-caption); }
+  html.b-page-my .b-pb__tile dd { font-weight: 700; font-size: min(34px, 22cqi); }   /* 핵심 수치 크게 · 타일 폭에 맞춰 줄어듦 */
 
   /* =========================================================
      HOME — 시작 버튼도 같은 콘텐츠 선 (캐러셀은 화면 끝까지)
@@ -804,7 +803,10 @@
   .b-fb__win-xp { height: 26px; padding: 0 12px; font-size: 13px; }
   .b-fb:not([data-type="wrong"]) .b-fb__bubble { flex: none; padding: 16px 18px; border-radius: 18px; }
   .b-fb:not([data-type="wrong"]) .b-fb__bubble::before { left: 24px; top: -6px; transform: rotate(135deg); }
-  .b-fb:not([data-type="wrong"]) .b-fb__tags { gap: 6px; margin-bottom: 10px; }
+  .b-fb:not([data-type="wrong"]) .b-fb__tags { display: none; }
+  .b-fb:not([data-type="wrong"]) { --fbh: auto; }
+  .b-fb:not([data-type="wrong"]) .b-fb__win { height: auto; }
+  .b-fb:not([data-type="wrong"]) .b-fb__bubble { min-height: 0; }
   .b-fb:not([data-type="wrong"]) .b-fb__title,
   .b-fb:not([data-type="wrong"]) .b-fb__badge { height: 22px; padding: 0 9px; font-size: 11px; }
   .b-fb:not([data-type="wrong"]) .b-fb__say { font-size: 14px; line-height: 1.45; }
@@ -824,6 +826,16 @@
   .b-fb:not([data-type="wrong"]) .b-fb__react { width: 76px; height: 76px; }
   .b-fb:not([data-type="wrong"]) .b-fb__win { flex-direction: column; gap: 8px; }
   .b-fb__big { font-size: 34px; }
-  .b-fb:not([data-type="wrong"]) .b-fb__bubble { flex: 1 1 auto; padding: 22px 24px; }
+  .b-fb:not([data-type="wrong"]) { --fbh: 84px; }
+  .b-fb:not([data-type="wrong"]) .b-fb__react { width: var(--fbh); height: var(--fbh); }
+  .b-fb:not([data-type="wrong"]) .b-fb__win { height: var(--fbh); }
+  .b-fb:not([data-type="wrong"]) .b-fb__bubble { flex: 1 1 auto; min-height: var(--fbh); padding: 18px 24px; }
   .b-fb:not([data-type="wrong"]) .b-fb__bubble::before { left: -6px; top: 50%; transform: translateY(-50%) rotate(45deg); }
+}
+
+
+/* MY PAGE 프로필: 스킨 관리 = 오른쪽 위 동그란 아이콘 (52px · 이름 줄) */
+@media (max-width: 1023px) {
+  html.b-page-my .b-prof__skin { grid-column: 2; grid-row: 1; align-self: center; width: 52px; height: 52px; min-height: 0; padding: 0; font-size: 0; }
+  html.b-page-my .b-prof__skin .b-ic { width: 24px; height: 24px; }
 }
