@@ -847,6 +847,69 @@
   overflow-wrap: anywhere;
 }
 .b-fb__say:empty { display: none; }
+/* ---------- 정답 피드백 (GREAT! · PERFECT! · AMAZING!) ----------
+   [캐릭터 + 큰 결과 문구 / XP 배지]  ◀ [말풍선: 배지 · 해설]
+   오답(data-type="wrong")에는 적용하지 않음 → 기존 [캐릭터] ◀ [말풍선] 그대로 */
+.b-fb__hero { display: flex; align-items: center; flex: none; }
+.b-fb__win { display: none; }
+.b-fb:not([data-type="wrong"]) {
+  width: calc(850 * var(--k));
+  gap: calc(20 * var(--k));
+}
+@media (min-width: 1024px) and (max-width: 1279px) { .b-fb:not([data-type="wrong"]) { width: calc(790 * var(--k)); } }   /* 좁은 PC: 오른쪽 진행 줄과 겹치지 않게 */
+.b-fb:not([data-type="wrong"]) .b-fb__hero { gap: calc(6 * var(--k)); }
+.b-fb:not([data-type="wrong"]) .b-fb__react { width: calc(132 * var(--k)); height: calc(132 * var(--k)); }
+.b-fb:not([data-type="wrong"]) .b-fb__win {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(10 * var(--k));
+}
+.b-fb__big {
+  display: block;
+  font-family: var(--font-en);
+  font-weight: 900;
+  font-style: italic;
+  font-size: max(24px, calc(56 * var(--k)));
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  padding-right: 0.08em;                               /* 기울임 끝 글자 잘림 방지 */
+  color: #f1f2ff;
+  background: linear-gradient(180deg, #ffffff 0%, #d9dcff 60%, #b7b9ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 calc(14 * var(--k)) rgba(130, 120, 255, 0.55));
+}
+.b-fb__win-xp {
+  display: inline-flex;
+  align-items: center;
+  height: max(22px, calc(32 * var(--k)));
+  padding: 0 calc(16 * var(--k));
+  border-radius: 999px;
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: max(11px, calc(15 * var(--k)));
+  letter-spacing: var(--ls-num, 0.02em);
+  white-space: nowrap;
+  color: #fff;
+  background: linear-gradient(90deg, #5a5ff0 0%, #8a6cff 100%);
+  box-shadow: 0 0 calc(14 * var(--k)) rgba(120, 110, 255, 0.5);
+}
+.b-fb__win-xp[hidden] { display: none; }
+.b-fb__win-xp.is-retry { font-family: var(--font-kr); font-weight: 700; letter-spacing: 0; }
+/* 말풍선: 여유 있는 안쪽 여백 (상하 34 · 좌우 31 · 배지↔해설 16) · 높이는 내용에 맞춤 */
+.b-fb:not([data-type="wrong"]) .b-fb__bubble {
+  flex: 1 1 auto;
+  max-width: none;
+  padding: max(16px, calc(34 * var(--k))) max(16px, calc(31 * var(--k)));
+  border-radius: calc(24 * var(--k));
+}
+.b-fb:not([data-type="wrong"]) .b-fb__tags { margin-bottom: max(8px, calc(16 * var(--k))); }
+.b-fb:not([data-type="wrong"]) .b-fb__say { font-size: max(13px, calc(21 * var(--k))); line-height: 1.5; }
+.b-fb.is-in:not([data-type="wrong"]) .b-fb__win { animation: b-fb-pop 320ms cubic-bezier(.2, .9, .3, 1.15) 40ms both; }
+@media (prefers-reduced-motion: reduce) { .b-fb.is-in .b-fb__win { animation: none; } }
 /* 등장 + 캐릭터 반응 (정답 = 통통 점프 · 오답 = 고개 숙임) */
 .b-fb.is-in .b-fb__bubble { animation: b-fb-pop 300ms cubic-bezier(.2, .9, .3, 1.15) 80ms both; }
 .b-fb.is-in .b-fb__react { animation: b-fb-hop 640ms cubic-bezier(.3, .7, .4, 1) both; }
