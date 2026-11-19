@@ -380,16 +380,22 @@
   .b-gtitle__top { position: static; margin: 0 0 6px; }
   .b-gtitle__top .b-gtitle__mode { font-size: 11px; margin: 0; }
 
-  /* 정답·오답 피드백: 타이틀 칸 안에 겹쳐 표시 · 캐릭터 발은 칸 아래선에서 잘림 */
+  /* 정답·오답 피드백: 제목 칸(같은 높이) 안에 캐릭터 + 말풍선 → 타이머·진행·카드 위치 그대로 · 화면 밖으로 안 넘침 */
   .b-fb {
     grid-area: title;
-    position: absolute;
-    top: auto;
-    bottom: 0;
-    left: 50%;
-    --fs: 0.44;
-    clip-path: inset(-100vh -100vw 0 -100vw);
+    align-self: stretch;
+    width: auto;
+    height: var(--g-title-h);
+    transform: none;
+    justify-content: flex-start;
+    gap: 10px;
   }
+  .b-fb__react { width: 64px; height: 64px; }
+  .b-fb__bubble { flex: 1 1 auto; max-width: none; padding: 8px 12px 9px; border-radius: 14px; }
+  .b-fb__bubble::before { left: -6px; width: 10px; height: 10px; }
+  .b-fb__tags { gap: 6px; margin: 0 0 4px; }
+  .b-fb__title, .b-fb__badge { height: 20px; padding: 0 8px; font-size: 11px; }
+  .b-fb__say { font-size: 13px; line-height: 1.42; }
 
   /* 타이머 · 진행 바 (한 줄) */
   .b-timer { grid-area: timer; align-self: stretch; width: auto; height: var(--g-hud-h); padding: 8px 12px 9px; border-radius: 14px; top: auto; right: auto; }
@@ -443,7 +449,9 @@
   .b-gtitle__h { font-size: 22px; }
   .b-gtitle__top { margin-bottom: 6px; }
   .b-gtitle__desc { margin-top: 4px; font-size: var(--m-fs-caption); }
-  .b-fb { --fs: 0.36; }
+  .b-fb__react { width: 52px; height: 52px; }
+  .b-fb__bubble { padding: 6px 10px 7px; }
+  .b-fb__say { font-size: 12.5px; line-height: 1.38; }
   .b-timer { padding: 7px 12px 8px; }
   .b-timer__time { font-size: 17px; }
 }
@@ -734,9 +742,6 @@
   html.b-page-my .b-prof__pts b { font-family: var(--font-kr); font-weight: 700; font-size: 16px; }
 
   /* 디자인 영역별 기록 (요약 + 레이더) */
-  html.b-page-my .b-skill__k { padding: 6px 12px; }
-  html.b-page-my .b-skill__k dt { font-size: var(--m-fs-caption); }
-  html.b-page-my .b-skill__k dd { font-family: var(--font-kr); font-weight: 700; font-size: 14px; }
   html.b-page-my .b-skill__row { height: 44px; }
   html.b-page-my .b-skill__no { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-caption); }
   html.b-page-my .b-skill__name { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
@@ -759,7 +764,7 @@
   html.b-page-my :is(.b-mylist__date, .b-mylist__xp) { font-size: var(--m-fs-caption); }
   html.b-page-my .b-mylist__score { font-family: var(--font-kr); font-weight: 700; font-size: var(--m-fs-body); }
   html.b-page-my .b-mylist__no { font-family: var(--font-kr); font-size: var(--m-fs-caption); }
-  html.b-page-my .b-pb__tile dd { font-family: var(--font-kr); font-weight: 700; font-size: 20px; }
+  html.b-page-my .b-pb__tile dd { font-family: var(--font-kr); font-weight: 700; font-size: min(34px, 22cqi); }   /* 핵심 수치 크게 · 타일 폭에 맞춰 줄어듦 */
 
   /* =========================================================
      HOME — 시작 버튼도 같은 콘텐츠 선 (캐러셀은 화면 끝까지)
