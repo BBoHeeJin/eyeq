@@ -455,6 +455,11 @@
     xp.textContent = retryWin ? "다시 도전 성공" : "+" + last.xp + " XP";
     xp.classList.toggle("is-red", !last.correct);
     xp.classList.toggle("is-retry", retryWin);
+    /* 정답 왼쪽 그룹: 결과 문구·XP를 그대로 복사해 크게 표시 (표시 전용 · 판정/XP 로직과 무관) */
+    var big = fb.querySelector("[data-fb-big]");
+    if (big) big.textContent = fb.querySelector("[data-fb-title]").textContent;
+    var bigXp = fb.querySelector("[data-fb-big-xp]");
+    if (bigXp) { bigXp.textContent = xp.textContent; bigXp.hidden = xp.hidden; bigXp.classList.toggle("is-retry", retryWin); }
     fb.querySelector("[data-react-char]").setAttribute("src", E.charImg(E.getCharacter(), last.correct ? "happy" : "sad"));   // 맞힘 = 기쁜 표정 · 틀림/시간 초과 = 슬픈 표정
     fb.querySelector("[data-react-face]").hidden = true;            // 표정은 캐릭터 이미지에 포함 → 예전 얼굴 겹침 이미지 사용 안 함
     if (animate) {
