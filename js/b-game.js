@@ -335,8 +335,8 @@
   function fitTexts() {
     var compact = mqCompact.matches;
     var k = canvas.getBoundingClientRect().width / (compact ? 390 : 1920);
-    var max = (compact ? 350 : 1400) * k;                                   // PC: 제목이 가운데 줄 전체 사용 (타이머·진행 바는 위 줄)
-    fit(titleH, max); fit(insight, max);
+    var max = (compact ? 350 : 816) * k;                                    // PC: 제목 = 타이머와 미션 진행 사이 가운데 칸 (좌우 대칭 폭)
+    fit(titleH, max);
     if (modeEl && !modeEl.hidden) fit(modeEl, max);                       // 안내 줄이 길면 글자 크기만 축소 (한 줄 유지)
   }
   var fitTimer = 0;
@@ -388,9 +388,16 @@
     titleH.appendChild(document.createTextNode(t[2]));
     desc.textContent = T.desc || m.desc;                              // 판단 기준 설명 = 스크린리더용 (화면은 제목 한 문장)
 
-    var why = T.insight || m.insight || "";
-    insight.textContent = why;
-    insight.hidden = !(st.phase === "correct" && why);                // 정답일 때만 정답 설명 (모든 스테이지·QUICK PLAY 공통)
+    /* 말풍선 한 줄: 정답 = 정답인 이유 · 오답/시간 초과 = 다시 볼 곳 힌트 (정답은 알려 주지 않음 → 다시 도전 유지) */
+    var why = T.insight || m.insight || "", hint = T.hint || "";
+    /* 기존 오답 처리(다시 도전 · 정답 미공개)는 그대로
+       - 오답: 고른 카드는 아니라는 것 + 다시 볼 곳 힌트 (정답은 알려 주지 않음)
+       - 시간 초과: 시간 안내 + 힌트
+       - 재도전 성공: 이제 맞혔으니 정답 번호 + 정답인 이유 */
+    var said = "";
+    if (st.phase === "correct") said = st.attempt === "retry" && st.selected ? st.selected + "번이 정답이에요! " + why : why;
+    else if (st.phase === "wrong") said = st.last && st.last.timeout ? "시간이 다 됐어요. " + hint : (st.selected ? st.selected + "번은 아니에요. " : "") + hint;
+    insight.textContent = said;
 
     var showFb = st.phase === "correct" || st.phase === "wrong";
     title.hidden = showFb;
@@ -438,15 +445,16 @@
     var type = !last.correct ? "wrong" : last.combo >= 3 ? "combo3" : last.combo === 2 ? "combo2" : "correct";
     fb.setAttribute("data-type", type);
     fb.querySelector("[data-fb-title]").textContent =
-      type === "wrong" ? (last.timeout ? "TIME OVER" : "TRY AGAIN!") : type === "combo3" ? "AMAZING!" : type === "combo2" ? "PERFECT!" : "GREAT!";
-    fb.querySelector("[data-fb-flame]").hidden = type.indexOf("combo") !== 0;
+      type === "wrong" ? (last.timeout ? "TIME OVER" : "NICE TRY!") : type === "combo3" ? "AMAZING!" : type === "combo2" ? "PERFECT!" : "GREAT!";
     var combo = fb.querySelector("[data-fb-combo]");
     combo.hidden = type.indexOf("combo") !== 0;
     combo.textContent = last.combo + " COMBO";                       // 일반 3문제 = 최대 3 · QUICK PLAY = 최대 5
     var xp = fb.querySelector("[data-fb-xp]");
-    xp.hidden = last.xp <= 0;                       // 재시도 오답: XP 배지 숨김
-    xp.textContent = "+" + last.xp + " XP";
+    var retryWin = last.correct && st.attempt === "retry";           // 재도전 성공 = 0 XP (기존 규칙) → XP 대신 "다시 도전 성공"
+    xp.hidden = last.xp <= 0 && !retryWin;          // 오답: XP 배지 숨김
+    xp.textContent = retryWin ? "다시 도전 성공" : "+" + last.xp + " XP";
     xp.classList.toggle("is-red", !last.correct);
+    xp.classList.toggle("is-retry", retryWin);
     fb.querySelector("[data-react-char]").setAttribute("src", E.charImg(E.getCharacter(), last.correct ? "happy" : "sad"));   // 맞힘 = 기쁜 표정 · 틀림/시간 초과 = 슬픈 표정
     fb.querySelector("[data-react-face]").hidden = true;            // 표정은 캐릭터 이미지에 포함 → 예전 얼굴 겹침 이미지 사용 안 함
     if (animate) {

@@ -221,18 +221,11 @@
   /* 최고 콤보: 이 영역 스테이지 판의 최고 연속 정답 (QUICK PLAY 콤보는 여러 영역이 섞여 제외 · 스테이지 판이 없으면 —) */
   function comboTxt(a) { return a.sp ? "×" + a.combo : "—"; }
 
-  /* 오른쪽: 한눈 요약 (평균 · 강점 · 보완) + 영역 5줄 간단 목록 + 자세히 보기 — 레이더와 같은 값 */
+  /* 오른쪽: 영역 5줄 목록(정답률 · 최고 콤보) + 그래프 자세히 보기 — 레이더와 같은 값 (요약 배지 3개는 레이더·목록과 중복이라 삭제)
+     strong = 자세히 보기 버튼이 처음 여는 영역 (정답률 가장 높은 영역) */
   var withData = ST.list.filter(function (s) { return area[s.id].t > 0; });
-  var sumC = 0, sumT = 0; withData.forEach(function (s) { sumC += area[s.id].c; sumT += area[s.id].t; });
   var byRate = withData.slice().sort(function (x, y) { return rate(y.id) - rate(x.id) || area[y.id].t - area[x.id].t; });
-  var strong = byRate[0], weak = byRate.length > 1 ? byRate[byRate.length - 1] : null;
-  if (weak && strong && rate(weak.id) === rate(strong.id)) weak = null;   // 모두 같으면 보완 영역 없음
-  var noData = ST.list.filter(function (s) { return !area[s.id].t; });
-  var kpi = $("[data-skill-kpi]");
-  if (kpi) kpi.innerHTML =
-    '<div class="b-skill__k"><dt>전체 정답률</dt><dd>' + (sumT ? pct(sumC, sumT) + "<small>%</small>" : "—") + "</dd></div>" +
-    '<div class="b-skill__k"><dt>강점</dt><dd class="is-name">' + (strong ? strong.name : "—") + "</dd></div>" +
-    '<div class="b-skill__k"><dt>' + (weak ? "보완 영역" : noData.length ? "아직 안 푼 영역" : "보완 영역") + '</dt><dd class="is-name">' + (weak ? weak.name : noData.length ? noData[0].name + (noData.length > 1 ? " 외 " + (noData.length - 1) : "") : "—") + "</dd></div>";
+  var strong = byRate[0];
   var bestList = $("[data-best]");
   ST.list.forEach(function (s) {
     var a = area[s.id];
@@ -243,7 +236,7 @@
       '<span class="b-skill__bar" aria-hidden="true"><i style="--p:' + (a.t ? (a.c / a.t).toFixed(3) : 0) + '"></i></span>' +
       '<span class="b-skill__rate">' + (a.t ? pct(a.c, a.t) + "<small>%</small>" : "기록 없음") + "</span>" +
       '<span class="b-skill__combo">' + (a.t ? FLAME + comboTxt(a) : "") + "</span></button>";
-    li.firstChild.setAttribute("aria-label", s.no + " " + s.name + (a.t ? " 누적 정답률 " + pct(a.c, a.t) + "% (" + a.c + " / " + a.t + "문제) · 최고 콤보 " + (a.sp ? a.combo : "스테이지 기록 없음") : " 기록 없음 (0%)") + " — 날마다 성장 그래프 보기");
+    li.firstChild.setAttribute("aria-label", s.no + " " + s.name + (a.t ? " 누적 정답률 " + pct(a.c, a.t) + "% (" + a.c + " / " + a.t + "문제) · 최고 콤보 " + (a.sp ? a.combo : "스테이지 기록 없음") : " 기록 없음 (0%)") + " — 성장 리포트 보기");
     li.firstChild.addEventListener("click", function () { openArea(s.id, li.firstChild); });
     bestList.appendChild(li);
   });
@@ -255,78 +248,72 @@
   if (amPlay) amPlay.addEventListener("click", function () { if (amFor) go(amFor); });
   var DAYS_MAX = 14;                                                  // 그래프: 플레이한 날 최근 14일
   function md(key) { var p = key.split("-"); return Number(p[1]) + "." + Number(p[2]); }
-  function dailyChart(a, s) {                                         // 막대 = 그날 정답률 · 선 = 그날까지 누적 정답률 (실제 기록만)
+  /* 정답률 변화: 플레이한 날마다 "그날까지 누적 정답률" 꺾은선 하나 (실제 기록만 · 마지막 점 강조 + 값 표시) */
+  function rateChart(a, s) {
     var D = a.days.slice(-DAYS_MAX), n = D.length;
-    if (!n) return '<p class="b-area__chartnone">아직 이 영역의 기록이 없어요. 플레이한 날마다 여기에 막대가 하나씩 생겨요.</p>';
+    if (!n) return '<p class="b-area__chartnone">아직 이 영역의 기록이 없어요. 플레이한 날마다 점이 하나씩 생겨요.</p>';
     var narrow = window.matchMedia("(max-width: 767px)").matches;
-    var W = narrow ? 340 : 640, Hh = narrow ? 210 : 220, L = 40, R = 10, T = 22, B = 30;
-    var pw = W - L - R, ph = Hh - T - B, slot = pw / n, bw = Math.min(narrow ? 22 : 34, slot * 0.56);
-    var x = function (i) { return L + slot * (i + 0.5); }, y = function (v) { return T + ph * (1 - v); };
-    var every = n > (narrow ? 7 : 10) ? 2 : 1, showV = n <= (narrow ? 7 : 12);
-    var out = [0, 0.5, 1].map(function (v) { return '<line class="b-area__gl" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/><text class="b-area__gt" x="' + (L - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v * 100 + "%</text>"; }).join("");
-    D.forEach(function (d, i) {
-      var v = d.dt ? d.dc / d.dt : 0, top = y(v);
-      out += '<rect class="b-area__col" x="' + (x(i) - bw / 2).toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + Math.max(0, y(0) - top).toFixed(1) + '" rx="4"/>';
-      if (showV) out += '<text class="b-area__bv" x="' + x(i).toFixed(1) + '" y="' + (top - 6).toFixed(1) + '" text-anchor="middle">' + Math.round(v * 100) + "</text>";
-      if (i % every === (n - 1) % every) out += '<text class="b-area__gt" x="' + x(i).toFixed(1) + '" y="' + (Hh - 8) + '" text-anchor="middle">' + md(d.key) + "</text>";
-    });
-    var path = D.map(function (d, i) { return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(d.c / d.t).toFixed(1); }).join(" ");
-    if (n > 1) out += '<path class="b-area__line" d="' + path + '"/>';
-    out += D.map(function (d, i) { return '<circle class="b-area__dot" cx="' + x(i).toFixed(1) + '" cy="' + y(d.c / d.t).toFixed(1) + '" r="4"/>'; }).join("");
-    var label = D.map(function (d) { return md(d.key) + " 그날 " + pct(d.dc, d.dt) + "% · 누적 " + pct(d.c, d.t) + "%"; }).join(", ");
-    /* 최근 두 날 비교 (누적 정답률 변화) */
-    var cmp = "";
-    if (n > 1) {
-      var p0 = pct(D[n - 2].c, D[n - 2].t), p1 = pct(D[n - 1].c, D[n - 1].t), dd = p1 - p0;
-      cmp = '<p class="b-area__daycmp">' + md(D[n - 1].key) + " 누적 정답률 <b>" + p1 + "%</b> · 이전 플레이한 날(" + md(D[n - 2].key) + ")보다 <b class=\"" + (dd > 0 ? "is-up" : dd < 0 ? "is-down" : "") + "\">" + (dd > 0 ? "+" : dd < 0 ? "−" : "±") + Math.abs(dd) + "%p</b></p>";
-    } else cmp = '<p class="b-area__daycmp">다른 날에도 플레이하면 날마다 얼마나 늘었는지 비교해 드려요.</p>';
-    return '<div class="b-area__legend" aria-hidden="true"><span class="is-bar">그날 정답률</span><span class="is-line">그날까지 누적 정답률</span>' + (a.days.length > DAYS_MAX ? "<span>최근 " + DAYS_MAX + "일</span>" : "") + "</div>" +
-      '<svg class="b-area__svg" viewBox="0 0 ' + W + " " + Hh + '" role="img" aria-label="' + s.name + " 날마다 정답률: " + label + '">' + out + "</svg>" + cmp;
+    var W = narrow ? 340 : 640, Hh = narrow ? 190 : 210, L = 40, R = narrow ? 30 : 40, T = 26, B = 28;
+    var pw = W - L - R, ph = Hh - T - B;
+    var x = function (i) { return n === 1 ? L + pw / 2 : L + pw * i / (n - 1); }, y = function (v) { return T + ph * (1 - v); };
+    var P = D.map(function (d, i) { return [x(i), y(d.c / d.t)]; });
+    var every = Math.ceil(n / (narrow ? 5 : 8));
+    var out = '<defs><linearGradient id="b-area-stroke" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#6c7bff"/><stop offset="1" stop-color="#b79dff"/></linearGradient></defs>';
+    out += [0, 0.5, 1].map(function (v) { return '<line class="b-area__gl" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/><text class="b-area__gt" x="' + (L - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v * 100 + "%</text>"; }).join("");
+    D.forEach(function (d, i) { if ((n - 1 - i) % every === 0) out += '<text class="b-area__gt" x="' + P[i][0].toFixed(1) + '" y="' + (Hh - 6) + '" text-anchor="middle">' + md(d.key) + "</text>"; });
+    if (n > 1) {                                                      // 부드러운 곡선 (Catmull-Rom → 베지어 · 0~100% 밖으로 넘지 않게)
+      var cl = function (v) { return Math.max(T, Math.min(T + ph, v)); };
+      var dpath = "M" + P[0][0].toFixed(1) + " " + P[0][1].toFixed(1);
+      for (var i = 0; i < n - 1; i++) {
+        var p0 = P[Math.max(0, i - 1)], p1 = P[i], p2 = P[i + 1], p3 = P[Math.min(n - 1, i + 2)];
+        dpath += " C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + cl(p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + cl(p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + " " + p2[0].toFixed(1) + " " + p2[1].toFixed(1);
+      }
+      out += '<path class="b-area__line" d="' + dpath + '"/>';
+    }
+    P.forEach(function (p, i) { if (i < n - 1) out += '<circle class="b-area__dot" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3.5"/>'; });
+    var lp = P[n - 1], lv = pct(D[n - 1].c, D[n - 1].t);
+    out += '<circle class="b-area__last" cx="' + lp[0].toFixed(1) + '" cy="' + lp[1].toFixed(1) + '" r="6.5"/>';
+    out += '<text class="b-area__lastv" x="' + Math.min(lp[0], W - 22).toFixed(1) + '" y="' + (lp[1] - 13).toFixed(1) + '" text-anchor="middle">' + lv + "%</text>";
+    var label = D.map(function (d) { return md(d.key) + " 누적 " + pct(d.c, d.t) + "%"; }).join(", ");
+    return '<svg class="b-area__svg" viewBox="0 0 ' + W + " " + Hh + '" role="img" aria-label="' + s.name + " 정답률 변화: " + label + '">' + out + "</svg>" +
+      '<p class="b-area__cap">플레이한 날의 누적 정답률' + (a.days.length > DAYS_MAX ? " · 최근 " + DAYS_MAX + "일" : "") + " · 이 기기에 저장된 기록 기준</p>";
   }
+  var CHEV = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9.5l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function renderArea(id) {
     var s = ST.get(id), a = area[id], g = GR[id];
     amFor = id;
-    var tile = function (label, val) { return '<div class="b-area__tile"><dt>' + label + "</dt><dd>" + val + "</dd></div>"; };
-    var tabs = '<div class="b-area__tabs" role="tablist" aria-label="디자인 영역">' + ST.list.map(function (x) {
-      var on = x.id === id;
-      return '<button class="b-area__tab' + (on ? " is-on" : "") + '" type="button" role="tab" aria-selected="' + on + '" tabindex="' + (on ? 0 : -1) + '" data-area-tab="' + x.id + '">' + x.name + "</button>";
-    }).join("") + "</div>";
-    var grow;
-    if (!a.t) grow = "";
-    else if (!g.ok) grow = '<div class="b-area__grow is-wait"><p class="b-area__growmsg">조금 더 플레이하면 성장 기록을 확인할 수 있어요!</p>' +
-      '<p class="b-area__growsub">지금 <b>' + fmtN(a.t) + "문제</b> · 처음 10문제와 최근 10문제 비교까지 <b>" + Math.max(0, g.need - a.t) + "문제</b> 남았어요</p>" +
-      '<span class="b-area__need" aria-hidden="true"><i style="--p:' + Math.min(1, a.t / g.need).toFixed(3) + '"></i></span></div>';
-    else {
-      var cls = g.d > 0 ? "is-up" : g.d < 0 ? "is-down" : "is-flat";
-      grow = '<div class="b-area__grow is-row ' + cls + '">' +
-        '<p class="b-area__growsub">처음 ' + g.n0 + "문제 <b>" + g.a0 + '%</b> <span aria-hidden="true">→</span> 최근 ' + g.n1 + "문제 <b>" + g.a1 + "%</b></p>" +
-        '<p class="b-area__delta">' + (g.d > 0 ? "+" : g.d < 0 ? "−" : "±") + Math.abs(g.d) + "%p " + (g.d > 0 ? "성장" : g.d < 0 ? "변화" : "유지") + "</p></div>";
+    var pick = '<label class="b-area__pick"><span class="b-sr-only">디자인 영역 선택</span><select class="b-area__select" data-area-pick>' +
+      ST.list.map(function (x) { return '<option value="' + x.id + '"' + (x.id === id ? " selected" : "") + ">" + x.name + "</option>"; }).join("") + "</select>" + CHEV + "</label>";
+    /* 성장 수치: 기존 성장 분석 기준(처음 10문제 ↔ 최근 10문제) 그대로 · 데이터가 모자라면 수치 대신 안내 */
+    var delta;
+    if (!a.t) delta = '<p class="b-area__delta is-wait">아직 이 영역 기록이 없어요</p>';
+    else if (!g.ok) delta = '<p class="b-area__delta is-wait">성장 기록을 모으는 중이에요</p>';
+    else delta = '<p class="b-area__delta ' + (g.d > 0 ? "is-up" : g.d < 0 ? "is-down" : "") + '">' + (g.d > 0 ? "↗ +" : g.d < 0 ? "↘ −" : "→ ±") + Math.abs(g.d) + "%p <span>처음 " + g.n0 + "문제 대비</span></p>";
+    var prog = "";
+    if (!g.ok) {
+      var need = g.need || 20, left = Math.max(0, need - a.t);
+      prog = '<div class="b-area__prog"><p class="b-area__progmsg">성장 분석까지 ' + left + "문제 남았어요!</p>" +
+        '<div class="b-area__progbar"><span aria-hidden="true"><i style="--p:' + Math.min(1, a.t / need).toFixed(3) + '"></i></span><b>' + fmtN(a.t) + " / " + need + "문제</b></div></div>";
     }
-    amBody.innerHTML = tabs +
-      '<h2 class="b-area__title" id="b-area-title" tabindex="-1">' + s.name + ' <span><i class="b-area__sl">/ </i>' + s.nameKo + " 감각 성장 기록</span></h2>" +
-      '<dl class="b-area__tiles">' +
-        tile("현재 정답률", a.t ? pct(a.c, a.t) + "<small>%</small>" : "0<small>%</small>") +
-        tile("푼 문제", fmtN(a.t) + "<small>개</small>") +
-        tile("맞힌 문제", fmtN(a.c) + "<small>개</small>") +
-        tile("최고 콤보", a.sp ? '<small class="b-stats__x">×</small>' + a.combo : "—") +
-      "</dl>" +
-      '<section class="b-area__chart"><h3 class="b-area__h">날마다 성장 그래프</h3>' + dailyChart(a, s) + "</section>" + grow +
-      '<p class="b-area__note">이 기기(브라우저)에 저장된 플레이 기록 기준 · 첫 시도 정답 기준 · 플레이한 날만 표시</p>';
+    amBody.innerHTML =
+      '<div class="b-area__head">' + pick + '<h2 class="b-area__title" id="b-area-title" tabindex="-1">' + s.nameKo + " 감각 성장 기록</h2></div>" +
+      '<section class="b-area__kpi" aria-label="핵심 성장 지표"><p class="b-area__klabel">현재 정답률</p>' +
+        '<div class="b-area__krow"><p class="b-area__kval">' + (a.t ? pct(a.c, a.t) : 0) + "<small>%</small></p>" + delta + "</div>" +
+        '<p class="b-area__meta"><b>' + fmtN(a.t) + "</b>문제 풀이 · <b>" + fmtN(a.c) + "</b>문제 정답 · 최고 콤보 <b>" + (a.sp ? "×" + a.combo : "—") + "</b></p></section>" +
+      '<section class="b-area__chart"><h3 class="b-area__h">정답률 변화</h3>' + rateChart(a, s) + "</section>" + prog;
   }
   if (amBody) {
-    amBody.addEventListener("click", function (e) { var t = e.target.closest("[data-area-tab]"); if (t) { renderArea(t.getAttribute("data-area-tab")); var n = amBody.querySelector(".b-area__tab.is-on"); if (n) n.focus(); } });
-    amBody.addEventListener("keydown", function (e) {
-      var t = e.target.closest("[data-area-tab]"); if (!t || (e.key !== "ArrowRight" && e.key !== "ArrowLeft")) return;
-      e.preventDefault();
-      var i = ST.list.indexOf(ST.get(t.getAttribute("data-area-tab"))), k = (i + (e.key === "ArrowRight" ? 1 : ST.list.length - 1)) % ST.list.length;
-      renderArea(ST.list[k].id); amBody.querySelector(".b-area__tab.is-on").focus();
+    amBody.addEventListener("change", function (e) {
+      var t = e.target.closest("[data-area-pick]"); if (!t) return;
+      renderArea(t.value);
+      var n = amBody.querySelector("[data-area-pick]"); if (n) n.focus();
     });
   }
   function openArea(id) {
     if (!am || !amBody) return;
     renderArea(id);
     am.open();
-    var t = amEl.querySelector(window.matchMedia("(max-width: 1023px)").matches ? "[data-area-back]" : ".b-area__tab.is-on"); if (t) t.focus();
+    var t = amEl.querySelector(window.matchMedia("(max-width: 1023px)").matches ? "[data-area-back]" : "#b-area-title"); if (t) t.focus();   // PC: 제목에 포커스 (드롭다운 테두리가 열리자마자 보이지 않게)
   }
 
   /* ---------- 업적 (판정·저장은 b-achieve.js · 여기서는 같은 결과를 그림) ---------- */
@@ -424,7 +411,7 @@
     pb.innerHTML = '<dl class="b-pb">' +
       tile("최고 정답률", pct(bRate.correct, bRate.total) + "<small>%</small>", esc(nm(bRate)) + " · " + bRate.correct + " / " + bRate.total) +
       tile("최고 콤보", '<small class="b-stats__x">×</small>' + maxCombo, "한 판 연속 정답") +
-      tile("최고 획득 XP", "+" + bXp.xp + "<small> XP</small>", esc(nm(bXp)) + " · 1판") +
+      tile("최고 획득 XP", "+" + fmtN(bXp.xp) + "<small>XP</small>", esc(nm(bXp)) + " · 1판") +
       tile("가장 빠른 풀이", fast ? (fast.solveMs / fast.total / 1000).toFixed(1) + "<small>초</small>" : "—", fast ? "문제당 평균 · " + esc(nm(fast)) : "풀이 시간 기록 후 표시") +
       "</dl>";
   }
