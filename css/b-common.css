@@ -552,6 +552,12 @@ em { font-style: normal; }
 }
 
 /* PC / Compact 전용 콘텐츠 (시안별 문구·에셋이 다른 경우) */
+/* 메인 캐릭터 화살표: PC·모바일 아이콘 중 하나만 (규칙이 빠져 두 개가 겹쳐 보이던 문제) */
+.b-icon--mo { display: none; }
+@media (max-width: 1023px) {
+  .b-icon--pc { display: none; }
+  .b-icon--mo { display: block; }
+}
 .b-mo { display: none !important; }
 @media (max-width: 1023px) {
   .b-pc { display: none !important; }

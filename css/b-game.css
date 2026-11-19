@@ -160,117 +160,7 @@
   white-space: nowrap;
 }
 
-/* =========================================================
-   Feedback (327:4448) — 원본 컴포넌트 × 배율 --fs (PC 0.68 · 시안 0.592에서 확대 / Mobile 0.36)
-   ========================================================= */
-.b-fb {
-  --fs: 0.68;
-  --f: calc(var(--fs) * var(--k));
-  --fw: 662; --cl: 402; --mt: 44;
-  left: 50%;
-  top: calc(15 * var(--k) + var(--ex) * 0.3);           /* 문구·XP 배지 중심 = 상단 줄(타이머·진행 바) 중심 */
-  width: calc(var(--fw) * var(--f));
-  height: calc(250 * var(--f));
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-.b-fb[hidden] { display: none; }
-/* 피드백 캐릭터 발이 답안 카드 뒤로 비치지 않도록 카드 윗선에서 잘라냄 (사용자 요청)
-   아래쪽 잘라낼 양 = 피드백 높이 − (카드 top − 피드백 top) */
-.b-fb { clip-path: inset(-100vh -100vw calc(250 * var(--f) - 247 * var(--k) - var(--ex) * 0.15) -100vw); }
-.b-fb[data-type="wrong"]  { --fw: 870; --cl: 610; --mt: 44; }
-.b-fb[data-type="combo2"] { --fw: 832; --cl: 572; --mt: 38; }
-.b-fb[data-type="combo3"] { --fw: 870; --cl: 610; --mt: 38; }
-.b-fb > * { position: absolute; }
-.b-fb__msg {
-  left: 0;
-  top: calc(var(--mt) * var(--f));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: calc(8 * var(--f));
-}
-.b-fb__row { display: flex; align-items: center; gap: calc(6 * var(--f)); }
-.b-fb__title {
-  font-family: var(--font-en);
-  font-weight: 900;
-  font-style: italic;
-  font-size: calc(100 * var(--f));
-  line-height: normal;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  background: linear-gradient(180deg, #ffffff 0%, #c9d4ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 calc(6 * var(--f)) 0 rgba(5, 5, 31, 0.6)) drop-shadow(0 calc(6 * var(--f)) calc(12 * var(--f)) rgba(47, 85, 255, 0.75));
-  padding-right: calc(8 * var(--f));        /* 이탤릭 끝 잘림 방지 */
-}
-.b-fb[data-type="wrong"] .b-fb__title {
-  background-image: linear-gradient(180deg, #ff8a96 0%, #ff4d63 100%);
-  filter: drop-shadow(0 calc(6 * var(--f)) 0 rgba(5, 5, 31, 0.6)) drop-shadow(0 calc(6 * var(--f)) calc(12 * var(--f)) rgba(255, 77, 99, 0.75));
-}
-.b-fb[data-type^="combo"] .b-fb__title {
-  background-image: linear-gradient(180deg, #fff6da 0%, #ffb547 100%);
-  filter: drop-shadow(0 calc(6 * var(--f)) 0 rgba(5, 5, 31, 0.6)) drop-shadow(0 calc(6 * var(--f)) calc(12 * var(--f)) rgba(255, 138, 42, 0.75));
-}
-.b-fb__flame { position: relative; flex: none; width: calc(52 * var(--f)); height: calc(64 * var(--f)); }
-.b-fb__flame[hidden] { display: none; }
-.b-fb__flame img { position: absolute; left: calc(-10 * var(--f)); top: calc(-14 * var(--f)); width: calc(72 * var(--f)); height: calc(92 * var(--f)); max-width: none; }
-.b-fb__rewards { display: flex; align-items: center; gap: calc(12 * var(--f)); min-height: calc(52 * var(--f)); }
-.b-fb__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: calc(7 * var(--f)) calc(22 * var(--f));
-  border-radius: calc(24 * var(--f));
-  border: calc(1.5 * var(--f)) solid rgba(255, 255, 255, 0.3);
-  font-family: var(--font-en);
-  font-weight: 800;
-  font-size: calc(24 * var(--f));
-  line-height: normal;
-  color: var(--color-white);
-  white-space: nowrap;
-}
-.b-fb__badge[hidden] { display: none; }
-.b-fb__badge--xp {
-  background: linear-gradient(90deg, #5c7dff 0%, #2f55ff 100%);
-  filter: drop-shadow(0 calc(4 * var(--f)) calc(4.5 * var(--f)) rgba(61, 99, 255, 0.6));
-}
-.b-fb__badge--xp.is-red {
-  background: linear-gradient(90deg, #ff7a88 0%, #e8475a 100%);
-  filter: drop-shadow(0 calc(4 * var(--f)) calc(4.5 * var(--f)) rgba(255, 77, 99, 0.6));
-}
-.b-fb__badge--combo {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: linear-gradient(90deg, #ffe08a 0%, #ffa53d 100%);
-  color: #3a1c00;
-  transform: rotate(4deg);
-  filter: drop-shadow(0 calc(4 * var(--f)) calc(4.5 * var(--f)) rgba(255, 159, 67, 0.55));
-}
-.b-fb__react {
-  left: calc(var(--cl) * var(--f));
-  top: 0;
-  width: calc(240 * var(--f));
-  height: calc(240 * var(--f));
-}
-.b-fb__react img { position: absolute; left: 0; top: 0; width: calc(300 * var(--f)); height: calc(300 * var(--f)); max-width: none; object-fit: contain; }
-.b-fb__fx { left: calc((var(--cl) - 40) * var(--f)); top: calc(-10 * var(--f)); width: calc(320 * var(--f)); height: calc(260 * var(--f)); }
-.b-fb__sp { position: absolute; max-width: none; }
-.b-fb__sp--1 { left: calc(272 * var(--f)); top: calc(32 * var(--f));  width: calc(50 * var(--f)); }
-.b-fb__sp--2 { left: calc(288 * var(--f)); top: calc(112 * var(--f)); width: calc(38 * var(--f)); }
-.b-fb__sp--3 { left: calc(12 * var(--f));  top: calc(22 * var(--f));  width: calc(34 * var(--f)); }
-.b-fb__sp--4 { left: calc(42 * var(--f));  top: calc(192 * var(--f)); width: calc(30 * var(--f)); }
-.b-fb__sp--5 { left: calc(292 * var(--f)); top: calc(182 * var(--f)); width: calc(32 * var(--f)); }
-.b-fb__sp--w { left: calc(272 * var(--f)); top: calc(42 * var(--f));  width: calc(30 * var(--f)); display: none; }
-.b-fb[data-type="wrong"] .b-fb__sp { display: none; }
-.b-fb[data-type="wrong"] .b-fb__sp--w { display: block; }
-/* 등장 — Feedback 설명: CSS scale/fade 단순 애니메이션 */
-.b-fb.is-in { animation: b-fb-in 320ms cubic-bezier(.2, .9, .3, 1.2) both; }
-@keyframes b-fb-in {
-  from { opacity: 0; transform: translateX(-50%) scale(0.85); }
-  to   { opacity: 1; transform: translateX(-50%) scale(1); }
-}
+/* Feedback — 새 컴포넌트는 파일 끝 "상단 줄 · 피드백 말풍선" 참고 */
 
 /* =========================================================
    Answer Card (326:4385) — PC: 헤더 정렬선 사이 3등분 × 510 (시안 466×459) · 간격 24
@@ -469,7 +359,6 @@
   .b-gtitle__h { font-size: calc(28 * var(--k)); letter-spacing: -0.02em; text-shadow: none; }
   .b-gtitle__desc { --desc-y: 48; margin: 0;   /* 모바일 제목 → 설명 8 */ font-size: max(12px, calc(14 * var(--k))); }
 
-  .b-fb { --fs: 0.36; top: calc(0 * var(--k)); clip-path: inset(-100vh -100vw calc(250 * var(--f) - 92 * var(--k)) -100vw); }   /* 제목 자리 · 타이머 줄 위에서 잘라냄 */
 
   .b-answers {
     right: auto;
@@ -635,24 +524,9 @@
 .bq-grid__in .bq-img { width: 100%; height: 100%; border-radius: calc(6 * var(--u)); }
 .bq-grid__in .bq-grid__last { width: calc(var(--last) * var(--u)); height: calc(var(--last) * var(--u)); }
 
-/* 정답 인사이트 — 정답일 때만 피드백 아래 한 줄 (PC: 피드백 ↔ 카드 사이 / 모바일: 타이머 줄 ↔ 카드 사이) */
-.b-insight {
-  left: 0; right: 0;
-  top: calc(212 * var(--k) + var(--ex) * 0.36);
-  margin: 0;
-  text-align: center;
-  font-family: var(--font-kr);
-  font-weight: 500;
-  font-size: max(12px, calc(18 * var(--k)));   /* 정답 설명: 모든 스테이지 같은 크기 · 한 줄 (작은 노트북에서도 12px 이상) */
-  line-height: 1.4;
-  color: var(--color-stage-desc);
-  white-space: nowrap;
-}
-.b-insight[hidden] { display: none; }
 
 @media (max-width: 1023px) {
   .b-ans__copy.is-ui { --u: var(--k); top: calc(50% + 4 * var(--k)); }
-  .b-insight { display: none; }           /* 모바일·태블릿: 정답 설명 한 줄 숨김 (PC 그대로) */
 }
 
 /* =========================================================
@@ -844,18 +718,19 @@
   white-space: nowrap;
 }
 /* 제목 (가운데 · 한 문장) — 문제 유형 배지는 없앰 · 위 줄은 QUICK/오프라인 안내가 있을 때만 */
-.b-gtitle { top: calc(124 * var(--k) + var(--ex) * 0.3); display: flex; flex-direction: column; align-items: center; }
+.b-gtitle { top: calc(86 * var(--k) + var(--ex) * 0.3); display: flex; flex-direction: column; align-items: center; }
 .b-gtitle__top { position: absolute; left: 0; right: 0; bottom: 100%; display: flex; justify-content: center; margin: 0 0 calc(8 * var(--k)); }
 .b-gtitle__top:empty { display: none; }
 .b-gtitle__top .b-gtitle__mode { position: static; margin: 0; font-size: max(10px, calc(13 * var(--k))); }
 
 /* 진행 바 = 왼쪽 위 · 타이머 = 오른쪽 위 (작게 · 제목보다 약하게) — PC 좌표 (모바일은 b-mobile.css 흐름 배치) */
 @media (min-width: 1024px) {
-.b-progress { left: var(--gl); right: auto; top: calc(54 * var(--k) + var(--ex) * 0.3); }
+/* 상단 줄 (가로 3칸 · 세로 중심 = --band 120): 왼쪽 타이머 · 가운데 제목/피드백 · 오른쪽 미션 진행 */
+.b-progress { left: auto; right: var(--gr); top: calc(87 * var(--k) + var(--ex) * 0.3); }   /* 점·글자 묶음 중심(33) = 줄 중심 */
 .b-timer {
-  left: auto;
-  right: var(--gr);
-  top: calc(50 * var(--k) + var(--ex) * 0.3);
+  left: var(--gl);
+  right: auto;
+  top: calc(88 * var(--k) + var(--ex) * 0.3);
   width: calc(300 * var(--k));
   height: calc(64 * var(--k));
   padding: calc(11 * var(--k)) calc(20 * var(--k)) calc(13 * var(--k));
@@ -897,3 +772,104 @@
   100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(100, 104, 244, 0); }
 }
 @media (prefers-reduced-motion: reduce) { .b-answers.is-go .b-ans__badge { animation: none; } }
+
+/* =========================================================
+   상단 줄 · 피드백 말풍선 (정답·오답 공통 컴포넌트)
+   PC: [타이머] [캐릭터 + 말풍선] [미션 진행] — 세 칸 세로 중심 같음 · 피드백은 제목 자리(가운데 폭 816)에만
+   말풍선 위쪽 = 결과 배지(GREAT! / NICE TRY! / TIME OVER · 콤보 · XP), 안쪽 = 한 줄 해설(정답) 또는 힌트(오답)
+   ========================================================= */
+.b-fb {
+  left: 50%;
+  top: calc(120 * var(--k) + var(--ex) * 0.3);
+  width: calc(816 * var(--k));
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(14 * var(--k));
+  pointer-events: none;
+}
+.b-fb[hidden] { display: none; }
+.b-fb__react { position: relative; flex: none; width: calc(128 * var(--k)); height: calc(128 * var(--k)); }
+.b-fb__react img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: contain; }
+.b-fb__react img[hidden] { display: none; }
+.b-fb__bubble {
+  position: relative;
+  min-width: 0;
+  max-width: calc(660 * var(--k));
+  padding: calc(14 * var(--k)) calc(22 * var(--k)) calc(16 * var(--k));
+  border-radius: calc(20 * var(--k));
+  border: 1px solid rgba(142, 166, 255, 0.35);
+  background: linear-gradient(180deg, rgba(36, 40, 110, 0.92) 0%, rgba(22, 25, 82, 0.92) 100%);
+  box-shadow: 0 calc(10 * var(--k)) calc(24 * var(--k)) rgba(3, 4, 26, 0.35);
+}
+.b-fb__bubble::before {                              /* 말꼬리 = 캐릭터 쪽 */
+  content: "";
+  position: absolute;
+  left: calc(-7 * var(--k));
+  top: 50%;
+  width: calc(12 * var(--k));
+  height: calc(12 * var(--k));
+  border-left: 1px solid rgba(142, 166, 255, 0.35);
+  border-bottom: 1px solid rgba(142, 166, 255, 0.35);
+  background: rgba(29, 32, 96, 0.96);
+  transform: translateY(-50%) rotate(45deg);
+}
+.b-fb__tags { display: flex; flex-wrap: wrap; align-items: center; gap: calc(8 * var(--k)); margin: 0 0 calc(8 * var(--k)); }
+.b-fb__title, .b-fb__badge {
+  margin: 0;                                        /* 같은 이름의 '피드백 보내기' 팝업 제목 여백(44px)이 섞이지 않게 */
+  display: inline-flex;
+  align-items: center;
+  height: calc(28 * var(--k));
+  padding: 0 calc(12 * var(--k));
+  border-radius: 999px;
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: max(11px, calc(15 * var(--k)));
+  letter-spacing: var(--ls-num, 0.02em);
+  white-space: nowrap;
+}
+.b-fb__title { color: #fff; background: linear-gradient(90deg, #4f54e3 0%, #8a6cff 100%); box-shadow: 0 0 calc(12 * var(--k)) rgba(120, 110, 255, 0.55); }
+.b-fb[data-type="wrong"] .b-fb__title { background: linear-gradient(90deg, #ff5d6c 0%, #ff8a7a 100%); box-shadow: 0 0 calc(12 * var(--k)) rgba(255, 93, 108, 0.45); }
+.b-fb__badge[hidden] { display: none; }
+.b-fb__badge--xp { color: #dfe4ff; background: rgba(100, 104, 244, 0.22); border: 1px solid rgba(142, 166, 255, 0.4); }
+.b-fb__badge--xp.is-red { color: #ffd0d5; background: rgba(255, 93, 108, 0.16); border-color: rgba(255, 120, 130, 0.4); }
+.b-fb__badge--xp.is-retry { font-family: var(--font-kr); font-weight: 700; letter-spacing: 0; }
+.b-fb__badge--combo { color: #ffc27a; background: rgba(255, 160, 70, 0.14); border: 1px solid rgba(255, 170, 90, 0.4); }
+.b-fb__say {
+  margin: 0;
+  font-family: var(--font-kr);
+  font-weight: 500;
+  font-size: max(13px, calc(20 * var(--k)));
+  line-height: 1.5;
+  color: #ffffff;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.b-fb__say:empty { display: none; }
+/* 등장 + 캐릭터 반응 (정답 = 통통 점프 · 오답 = 고개 숙임) */
+.b-fb.is-in .b-fb__bubble { animation: b-fb-pop 300ms cubic-bezier(.2, .9, .3, 1.15) 80ms both; }
+.b-fb.is-in .b-fb__react { animation: b-fb-hop 640ms cubic-bezier(.3, .7, .4, 1) both; }
+.b-fb.is-in[data-type="wrong"] .b-fb__react { animation: b-fb-droop 640ms ease-out both; }
+@keyframes b-fb-pop { from { opacity: 0; transform: translateX(calc(-10 * var(--k))) scale(0.94); } to { opacity: 1; transform: none; } }
+@keyframes b-fb-hop {
+  0% { opacity: 0; transform: translateY(calc(10 * var(--k))) scale(0.9); }
+  30% { opacity: 1; transform: translateY(calc(-16 * var(--k))) scale(1.04, 0.97); }
+  55% { transform: translateY(0) scale(1.05, 0.95); }
+  75% { transform: translateY(calc(-7 * var(--k))); }
+  100% { transform: none; }
+}
+@keyframes b-fb-droop {
+  0% { opacity: 0; transform: translateY(calc(-6 * var(--k))); }
+  35% { opacity: 1; transform: rotate(-7deg) translateY(calc(4 * var(--k))); }
+  60% { transform: rotate(5deg) translateY(calc(3 * var(--k))); }
+  100% { transform: rotate(0) translateY(calc(2 * var(--k))); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b-fb.is-in .b-fb__bubble, .b-fb.is-in .b-fb__react, .b-fb.is-in[data-type="wrong"] .b-fb__react { animation: none; }
+}
+/* 미션 진행: 단계 이동 부드럽게 */
+.b-progress__fill { transition: width 420ms cubic-bezier(.3, .7, .3, 1); }
+.b-pnode { transition: width 260ms ease-out, height 260ms ease-out, background 260ms ease-out, box-shadow 260ms ease-out; }
+.b-pnode.is-done { animation: b-pnode-done 380ms ease-out; }
+@keyframes b-pnode-done { 0% { transform: translate(-50%, -50%) scale(0.6); } 70% { transform: translate(-50%, -50%) scale(1.15); } 100% { transform: translate(-50%, -50%) scale(1); } }
