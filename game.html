@@ -157,34 +157,21 @@
         <p class="b-gtitle__desc" data-mission-desc>세 가지 중 글자 간격이 다른 하나를 선택하세요.</p>
       </div>
 
-      <!-- Feedback (327:4448) : 정답 / 오답 / 콤보 -->
+      <!-- 정답·오답 피드백 (상단 가운데): 캐릭터 반응 + 말풍선(결과 배지 · 한 줄 해설) — 판정 후에만 -->
       <div class="b-fb" data-feedback hidden>
-        <div class="b-fb__msg">
-          <div class="b-fb__row">
-            <span class="b-fb__title" data-fb-title>GREAT!</span>
-            <span class="b-fb__flame" data-fb-flame hidden><img src="assets/b/icon-flame.svg" alt="" /></span>
-          </div>
-          <div class="b-fb__rewards">
-            <span class="b-fb__badge b-fb__badge--combo" data-fb-combo hidden>2 COMBO</span>
-            <span class="b-fb__badge b-fb__badge--xp" data-fb-xp>+30 XP</span>
-          </div>
-        </div>
         <span class="b-fb__react" aria-hidden="true">
           <img data-react-char src="assets/b/char-eye.webp" alt="" />
           <img data-react-face alt="" hidden />
         </span>
-        <span class="b-fb__fx" aria-hidden="true">
-          <img class="b-fb__sp b-fb__sp--1" src="assets/b/sparkle-1.svg" alt="" />
-          <img class="b-fb__sp b-fb__sp--2" src="assets/b/sparkle-2.svg" alt="" />
-          <img class="b-fb__sp b-fb__sp--3" src="assets/b/sparkle-3.svg" alt="" />
-          <img class="b-fb__sp b-fb__sp--4" src="assets/b/sparkle-4.svg" alt="" />
-          <img class="b-fb__sp b-fb__sp--5" src="assets/b/sparkle-5.svg" alt="" />
-          <img class="b-fb__sp b-fb__sp--w" src="assets/b/sparkle-wrong.svg" alt="" />
-        </span>
+        <div class="b-fb__bubble">
+          <div class="b-fb__tags">
+            <span class="b-fb__title" data-fb-title>GREAT!</span>
+            <span class="b-fb__badge b-fb__badge--combo" data-fb-combo hidden>2 COMBO</span>
+            <span class="b-fb__badge b-fb__badge--xp" data-fb-xp>+30 XP</span>
+          </div>
+          <p class="b-fb__say" data-insight></p>
+        </div>
       </div>
-
-      <!-- 정답 인사이트 (정답일 때만 한 줄) -->
-      <p class="b-insight" data-insight hidden></p>
 
       <!-- Answer Cards A / B / C (326:4385) -->
       <div class="b-answers" role="radiogroup" aria-label="답안 선택">
