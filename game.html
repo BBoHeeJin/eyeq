@@ -159,10 +159,17 @@
 
       <!-- 정답·오답 피드백 (상단 가운데): 캐릭터 반응 + 말풍선(결과 배지 · 한 줄 해설) — 판정 후에만 -->
       <div class="b-fb" data-feedback hidden>
-        <span class="b-fb__react" aria-hidden="true">
-          <img data-react-char src="assets/b/char-eye.webp" alt="" />
-          <img data-react-face alt="" hidden />
-        </span>
+        <!-- 왼쪽 그룹: 캐릭터 + (정답일 때) 큰 결과 문구 + XP 배지 · 오답은 캐릭터만 -->
+        <div class="b-fb__hero">
+          <span class="b-fb__react" aria-hidden="true">
+            <img data-react-char src="assets/b/char-eye.webp" alt="" />
+            <img data-react-face alt="" hidden />
+          </span>
+          <span class="b-fb__win" aria-hidden="true">
+            <b class="b-fb__big" data-fb-big>GREAT!</b>
+            <span class="b-fb__win-xp" data-fb-big-xp>+30 XP</span>
+          </span>
+        </div>
         <div class="b-fb__bubble">
           <div class="b-fb__tags">
             <span class="b-fb__title" data-fb-title>GREAT!</span>
