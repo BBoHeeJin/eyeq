@@ -12,13 +12,14 @@
      check     미션 진행 칸 완료             ready    게임 준비 완료
      roll/ding 결과 숫자 올라감 / 다 참      fill     레벨 바 차오름
      clear · levelup · buy · equip · badge · rankup(순위 상승)
-   배경음악 (기본 꺼짐)
+   배경음악 (기본 켜짐 · 메뉴에서 끄기)
      lobby  홈·스테이지·랭킹·상점·마이페이지·결과 — 잔잔한 코드 + 아르페지오 (84 BPM)
      game   플레이 화면 — 경쾌한 베이스 + 아르페지오 + 하이햇 (112 BPM)
      · 페이지를 옮겨도 박자 위치를 이어서 재생 (sessionStorage) · 큰 효과음이 날 때 잠깐 작아짐(덕킹)
      · 탭이 안 보이면 멈춤 → 돌아오면 이어서
    공통 규칙
-   · 설정은 이 기기에 저장 — eyeq.b.sfx ("off" = 효과음 끔) · eyeq.b.bgm ("on" = 배경음악 켬)
+   · 설정은 이 기기에 저장 — eyeq.b.sfx ("off" = 효과음 끔) · eyeq.b.bgm ("off" = 배경음악 끔)
+   · 배경음악이 켜져 있는데 브라우저가 소리를 막고 있으면 "화면을 눌러 소리 켜기" 안내 → 누르면 사라짐
    · 모바일 브라우저는 첫 터치 전 소리를 막음 → 첫 터치·클릭·키 입력 때 오디오를 깨움
    · 안드로이드: 정답·오답·클리어 등에 짧은 진동 (효과음을 끄면 진동도 끔 · iPhone 웹은 미지원)
    · 게임 로직·데이터와 무관 (소리만 냄) · 이 파일이 없어도 다른 기능은 그대로 동작
@@ -33,7 +34,7 @@
 
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
   function enabled() { return store(KEY) !== "off"; }
-  function bgmOn() { return store(KEY_BGM) === "on"; }
+  function bgmOn() { return store(KEY_BGM) !== "off"; }            // 배경음악 기본 = 켜짐 (메뉴에서 끄면 "off" 저장)
 
   /* ---------- 오디오 준비 ---------- */
   function ensure() {
@@ -57,6 +58,7 @@
     } else woke();
   }
   function woke() {
+    hint(false);
     if (pending && Date.now() - pending.at < 1500) { var p = pending; pending = null; play(p.name, p.opt); }
     pending = null;
     if (bgmOn()) BGM.start();
@@ -303,7 +305,7 @@
             ".b-rk__tab, .b-rbtn, .b-mytabs button, [data-tab], .b-mycard__more, .b-mylist__row, .b-prof__edit, " +
             ".b-modal__btn, .b-sk__btn, .b-shop button, .b-shop a, .b-back, .b-major__opt, .b-tut button, .b-rfilter__btn, .b-sk__opt, .b-carousel__dot, [data-carousel-dot]";
   /* 전용 소리가 있거나(판정·구매·캐릭터 넘김), 팝업 열림·닫힘 소리로 대신하는 버튼 */
-  var NO_TAP = ".b-ans, [data-sk-buy], [data-sk-ok], [data-apply], [data-sfx-toggle], [data-bgm-toggle], [data-carousel-prev], [data-carousel-next], " +
+  var NO_TAP = ".b-ans, .b-sfx-hint, [data-sk-buy], [data-sk-ok], [data-apply], [data-sfx-toggle], [data-bgm-toggle], [data-carousel-prev], [data-carousel-next], " +
                "[aria-haspopup], [data-menu-toggle], [data-prof-toggle], [data-skill-open], [data-modal-close], [data-sk-close], [data-menu-close], [disabled], [aria-disabled='true']";
   var SPECIAL = [["[data-tut-next], [data-tut-prev]", "page"], ["[data-play], [data-quick]", "start"]];
   document.addEventListener("click", function (e) {
@@ -340,6 +342,32 @@
     }).observe(document.body, { subtree: true, attributes: true, attributeOldValue: true, attributeFilter: ["class", "hidden"] });
   }
 
+  /* ---------- 소리 막힘 안내 (모든 페이지 공통 · 헤더 바로 아래 가운데 작은 알약) ---------- */
+  var hintEl = null;
+  function hint(show) {
+    if (!show) { if (hintEl) { hintEl.classList.remove("is-in"); var h = hintEl; hintEl = null; setTimeout(function () { h.remove(); }, 250); } return; }
+    if (hintEl || !document.body) return;
+    if (!document.getElementById("b-sfx-hint-css")) {
+      var st = document.createElement("style"); st.id = "b-sfx-hint-css";
+      st.textContent =
+        ".b-sfx-hint{position:fixed;z-index:60;left:50%;top:calc(var(--header-h,64px) + 10px);display:inline-flex;align-items:center;gap:6px;" +
+        "height:34px;padding:0 14px 0 11px;border:1px solid rgba(142,166,255,.45);border-radius:999px;background:rgba(24,26,78,.92);" +
+        "box-shadow:0 6px 18px rgba(3,4,26,.45);color:#e6e9ff;font:600 13px/1 var(--font-kr,'Noto Sans KR',sans-serif);white-space:nowrap;cursor:pointer;" +
+        "-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transform:translate(-50%,-6px);transition:opacity .25s ease,transform .25s ease}" +
+        ".b-sfx-hint.is-in{opacity:1;transform:translate(-50%,0)}.b-sfx-hint svg{width:18px;height:18px;color:#a9b4ff}" +
+        "@media (max-width:1023px){.b-sfx-hint{top:auto;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 8px)}" +            /* 모바일: 아래쪽 (제목을 가리지 않게) */
+        ".b-page-game .b-sfx-hint,.b-page-result .b-sfx-hint,.b-page-home .b-sfx-hint{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 80px)}}" +       /* 하단 버튼 위 */
+        "@media (prefers-reduced-motion:reduce){.b-sfx-hint{transition:none}}";
+      document.head.appendChild(st);
+    }
+    hintEl = document.createElement("button");
+    hintEl.type = "button"; hintEl.className = "b-sfx-hint";
+    hintEl.innerHTML = svg(IC.music) + "<span>화면을 눌러 소리 켜기</span>";
+    hintEl.addEventListener("click", function () { unlock(); });
+    document.body.appendChild(hintEl);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { if (hintEl) hintEl.classList.add("is-in"); }); });
+  }
+
   /* ---------- 켜기/끄기 (PC = 프로필 메뉴 · 모바일 = 햄버거 메뉴) ---------- */
   var IC = {
     on: '<path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
@@ -362,7 +390,7 @@
   function setSfx(on) { store(KEY, on ? "on" : "off"); sync(); }
   function setBgm(on) {
     store(KEY_BGM, on ? "on" : "off"); sync();
-    if (on) { unlock(); BGM.start(); } else BGM.stop();
+    if (on) { unlock(); BGM.start(); } else { BGM.stop(); hint(false); }
   }
   function addToggle(host, cls, attr, fn) {
     if (!host || host.querySelector("[" + attr + "]")) return;
@@ -379,7 +407,13 @@
     });
     sync();
     watch();
-    if (bgmOn()) { ensure(); if (ctx) ctx.resume().then(woke, function () {}); }   // PC 등 자동 재생이 허용되면 바로 · 아니면 첫 터치 때
+    if (bgmOn()) {                                              // 자동 재생이 허용되면 바로 · 아니면 첫 터치 때 (그동안 안내 표시)
+      ensure();
+      if (ctx) {
+        ctx.resume().then(woke, function () {});
+        setTimeout(function () { if (bgmOn() && !running()) hint(true); }, 700);
+      }
+    }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
   window.addEventListener("storage", function (e) { if (e.key === KEY || e.key === KEY_BGM) sync(); });
