@@ -278,12 +278,13 @@
     return '<svg class="b-area__svg" viewBox="0 0 ' + W + " " + Hh + '" role="img" aria-label="' + s.name + " 정답률 변화: " + label + '">' + out + "</svg>" +
       '<p class="b-area__cap">플레이한 날의 누적 정답률' + (a.days.length > DAYS_MAX ? " · 최근 " + DAYS_MAX + "일" : "") + " · 이 기기에 저장된 기록 기준</p>";
   }
-  var CHEV = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9.5l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  /* 영역 선택 드롭다운 화살표 — 최근 플레이 행 화살표(CHEV, 22행)와 이름이 겹쳐 덮어쓰던 문제 수정 → 별도 이름 */
+  var SEL_CHEV = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9.5l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function renderArea(id) {
     var s = ST.get(id), a = area[id], g = GR[id];
     amFor = id;
     var pick = '<label class="b-area__pick"><span class="b-sr-only">디자인 영역 선택</span><select class="b-area__select" data-area-pick>' +
-      ST.list.map(function (x) { return '<option value="' + x.id + '"' + (x.id === id ? " selected" : "") + ">" + x.name + "</option>"; }).join("") + "</select>" + CHEV + "</label>";
+      ST.list.map(function (x) { return '<option value="' + x.id + '"' + (x.id === id ? " selected" : "") + ">" + x.name + "</option>"; }).join("") + "</select>" + SEL_CHEV + "</label>";
     /* 성장 수치: 기존 성장 분석 기준(처음 10문제 ↔ 최근 10문제) 그대로 · 데이터가 모자라면 수치 대신 안내 */
     var delta;
     if (!a.t) delta = '<p class="b-area__delta is-wait">아직 이 영역 기록이 없어요</p>';
