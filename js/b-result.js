@@ -72,7 +72,9 @@
     function step(t) {
       if (t0 === null) t0 = t;
       var p = Math.min(1, (t - t0) / D);
-      el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - p, 3))));
+      var shown = fmt(Math.round(to * (1 - Math.pow(1 - p, 3))));
+      if (E.sfx) { if (p >= 1) E.sfx.play("ding"); else if (shown !== el.textContent) E.sfx.play("roll"); }   // 효과음: 숫자 올라감 · 다 참
+      el.textContent = shown;
       if (p < 1) requestAnimationFrame(step);
     }
     setTimeout(function () { requestAnimationFrame(step); }, 300);
@@ -92,7 +94,7 @@
   var maxNow = B.max && !A.max;                                      // 이번 판에서 LV.10 첫 달성 → 같은 배지 자리에 문구만 변경
   $("[data-lvup]").textContent = maxNow ? "MAX LEVEL ACHIEVED!" : "LEVEL UP!";
   $("[data-lvup]").hidden = !up;
-  if (E.sfx) { E.sfx.play("clear"); if (up) setTimeout(function () { E.sfx.play("levelup"); }, 900); }   // 효과음: 클리어 → (레벨 업)
+  if (E.sfx) E.sfx.play("clear");                                    // 효과음: 클리어 (레벨 바·레벨 업은 아래 바 애니메이션에 맞춰)
   $("[data-level-xp]").textContent = B.max ? "XP MAX" : "XP " + B.xp + " / " + B.need;
   if (r.offline) {                                                    // 오프라인 플레이: 레이스 XP·레벨 변화 없음 안내
     var off = document.createElement("b");
@@ -109,7 +111,9 @@
   fill.style.setProperty("--p", from);
   if (from !== to) {
     requestAnimationFrame(function () { requestAnimationFrame(function () { fill.style.setProperty("--p", to); }); });
+    if (E.sfx && !calm) setTimeout(function () { E.sfx.play("fill", { d: 0.9 }); }, 450);   // 바 차오름 — CSS 애니메이션(450ms 뒤 900ms)과 같은 시간
   }
+  if (up && E.sfx) setTimeout(function () { E.sfx.play("levelup"); }, calm ? 900 : 1400);   // 바가 다 찬 순간 레벨 업
 
   $("[data-react-char]").setAttribute("src", E.charImg(r.character || E.getCharacter(), r.total && r.correct / r.total >= 0.6 ? "happy" : "sad"));   // 정답률 60% 이상(메시지 상위 2단계) = 기쁜 표정 · 미만 = 슬픈 표정
   $("[data-react-face]").hidden = true;                                 // 표정은 캐릭터 이미지에 포함

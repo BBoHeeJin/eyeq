@@ -94,6 +94,7 @@
         dot.classList.toggle("is-active", on);
         if (on) dot.setAttribute("aria-current", "true"); else dot.removeAttribute("aria-current");
       });
+      if (announce && sel !== current && E0.sfx) { E0.sfx.play("swipe"); E0.sfx.play("char", { id: sel }); }   // 효과음: 넘김 + 캐릭터 시그니처
       current = sel;                    // 둘러보기만으로는 저장하지 않음 — CTA에서 확정 (캐릭터 변경 시 XP 초기화)
       if (announce && status) status.textContent = NAMES[sel];
     }

@@ -226,8 +226,10 @@
     var my = session ? OL.rpc("get_my_rank", {}, true).catch(function () { return null; }) : Promise.resolve(null);
     Promise.all([lb, my]).then(function (res) {
       data = Array.isArray(res[0]) ? res[0] : [];
+      var before = mine ? mine.rank : null;
       mine = Array.isArray(res[1]) && res[1][0] ? res[1][0] : null;
       if (mine) mine.is_me = true;
+      if (before && mine && mine.rank < before && E.sfx) E.sfx.play("rankup");   // 효과음: 실시간 갱신에서 내 순위가 올랐을 때
       failed = false;
       var d = new Date();
       updEl.textContent = "업데이트 " + two(d.getHours()) + ":" + two(d.getMinutes()) + ":" + two(d.getSeconds());

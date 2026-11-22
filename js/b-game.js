@@ -168,6 +168,7 @@
       el.style.setProperty("--p", "1");
       track.setAttribute("aria-valuenow", "100");
       if (!failed) { msgEl.textContent = "준비 완료!"; stepEl.textContent = ""; }
+      if (!failed && E.sfx) E.sfx.play("ready");                              // 효과음: 준비 완료
       el.classList.add("is-done");                                            // 완료 반응 (캐릭터 점프 · 바 빛남)
       setTimeout(function () {
         el.classList.add("is-out");
@@ -265,7 +266,7 @@
   function remaining() { return st.deadline ? Math.max(0, Math.min(TIME, st.deadline - Date.now())) : Math.max(0, Math.min(TIME, st.timeLeft)); }
   function readLeft() { return st.phase === "default" && st.deadline && st.readUntil ? Math.max(0, st.readUntil - Date.now()) : 0; }
   function reading() { return readLeft() > 0; }
-  var wasReading = null, lastSec = null;
+  var wasReading = null, lastSec = null, prevDone = null, prevCombo = 0;
   var sfx = function (n) { if (E.sfx) E.sfx.play(n); };   // 효과음 (b-sound.js · 없으면 무시)
   function drawTimer() {
     var r = readLeft();
@@ -373,6 +374,9 @@
     }
 
     // Mission Progress: 현재 = 링, 완료 = 체크, 예정 = 비활성
+    var doneN = completed ? N : st.mission - 1;                         // 효과음: 미션 칸이 새로 완료될 때 '체크'
+    if (prevDone != null && doneN > prevDone && E.sfx) E.sfx.play("check");
+    prevDone = doneN;
     var fill = completed ? 1 : (st.mission - 1) / (N - 1);
     progress.style.setProperty("--fill", fill);
     for (var i = 1; i <= N; i++) {
@@ -470,7 +474,9 @@
     fb.querySelector("[data-react-char]").setAttribute("src", E.charImg(E.getCharacter(), last.correct ? "happy" : "sad"));   // 맞힘 = 기쁜 표정 · 틀림/시간 초과 = 슬픈 표정
     fb.querySelector("[data-react-face]").hidden = true;            // 표정은 캐릭터 이미지에 포함 → 예전 얼굴 겹침 이미지 사용 안 함
     if (animate) {
-      sfx(type !== "wrong" ? type : last.timeout ? "timeout" : "wrong");   // 판정 효과음 (정답 · 2연속 · 3연속 · 오답 · 시간 초과)
+      /* 판정 효과음: 정답 · 2연속 · 3연속(4연속부터 더 높게) · 오답 · 연속이 끊김 · 시간 초과 */
+      if (E.sfx) E.sfx.play(type !== "wrong" ? type : last.timeout ? "timeout" : prevCombo >= 2 ? "break" : "wrong", { n: last.combo });
+      prevCombo = last.correct ? last.combo : 0;
       fb.classList.remove("is-in");
       void fb.offsetWidth;
       fb.classList.add("is-in");
