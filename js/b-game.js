@@ -265,11 +265,14 @@
   function remaining() { return st.deadline ? Math.max(0, Math.min(TIME, st.deadline - Date.now())) : Math.max(0, Math.min(TIME, st.timeLeft)); }
   function readLeft() { return st.phase === "default" && st.deadline && st.readUntil ? Math.max(0, st.readUntil - Date.now()) : 0; }
   function reading() { return readLeft() > 0; }
-  var wasReading = null;
+  var wasReading = null, lastSec = null;
+  var sfx = function (n) { if (E.sfx) E.sfx.play(n); };   // 효과음 (b-sound.js · 없으면 무시)
   function drawTimer() {
     var r = readLeft();
     if (r > 0) {                                                            // 문제 확인: 3 → 2 → 1 (풀이 시간 차감 없음)
       timerText.textContent = String(Math.ceil(r / 1000));
+      if (wasReading !== true) lastSec = null;                           // 새 문제 → 카운트 처음부터
+      if (Math.ceil(r / 1000) !== lastSec) { lastSec = Math.ceil(r / 1000); sfx("count"); }   // 읽기 3 · 2 · 1
       timerEl.style.setProperty("--t", (r / Math.max(1, st.readMs || READ)).toFixed(4));
       timerEl.classList.remove("is-warn");
     } else {
@@ -278,6 +281,9 @@
       timerText.textContent = s.toFixed(1) + "s";
       timerEl.style.setProperty("--t", (ms / TIME).toFixed(4));
       timerEl.classList.toggle("is-warn", ms <= WARN);
+      if (wasReading !== false) lastSec = null;
+      var sec = Math.ceil(ms / 1000);                                     // 경고 구간(마지막 3초)에서 1초마다 똑딱
+      if (ms <= WARN && ms > 0 && st.phase === "default" && sec !== lastSec) { lastSec = sec; sfx("tick"); }
     }
     setReading(r > 0);
   }
@@ -292,6 +298,7 @@
     applyLock();
     if (!first && !on && st.phase === "default") {
       answers.classList.remove("is-go"); void answers.offsetWidth; answers.classList.add("is-go");   // 풀이 시작 신호 (짧게)
+      sfx("go");
       live.textContent = "문제 풀이를 시작하세요.";
     } else if (on) live.textContent = "문제를 읽어보세요. " + Math.ceil(readLeft() / 1000) + "초 뒤에 선택할 수 있어요.";
   }
@@ -463,6 +470,7 @@
     fb.querySelector("[data-react-char]").setAttribute("src", E.charImg(E.getCharacter(), last.correct ? "happy" : "sad"));   // 맞힘 = 기쁜 표정 · 틀림/시간 초과 = 슬픈 표정
     fb.querySelector("[data-react-face]").hidden = true;            // 표정은 캐릭터 이미지에 포함 → 예전 얼굴 겹침 이미지 사용 안 함
     if (animate) {
+      sfx(type !== "wrong" ? type : last.timeout ? "timeout" : "wrong");   // 판정 효과음 (정답 · 2연속 · 3연속 · 오답 · 시간 초과)
       fb.classList.remove("is-in");
       void fb.offsetWidth;
       fb.classList.add("is-in");

@@ -92,6 +92,7 @@
   var maxNow = B.max && !A.max;                                      // 이번 판에서 LV.10 첫 달성 → 같은 배지 자리에 문구만 변경
   $("[data-lvup]").textContent = maxNow ? "MAX LEVEL ACHIEVED!" : "LEVEL UP!";
   $("[data-lvup]").hidden = !up;
+  if (E.sfx) { E.sfx.play("clear"); if (up) setTimeout(function () { E.sfx.play("levelup"); }, 900); }   // 효과음: 클리어 → (레벨 업)
   $("[data-level-xp]").textContent = B.max ? "XP MAX" : "XP " + B.xp + " / " + B.need;
   if (r.offline) {                                                    // 오프라인 플레이: 레이스 XP·레벨 변화 없음 안내
     var off = document.createElement("b");

@@ -126,7 +126,7 @@
     } else if (b && !b.disabled) S.confirmBuy(b.getAttribute("data-buy"), render);
     else if (a && !a.disabled) {
       a.disabled = true; a.textContent = "적용 중…";
-      S.apply(a.getAttribute("data-apply")).then(render, function (er) {
+      S.apply(a.getAttribute("data-apply")).then(function () { if (E.sfx) E.sfx.play("equip"); render(); }, function (er) {   // 효과음: 장착
         render();
         notice.textContent = S.errText(er); notice.hidden = false;
       });

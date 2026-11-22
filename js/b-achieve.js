@@ -112,6 +112,7 @@
     el.querySelector(".b-toast__name").textContent = b.name;
     ensureHost().appendChild(el);
     requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("is-in"); }); });
+    if (E.sfx) E.sfx.play("badge");                                            // 효과음: 업적 획득
     setTimeout(function () {                                                   // 충분히 보였으면 대기열에서 제거
       var cur = queue(), i = cur.indexOf(b.id);
       if (i > -1) { cur.splice(i, 1); setQueue(cur); }

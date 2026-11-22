@@ -152,6 +152,7 @@
       dialog.setAttribute("aria-busy", "true");
       buy(id).then(function () {
         busy = false; dialog.removeAttribute("aria-busy");
+        if (E.sfx) E.sfx.play("buy");                    // 효과음: 구매 완료
         purchased(id, done);
       }, function (e) {
         busy = false; dialog.removeAttribute("aria-busy");
@@ -203,6 +204,7 @@
       busy = true; ok.disabled = true; ok.textContent = "적용 중…";
       apply(sel).then(function () {
         busy = false; close();
+        if (E.sfx) E.sfx.play("equip");                  // 효과음: 장착
         announce(E.skin(sel).name + " 캐릭터를 적용했어요.");
       }, function (e) {
         busy = false; ok.disabled = false; ok.textContent = "이 캐릭터로 적용하기";
