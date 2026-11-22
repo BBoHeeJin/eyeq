@@ -309,11 +309,8 @@
     overscroll-behavior-y: contain;                      /* 목록 끝에서 페이지가 같이 튀지 않게 */
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(142, 166, 255, 0.45) transparent;
   }
-  .b-rtable__body::-webkit-scrollbar { width: 4px; }
-  .b-rtable__body::-webkit-scrollbar-thumb { border-radius: 2px; background: rgba(142, 166, 255, 0.45); }
+  .b-rtable__body::-webkit-scrollbar { width: 8px; }   /* 순위표는 조금 얇게 (디자인은 b-common.css 공통 스크롤바) */
   .b-rk__divider { height: 24px; margin: 0; }
   /* 행: [순위 | 캐릭터·닉네임 | XP / 시간 | LV / 상태] */
   .b-rrow {
