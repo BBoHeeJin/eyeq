@@ -804,3 +804,6 @@
 .b-page-my .b-prof__skin:active { transform: scale(0.95); }
 .b-page-my .b-prof__skin:focus-visible { outline: 2px solid #b9b3ff; outline-offset: 3px; }
 @media (min-width: 1024px) { .b-page-my .b-prof__who { width: max(300px, calc(440 * var(--k))); } }
+
+/* 최근 플레이 행 화살표: 20~24px 고정 · 행 오른쪽 세로 중앙 (b-my.js 변수 이름 충돌로 커지던 문제는 JS에서 수정) */
+.b-mylist__row .b-mylist__chev { flex: none; align-self: center; width: clamp(20px, calc(24 * var(--k)), 24px); height: clamp(20px, calc(24 * var(--k)), 24px); }

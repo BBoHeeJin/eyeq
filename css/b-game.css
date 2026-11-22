@@ -852,11 +852,7 @@
    오답(data-type="wrong")에는 적용하지 않음 → 기존 [캐릭터] ◀ [말풍선] 그대로 */
 .b-fb__hero { display: flex; align-items: center; flex: none; }
 .b-fb__win { display: none; }
-.b-fb:not([data-type="wrong"]) {
-  width: calc(850 * var(--k));
-  gap: calc(20 * var(--k));
-}
-@media (min-width: 1024px) and (max-width: 1279px) { .b-fb:not([data-type="wrong"]) { width: calc(790 * var(--k)); } }   /* 좁은 PC: 오른쪽 진행 줄과 겹치지 않게 */
+.b-fb:not([data-type="wrong"]) { gap: calc(28 * var(--k)); }   /* 왼쪽 그룹(캐릭터·결과) ↔ 말풍선 */
 .b-fb:not([data-type="wrong"]) .b-fb__hero { gap: calc(6 * var(--k)); }
 .b-fb:not([data-type="wrong"]) .b-fb__react { width: calc(132 * var(--k)); height: calc(132 * var(--k)); }
 .b-fb:not([data-type="wrong"]) .b-fb__win {
@@ -901,8 +897,8 @@
 .b-fb__win-xp.is-retry { font-family: var(--font-kr); font-weight: 700; letter-spacing: 0; }
 /* 말풍선: 여유 있는 안쪽 여백 (상하 34 · 좌우 31 · 배지↔해설 16) · 높이는 내용에 맞춤 */
 .b-fb:not([data-type="wrong"]) .b-fb__bubble {
-  flex: 1 1 auto;
-  max-width: none;
+  flex: 0 1 auto;
+  max-width: calc(600 * var(--k));
   padding: max(16px, calc(34 * var(--k))) max(16px, calc(31 * var(--k)));
   border-radius: calc(24 * var(--k));
 }
@@ -947,3 +943,32 @@
 .b-pnode { transition: width 260ms ease-out, height 260ms ease-out, background 260ms ease-out, box-shadow 260ms ease-out; }
 .b-pnode.is-done { animation: b-pnode-done 380ms ease-out; }
 @keyframes b-pnode-done { 0% { transform: translate(-50%, -50%) scale(0.6); } 70% { transform: translate(-50%, -50%) scale(1.15); } 100% { transform: translate(-50%, -50%) scale(1); } }
+
+/* =========================================================
+   PC 상단 줄 = 3칸 구조 (2026-11-23)
+   [타이머 300] ── [가운데 칸: 제목 / 피드백] ── [미션 진행 300]
+   · 좌우 칸 폭 동일(--side-w) · 바깥 여백 동일(--gl = --gr) · 가운데 칸과의 간격 동일(--side-gap)
+   · 피드백은 가운데 칸 안에서 가운데 정렬 → 한쪽으로 쏠리지 않음 · 세로 중심 = 상단 줄 중심(120)
+   ========================================================= */
+@media (min-width: 1024px) {
+  .b-game { --side-w: calc(300 * var(--k)); --side-gap: calc(40 * var(--k)); }
+  .b-timer { width: var(--side-w); }
+  /* 미션 진행: 타이머와 같은 폭 · 첫·마지막 점이 칸 양끝에 닿도록 (점 지름 20 → 중심 10 / 290) */
+  .b-progress { width: var(--side-w); --tx: 10; --tw: 280; }
+  .b-pnode, .b-plabel { --cx: 10; }
+  .b-pnode[data-node="2"], .b-plabel[data-label="2"] { --cx: 150; }
+  .b-pnode[data-node="3"], .b-plabel[data-label="3"] { --cx: 290; }
+  .b-progress.is-5 .b-pnode[data-node="2"], .b-progress.is-5 .b-plabel[data-label="2"] { --cx: 80; }
+  .b-progress.is-5 .b-pnode[data-node="3"], .b-progress.is-5 .b-plabel[data-label="3"] { --cx: 150; }
+  .b-progress.is-5 .b-pnode[data-node="4"], .b-progress.is-5 .b-plabel[data-label="4"] { --cx: 220; }
+  .b-progress.is-5 .b-pnode[data-node="5"], .b-progress.is-5 .b-plabel[data-label="5"] { --cx: 290; }
+  .b-progress.is-5 .b-pnode__ring { width: calc(48 * var(--k)); height: calc(48 * var(--k)); }
+  /* 피드백: 가운데 칸 전체를 차지하고 내용은 가운데 정렬 */
+  .b-fb, .b-fb:not([data-type="wrong"]) {
+    left: calc(var(--gl) + var(--side-w) + var(--side-gap));
+    right: calc(var(--gr) + var(--side-w) + var(--side-gap));
+    width: auto;
+    transform: translateY(-50%);
+    justify-content: center;
+  }
+}

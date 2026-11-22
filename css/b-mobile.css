@@ -471,12 +471,14 @@
    일러스트 요소는 'hero' 칸 기준 좌표로 배치 (칸이 내려가도 함께 이동)
    ========================================================= */
 @media (max-width: 1023px) {
-  .b-page-result { --my: -139; }
+  .b-page-result { --my: -138; }                      /* 그림 윗선(기울어진 XP 카드 포함) = hero 칸 윗선 */
   .b-clear.b-canvas {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto minmax(8px, 1fr) calc(196 * var(--k)) auto auto minmax(16px, 1fr) auto;
+    /* 제목·설명은 위쪽 고정(기존 위치) · 가운데 묶음(캐릭터·XP → 기록 → 레벨)은 설명과 버튼 사이 남는 공간의 정중앙 (위·아래 여백 동일) */
+    grid-template-rows: auto auto auto minmax(20px, 1fr) var(--hero-h) auto auto minmax(20px, 1fr) auto;
     grid-template-areas: "title" "desc" "msg" "." "hero" "result" "level" "." "btns";
+    --hero-h: calc(150 * var(--k));                     /* 캐릭터·XP 그림 실제 높이 (반짝이 꼬리는 칸 밖으로 살짝) */
     min-height: calc(100vh - var(--m-header-h));
     min-height: calc(100svh - var(--m-header-h));
     padding: var(--m-page-top) var(--m-pad) 0;
@@ -484,21 +486,23 @@
   .b-clear > * { position: relative; left: auto; right: auto; top: auto; bottom: auto; }
   .b-clear__title { grid-area: title; font-size: var(--m-fs-display); line-height: var(--m-lh-display); }
   .b-clear__desc { grid-area: desc; margin-top: 10px; font-size: var(--m-fs-body); line-height: 1.45; text-align: center; }
-  .b-clear__msg { grid-area: msg; margin-top: 4px; font-size: var(--m-fs-sub); line-height: 1.45; text-align: center; word-break: keep-all; }
+  .b-clear__msg { grid-area: msg; margin: 4px 0 24px; font-size: var(--m-fs-sub); line-height: 1.45; text-align: center; word-break: keep-all; }   /* +24 = 버튼 영역 윗여백만큼 → 가운데 묶음 위·아래 여백 동일 */
 
   /* 일러스트: hero 칸 안의 절대 배치 */
   .b-clear__cube, .b-clear__glow, .b-clear__react, .b-clear__xpcard, .b-clear__sp { grid-area: hero; position: absolute; }
-  .b-clear__react { left: calc(50% - 113 * var(--k)); }
-  .b-clear__xpcard { left: calc(50% + 29.56 * var(--k)); }
-  .b-clear__glow { left: calc(50% - 210 * var(--k)); }
+  /* 캐릭터 + XP 카드 = 한 묶음 · 기울어진 XP 카드까지 포함한 시각 중심을 화면 중앙에 (-118 ~ +119) */
+  .b-clear__react { left: calc(50% - 118 * var(--k)); }
+  .b-clear__xpcard { left: calc(50% + 24.56 * var(--k)); }
+  .b-clear__glow { left: calc(50% - 215 * var(--k)); }
   .b-clear__cube { left: calc(50% + (var(--cx) - 195 - var(--s) / 2) * var(--k)); }
-  .b-clear__sp--3 { left: calc(50% + 35.17 * var(--k)); }
-  .b-clear__sp--4 { left: calc(50% - 134 * var(--k)); }
-  .b-clear__sp--1 { left: calc(50% - 117.81 * var(--k)); }
-  .b-clear__sp--5 { left: calc(50% + 134.75 * var(--k)); }
-  .b-clear__sp--2 { left: calc(50% + 112 * var(--k)); }
+  .b-clear__sp--3 { left: calc(50% + 30.17 * var(--k)); }
+  .b-clear__sp--4 { left: calc(50% - 139 * var(--k)); }
+  .b-clear__sp--1 { left: calc(50% - 122.81 * var(--k)); }
+  .b-clear__sp--5 { left: calc(50% + 129.75 * var(--k)); }
+  .b-clear__sp--2 { left: calc(50% + 107 * var(--k)); }
 
-  .b-result { grid-area: result; width: 100%; height: auto; min-height: 112px; margin-top: 8px; padding: 14px 0; box-sizing: border-box; }
+  .b-result { grid-area: result; width: 100%; height: auto; min-height: 112px; margin-top: 20px; padding: 14px 0; box-sizing: border-box; align-items: stretch; }   /* 그림 → 기록 20 */
+  .b-result__item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 0; }   /* 아이콘·라벨·수치 세로 가운데 */
   .b-result__label { font-size: var(--m-fs-caption); line-height: 1.4; }
   .b-result__value { font-size: max(18px, calc(20 * var(--k))); line-height: 1.3; letter-spacing: var(--m-ls-num); }
   .b-result__icon { width: 30px; height: 30px; }
@@ -522,10 +526,17 @@
   .b-clear__retry { flex: 0 0 auto; padding: 0 18px; }
 }
 @media (max-width: 1023px) and (max-height: 700px) {
-  .b-clear.b-canvas { grid-template-rows: auto auto auto minmax(4px, 1fr) calc(160 * var(--k)) auto auto minmax(12px, 1fr) auto; }
-  .b-page-result { --my: -150; }
-  .b-clear__react { transform: scale(0.82); transform-origin: 50% 40%; }
-  .b-clear__xpcard { transform: scale(0.82); }
+  /* 세로가 짧은 폰(SE 등): 그림을 80%로 (scale 속성 → XP 카드 기울기 transform 은 그대로) · 제목·간격 압축 */
+  .b-clear.b-canvas { --hero-h: calc(118 * var(--k)); padding-top: 12px; }
+  .b-page-result { --my: -138; }
+  .b-clear__react, .b-clear__xpcard { transform-origin: 50% 0; scale: 0.8; }
+  .b-clear__sp { scale: 0.8; }
+  .b-clear__title { font-size: 34px; }
+  .b-clear__desc { margin-top: 6px; font-size: 14px; }
+  .b-result { min-height: 100px; margin-top: 12px; padding: 10px 0; }
+  .b-result__icon { width: 26px; height: 26px; margin-bottom: 4px; }
+  .b-level { margin-top: 10px; padding: 12px var(--m-card-pad); }
+  .b-clear__btns { padding-top: 12px; }
   .b-clear__cube, .b-clear__sp { opacity: 0.4; }
 }
 
@@ -763,6 +774,12 @@
   html.b-page-my :is(.b-mylist__date, .b-mylist__xp) { font-size: var(--m-fs-caption); }
   html.b-page-my .b-mylist__score { font-weight: 700; font-size: var(--m-fs-body); }
   html.b-page-my .b-mylist__no { font-size: var(--m-fs-caption); }
+  /* 최근 플레이 = 컴팩트 행 60 고정 · [번호 | 이름·날짜·PERFECT | 정답 수 / XP | ›] · 긴 이름은 … */
+  html.b-page-my .b-mylist--recent .b-mylist__row { box-sizing: border-box; height: 60px; min-height: 0; padding: 0 10px 0 12px; align-items: center; align-content: center; row-gap: 2px; }
+  html.b-page-my .b-mylist__main { min-width: 0; justify-content: center; }
+  html.b-page-my .b-mylist__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  html.b-page-my .b-mylist__sub { flex-wrap: nowrap; gap: 4px; min-width: 0; white-space: nowrap; }
+  html.b-page-my .b-mylist__sub .b-perfect { flex: none; }
   html.b-page-my .b-pb__tile dd { font-weight: 700; font-size: min(34px, 22cqi); }   /* 핵심 수치 크게 · 타일 폭에 맞춰 줄어듦 */
 
   /* =========================================================
@@ -772,10 +789,7 @@
   html.b-page-home .b-intro { padding: 0 var(--m-side); }
   html.b-page-home .b-main { padding-bottom: calc(16px + var(--m-safe-b)); }
 }
-/* 랭킹 상태 칩: 최소 글자 11 (모바일 캡션 위계) */
-@media (max-width: 1023px) {
-  html.b-page-rank :is(.b-rk__chip, .b-rchip), html.b-page-rank .b-rk__row .b-rrow__combo .b-rchip, html.b-page-rank .b-rk__row .b-rchip { font-size: var(--m-fs-label); }
-}
+/* 랭킹 상태 칩 글자 크기 → b-rank.css 모바일 블록으로 통합 (2026-11-23) */
 
 /* =========================================================
    GAME — 정답 피드백 (모바일·태블릿)
