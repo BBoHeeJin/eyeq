@@ -12,14 +12,14 @@
      check     미션 진행 칸 완료             ready    게임 준비 완료
      roll/ding 결과 숫자 올라감 / 다 참      fill     레벨 바 차오름
      clear · levelup · buy · equip · badge · rankup(순위 상승)
-   배경음악 (기본 켜짐 · 메뉴에서 끄기)
+   배경음악 (페이지에 들어오면 자동 재생 · 브라우저가 막으면 첫 터치·클릭 때 바로 시작)
      lobby  홈·스테이지·랭킹·상점·마이페이지·결과 — 잔잔한 코드 + 아르페지오 (84 BPM)
      game   플레이 화면 — 경쾌한 베이스 + 아르페지오 + 하이햇 (112 BPM)
      · 페이지를 옮겨도 박자 위치를 이어서 재생 (sessionStorage) · 큰 효과음이 날 때 잠깐 작아짐(덕킹)
      · 탭이 안 보이면 멈춤 → 돌아오면 이어서
    공통 규칙
-   · 설정은 이 기기에 저장 — eyeq.b.sfx ("off" = 효과음 끔) · eyeq.b.bgm ("off" = 배경음악 끔)
-   · 배경음악이 켜져 있는데 브라우저가 소리를 막고 있으면 "화면을 눌러 소리 켜기" 안내 → 누르면 사라짐
+   · 소리 버튼 하나로 효과음 + 배경음악을 함께 켜고 끔 (오른쪽 아래 · 피드백 버튼 왼쪽)
+     설정은 이 기기에 저장 — eyeq.b.mute ("1" = 음소거) · 이전 버전의 eyeq.b.sfx / eyeq.b.bgm 은 정리
    · 모바일 브라우저는 첫 터치 전 소리를 막음 → 첫 터치·클릭·키 입력 때 오디오를 깨움
    · 안드로이드: 정답·오답·클리어 등에 짧은 진동 (효과음을 끄면 진동도 끔 · iPhone 웹은 미지원)
    · 게임 로직·데이터와 무관 (소리만 냄) · 이 파일이 없어도 다른 기능은 그대로 동작
@@ -27,14 +27,16 @@
 (function () {
   "use strict";
   var E = window.EYEQ = window.EYEQ || {};
-  var KEY = "eyeq.b.sfx", KEY_BGM = "eyeq.b.bgm", KEY_POS = "eyeq.b.bgmpos";
+  var KEY_MUTE = "eyeq.b.mute", KEY_POS = "eyeq.b.bgmpos";
   var MASTER = 0.5, BGM_VOL = 0.16;              // 전체 음량 · 배경음악 음량 (0~1)
   var AC = window.AudioContext || window.webkitAudioContext;
   var ctx = null, out = null, sfxBus = null, bgmBus = null, pending = null, PITCH = 1;
 
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
-  function enabled() { return store(KEY) !== "off"; }
-  function bgmOn() { return store(KEY_BGM) !== "off"; }            // 배경음악 기본 = 켜짐 (메뉴에서 끄면 "off" 저장)
+  function muted() { return store(KEY_MUTE) === "1"; }
+  function enabled() { return !muted(); }                      // 효과음
+  function bgmOn() { return !muted(); }                        // 배경음악 (기본 = 켜짐)
+  try { localStorage.removeItem("eyeq.b.sfx"); localStorage.removeItem("eyeq.b.bgm"); } catch (e) { /* 이전 버전 설정 정리 */ }
 
   /* ---------- 오디오 준비 ---------- */
   function ensure() {
@@ -58,12 +60,12 @@
     } else woke();
   }
   function woke() {
-    hint(false);
+    waiting(false);
     if (pending && Date.now() - pending.at < 1500) { var p = pending; pending = null; play(p.name, p.opt); }
     pending = null;
     if (bgmOn()) BGM.start();
   }
-  ["pointerdown", "touchend", "keydown"].forEach(function (ev) { window.addEventListener(ev, unlock, { capture: true, passive: true }); });
+  ["pointerdown", "touchstart", "touchend", "mousedown", "click", "keydown"].forEach(function (ev) { window.addEventListener(ev, unlock, { capture: true, passive: true }); });
 
   /* ---------- 합성 도구 (bus 지정 없으면 효과음 버스) ---------- */
   function tone(f, t, d, o) {
@@ -305,7 +307,7 @@
             ".b-rk__tab, .b-rbtn, .b-mytabs button, [data-tab], .b-mycard__more, .b-mylist__row, .b-prof__edit, " +
             ".b-modal__btn, .b-sk__btn, .b-shop button, .b-shop a, .b-back, .b-major__opt, .b-tut button, .b-rfilter__btn, .b-sk__opt, .b-carousel__dot, [data-carousel-dot]";
   /* 전용 소리가 있거나(판정·구매·캐릭터 넘김), 팝업 열림·닫힘 소리로 대신하는 버튼 */
-  var NO_TAP = ".b-ans, .b-sfx-hint, [data-sk-buy], [data-sk-ok], [data-apply], [data-sfx-toggle], [data-bgm-toggle], [data-carousel-prev], [data-carousel-next], " +
+  var NO_TAP = ".b-ans, [data-sk-buy], [data-sk-ok], [data-apply], [data-snd-toggle], [data-carousel-prev], [data-carousel-next], " +
                "[aria-haspopup], [data-menu-toggle], [data-prof-toggle], [data-skill-open], [data-modal-close], [data-sk-close], [data-menu-close], [disabled], [aria-disabled='true']";
   var SPECIAL = [["[data-tut-next], [data-tut-prev]", "page"], ["[data-play], [data-quick]", "start"]];
   document.addEventListener("click", function (e) {
@@ -342,82 +344,52 @@
     }).observe(document.body, { subtree: true, attributes: true, attributeOldValue: true, attributeFilter: ["class", "hidden"] });
   }
 
-  /* ---------- 소리 막힘 안내 (모든 페이지 공통 · 헤더 바로 아래 가운데 작은 알약) ---------- */
-  var hintEl = null;
-  function hint(show) {
-    if (!show) { if (hintEl) { hintEl.classList.remove("is-in"); var h = hintEl; hintEl = null; setTimeout(function () { h.remove(); }, 250); } return; }
-    if (hintEl || !document.body) return;
-    if (!document.getElementById("b-sfx-hint-css")) {
-      var st = document.createElement("style"); st.id = "b-sfx-hint-css";
-      st.textContent =
-        ".b-sfx-hint{position:fixed;z-index:60;left:50%;top:calc(var(--header-h,64px) + 10px);display:inline-flex;align-items:center;gap:6px;" +
-        "height:34px;padding:0 14px 0 11px;border:1px solid rgba(142,166,255,.45);border-radius:999px;background:rgba(24,26,78,.92);" +
-        "box-shadow:0 6px 18px rgba(3,4,26,.45);color:#e6e9ff;font:600 13px/1 var(--font-kr,'Noto Sans KR',sans-serif);white-space:nowrap;cursor:pointer;" +
-        "-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transform:translate(-50%,-6px);transition:opacity .25s ease,transform .25s ease}" +
-        ".b-sfx-hint.is-in{opacity:1;transform:translate(-50%,0)}.b-sfx-hint svg{width:18px;height:18px;color:#a9b4ff}" +
-        "@media (max-width:1023px){.b-sfx-hint{top:auto;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 8px)}" +            /* 모바일: 아래쪽 (제목을 가리지 않게) */
-        ".b-page-game .b-sfx-hint,.b-page-result .b-sfx-hint,.b-page-home .b-sfx-hint{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 80px)}}" +       /* 하단 버튼 위 */
-        "@media (prefers-reduced-motion:reduce){.b-sfx-hint{transition:none}}";
-      document.head.appendChild(st);
-    }
-    hintEl = document.createElement("button");
-    hintEl.type = "button"; hintEl.className = "b-sfx-hint";
-    hintEl.innerHTML = svg(IC.music) + "<span>화면을 눌러 소리 켜기</span>";
-    hintEl.addEventListener("click", function () { unlock(); });
-    document.body.appendChild(hintEl);
-    requestAnimationFrame(function () { requestAnimationFrame(function () { if (hintEl) hintEl.classList.add("is-in"); }); });
-  }
-
-  /* ---------- 켜기/끄기 (PC = 프로필 메뉴 · 모바일 = 햄버거 메뉴) ---------- */
+  /* ---------- 소리 버튼 (오른쪽 아래 · 피드백 버튼 왼쪽 · 모든 페이지) ----------
+     누르면 음소거 ↔ 소리 켜기 · 브라우저가 소리를 막고 있는 동안은 버튼이 살짝 깜빡임 (아무 곳이나 누르면 시작) */
   var IC = {
     on: '<path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
-    off: '<path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
-    music: '<path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/>',
-    musicOff: '<path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path d="M3.5 3.5l17 17"/>'
+    off: '<path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>'
   };
-  function svg(p) { return '<svg class="b-ic24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>"; }
+  function svg(p) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>"; }
+  var btn = null;
   function sync() {
-    var s = enabled(), m = bgmOn();
-    Array.prototype.forEach.call(document.querySelectorAll("[data-sfx-toggle]"), function (b) {
-      b.setAttribute("aria-pressed", s ? "true" : "false");
-      b.innerHTML = svg(s ? IC.on : IC.off) + "<span>" + (s ? "효과음 켜짐" : "효과음 꺼짐") + "</span>";
-    });
-    Array.prototype.forEach.call(document.querySelectorAll("[data-bgm-toggle]"), function (b) {
-      b.setAttribute("aria-pressed", m ? "true" : "false");
-      b.innerHTML = svg(m ? IC.music : IC.musicOff) + "<span>" + (m ? "배경음악 켜짐" : "배경음악 꺼짐") + "</span>";
-    });
+    if (!btn) return;
+    var m = muted();
+    btn.innerHTML = svg(m ? IC.off : IC.on);
+    btn.classList.toggle("is-muted", m);
+    btn.setAttribute("aria-pressed", m ? "true" : "false");
+    btn.setAttribute("aria-label", m ? "소리 켜기" : "소리 끄기 (음소거)");
+    btn.title = m ? "소리 켜기" : "음소거";
+    if (m) waiting(false);
   }
-  function setSfx(on) { store(KEY, on ? "on" : "off"); sync(); }
-  function setBgm(on) {
-    store(KEY_BGM, on ? "on" : "off"); sync();
-    if (on) { unlock(); BGM.start(); } else { BGM.stop(); hint(false); }
-  }
-  function addToggle(host, cls, attr, fn) {
-    if (!host || host.querySelector("[" + attr + "]")) return;
-    var b = document.createElement("button");
-    b.type = "button"; b.className = cls; b.setAttribute(attr, "");
-    b.addEventListener("click", fn);
-    host.appendChild(b);
+  function waiting(on) { if (btn) btn.classList.toggle("is-wait", !!on && !muted()); }
+  function setMuted(m) {
+    store(KEY_MUTE, m ? "1" : "0"); sync();
+    if (m) BGM.stop(); else { unlock(); BGM.start(); play("tap"); }
   }
   function mount() {
-    [["[data-prof-menu]", "b-profmenu__item b-sfx-toggle"], [".b-menu__panel", "b-menu__item b-sfx-toggle"]].forEach(function (h) {
-      var host = document.querySelector(h[0]);
-      addToggle(host, h[1], "data-sfx-toggle", function () { var on = !enabled(); setSfx(on); if (on) { unlock(); play("tap"); } });
-      addToggle(host, h[1], "data-bgm-toggle", function () { setBgm(!bgmOn()); });
-    });
+    btn = document.createElement("button");
+    btn.type = "button"; btn.className = "b-snd"; btn.setAttribute("data-snd-toggle", "");
+    btn.addEventListener("click", function () { setMuted(!muted()); });
+    var dock = document.createElement("div");
+    dock.className = "b-dock";
+    dock.appendChild(btn);
+    var fab = document.querySelector(".b-fb-fab");                 // 피드백 버튼이 있는 페이지 → 같은 줄 오른쪽에
+    if (fab) dock.appendChild(fab);
+    document.body.appendChild(dock);
     sync();
     watch();
-    if (bgmOn()) {                                              // 자동 재생이 허용되면 바로 · 아니면 첫 터치 때 (그동안 안내 표시)
+    if (bgmOn()) {                                                  // 바로 재생 시도 → 막히면 첫 터치·클릭 때
       ensure();
       if (ctx) {
         ctx.resume().then(woke, function () {});
-        setTimeout(function () { if (bgmOn() && !running()) hint(true); }, 700);
+        setTimeout(function () { if (bgmOn() && !running()) waiting(true); }, 700);
       }
     }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
-  window.addEventListener("storage", function (e) { if (e.key === KEY || e.key === KEY_BGM) sync(); });
+  window.addEventListener("storage", function (e) { if (e.key === KEY_MUTE) { sync(); if (muted()) BGM.stop(); } });
 
-  E.sfx = { play: play, enabled: enabled, toggle: function () { setSfx(!enabled()); return enabled(); }, unlock: unlock };
-  E.bgm = { enabled: bgmOn, playing: function () { return BGM.playing(); }, toggle: function () { setBgm(!bgmOn()); return bgmOn(); }, start: function () { BGM.start(); }, stop: function () { BGM.stop(); } };
+  E.sfx = { play: play, enabled: enabled, muted: muted, setMuted: setMuted, toggle: function () { setMuted(!muted()); return !muted(); }, unlock: unlock };
+  E.bgm = { enabled: bgmOn, playing: function () { return BGM.playing(); }, start: function () { BGM.start(); }, stop: function () { BGM.stop(); } };
 })();
