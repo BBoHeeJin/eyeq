@@ -772,6 +772,60 @@ em { font-style: normal; }
 }
 .is-modal-open .b-fb-fab, .is-menu-open .b-fb-fab { visibility: hidden; }
 
+/* ---------- 오른쪽 아래 버튼 묶음: [소리] [피드백] (js/b-sound.js 가 만듦) ----------
+   피드백 버튼이 없는 페이지(게임·상점·모바일 스테이지·결과)는 소리 버튼만 · 위치·여백은 피드백 버튼과 동일 */
+.b-dock {
+  position: fixed;
+  right: 32px;
+  bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.b-dock .b-fb-fab { position: static; }
+.b-snd {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(160, 150, 255, 0.55);
+  background: rgba(40, 34, 112, 0.82);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(3, 4, 26, 0.45), 0 0 16px rgba(110, 96, 255, 0.28);
+  color: var(--color-white);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color 180ms ease-out, box-shadow 180ms ease-out, transform 150ms ease-out, color 180ms ease-out;
+}
+.b-snd svg { width: 22px; height: 22px; }
+.b-snd.is-muted { color: rgba(214, 218, 255, 0.55); border-color: rgba(160, 150, 255, 0.3); background: rgba(28, 26, 80, 0.82); box-shadow: 0 6px 18px rgba(3, 4, 26, 0.45); }
+@media (hover: hover) { .b-snd:hover { background: rgba(58, 50, 150, 0.92); box-shadow: 0 6px 18px rgba(3, 4, 26, 0.45), 0 0 22px rgba(124, 110, 255, 0.5); color: var(--color-white); } }
+.b-snd:active { transform: translateY(1px) scale(0.96); }
+.b-snd:focus-visible { outline: 2px solid #b9b3ff; outline-offset: 3px; }
+/* 브라우저가 소리를 막고 있는 동안: 바깥 고리가 천천히 퍼짐 (아무 곳이나 누르면 재생 시작 → 멈춤) */
+.b-snd.is-wait::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 2px solid rgba(160, 150, 255, 0.7);
+  animation: b-snd-wait 1.6s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes b-snd-wait { from { transform: scale(1); opacity: 0.9; } to { transform: scale(1.45); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .b-snd.is-wait::after { animation: none; opacity: 0.8; } }
+@media (max-width: 1023px) {
+  .b-dock { right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); gap: 8px; }
+  .fb-home .b-dock { bottom: calc(84 * var(--k) + 12px + env(safe-area-inset-bottom, 0px)); }        /* 시작 버튼 위 */
+  html.b-page-game .b-dock, html.b-page-result .b-dock { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }   /* 아래 고정 버튼 위 */
+}
+.is-modal-open .b-dock, .is-menu-open .b-dock { visibility: hidden; }
+
 /* 모바일 메뉴 항목 */
 
 /* 팝업 */
